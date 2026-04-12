@@ -25,6 +25,7 @@ export function LineagePage() {
   return (
     <div className="stack">
       <h1>Lineage</h1>
+      <p>Lineage explanations are split into business trust narrative and technical derivation details.</p>
       <DataDiagnostics diagnostics={diagnostics} />
       {artifact ? <LineageTrustPanel artifact={artifact} /> : <p>Lineage artifact unavailable.</p>}
     </div>

@@ -1,4 +1,5 @@
 import { ensureRecord, requireString } from './validation'
+import { validateProvenance } from './provenance'
 
 /**
  * @typedef {Object} RelationshipContractV2
@@ -9,6 +10,7 @@ import { ensureRecord, requireString } from './validation'
  * @property {string} targetEntityId
  * @property {string} relationshipType
  * @property {'business'|'technical_lineage'} relationshipClass
+ * @property {import('./provenance').ProvenanceContractV2=} provenance
  */
 
 export const relationshipContract = {
@@ -26,6 +28,7 @@ export function validateRelationship(relationship, path = 'relationship') {
   requireString(relationship, path, 'targetEntityId', diagnostics)
   requireString(relationship, path, 'relationshipType', diagnostics)
   requireString(relationship, path, 'relationshipClass', diagnostics)
+  if (relationship.provenance) diagnostics.push(...validateProvenance(relationship.provenance, `${path}.provenance`))
 
   return diagnostics
 }
