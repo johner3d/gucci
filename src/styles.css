@@ -333,3 +333,48 @@ a:hover {
 .timeline-actions {
   margin-top: var(--space-2);
 }
+
+.graph-split-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.graph-pane-main,
+.graph-pane-evidence {
+  min-width: 0;
+}
+
+.query-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+.query-grid label {
+  display: grid;
+  gap: var(--space-1);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.query-grid select,
+.query-grid input {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  padding: var(--space-2);
+  color: var(--color-text);
+}
+
+.path-row {
+  padding: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.path-row.is-selected {
+  border-color: #bfd0ff;
+  background: var(--color-primary-soft);
+}
