@@ -21,6 +21,7 @@ export function CausalPath({
   onFocusChange,
   onSelectNode,
   onSelectPath,
+  objectPathForNode,
 }) {
   const classOptions = [
     { value: 'all', label: 'All classes' },
@@ -128,7 +129,9 @@ export function CausalPath({
               Set selected node as focus
             </Button>
           </div>
-          <Link to={`/object-explorer/${selectedNode || details.node?.id || focus}`}>Inspect selected object</Link>
+          <Link to={objectPathForNode ? objectPathForNode(selectedNode || details.node?.id || focus) : `/object-explorer/${selectedNode || details.node?.id || focus}`}>
+            Inspect selected object
+          </Link>
         </Panel>
       </section>
 

@@ -1,4 +1,5 @@
 import { NavLink, Link, Outlet, useLocation, useSearchParams } from 'react-router-dom'
+import { IncidentTruthSelectors } from './IncidentTruthSelectors'
 import { buildSemanticBreadcrumbs, readContextKernel, toKernelQuery } from '../../lib/contextKernel'
 
 const spaceRoutes = [
@@ -56,7 +57,7 @@ const transitionRules = [
 
 export function AppShell() {
   const location = useLocation()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const contextKernel = readContextKernel(searchParams)
 
   const scopedParams = Object.fromEntries(searchParams.entries())
@@ -89,6 +90,7 @@ export function AppShell() {
         <div className="context-bar meta">
           Context kernel: {contextKernel.plant} / {contextKernel.line} / {contextKernel.severity} / {contextKernel.time}
         </div>
+        <IncidentTruthSelectors contextKernel={contextKernel} searchParams={searchParams} setSearchParams={setSearchParams} />
         <div className="context-bar meta">
           Scope: {contextKernel.incidentScope.incidentId} · Focus: {contextKernel.focusEntity}
         </div>

@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useOutletContext, useSearchParams } from 'react-router-dom'
+import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { CausalPath } from '../components/domain/CausalPath'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { Panel } from '../components/primitives/Primitives'
 import { loadGraphData, toUiDiagnostics } from '../lib/api'
+import { toScopedPath } from '../lib/scopedLink'
 
 const queryModeOptions = [
   { value: 'downstream-impact', label: 'Downstream impact' },
@@ -190,6 +192,13 @@ export function GraphPage() {
     <div className="stack">
       <h1>Graph</h1>
       <DataDiagnostics diagnostics={diagnostics} />
+      <Panel title="Graph workspace interactions">
+        <div className="button-row">
+          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus })}>Impact analysis</Link>
+          <Link className="btn" to={toScopedPath('/events', globalContext, { focus })}>Events evidence</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext, { focus })}>Process context</Link>
+        </div>
+      </Panel>
       {graph ? (
         <CausalPath
           details={details}
@@ -202,6 +211,7 @@ export function GraphPage() {
           onFocusChange={(nextFocus) => updateSearch({ focus: nextFocus, selectedNode: nextFocus })}
           onSelectNode={(nextNode) => updateSearch({ selectedNode: nextNode })}
           onSelectPath={(pathId, nodeId) => updateSearch({ selectedPath: pathId, selectedNode: nodeId })}
+          objectPathForNode={(nodeId) => toScopedPath(`/object-explorer/${nodeId}`, globalContext)}
         />
       ) : (
         <p>Graph content unavailable.</p>

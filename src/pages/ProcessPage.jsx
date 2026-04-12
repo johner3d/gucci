@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadProcessData, toUiDiagnostics } from '../lib/api'
+import { toScopedPath } from '../lib/scopedLink'
 
 const defaultContext = {
   plant: 'PLANT_DE_01',
@@ -20,6 +21,8 @@ export function ProcessPage() {
   const [processData, setProcessData] = useState(null)
   const [diagnostics, setDiagnostics] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
+  const outletContext = useOutletContext()
+  const globalContext = outletContext?.globalContext || {}
 
   const context = {
     plant: searchParams.get('plant') || defaultContext.plant,
@@ -72,6 +75,13 @@ export function ProcessPage() {
       <DataDiagnostics diagnostics={diagnostics} />
       {processData ? (
         <>
+          <Panel title="Process workspace interactions">
+            <div className="button-row">
+              <Link className="btn" to={toScopedPath('/events', globalContext, { step: selectedStep?.id || '' })}>Related events timeline</Link>
+              <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'dependency-chain' })}>Graph dependencies</Link>
+              <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { step: selectedStep?.id || '' })}>Impact analysis</Link>
+            </div>
+          </Panel>
           <Panel title="Global context">
             <div className="meta">
               Plant <strong>{context.plant}</strong> | Line <strong>{context.line}</strong> | Time window <strong>{context.time}</strong> | Severity{' '}
