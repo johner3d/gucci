@@ -3,16 +3,214 @@
     "artifact_type": "mapping_rule",
     "id": "LIN_0001",
     "input_refs": [
-      "EAM_WO_12090"
+      "SRCREP_0001"
     ],
-    "name": "map_eam_work_order_to_maintenance_activity",
+    "name": "map_erp_order_representation_to_order_entity",
+    "output_refs": [
+      "ORD_10045"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0002",
+    "input_refs": [
+      "SRCREP_0002"
+    ],
+    "name": "map_erp_order_representation_to_order_entity",
+    "output_refs": [
+      "ORD_10046"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0003",
+    "input_refs": [
+      "SRCREP_0004"
+    ],
+    "name": "map_mes_unit_representation_to_serial_unit_entity",
+    "output_refs": [
+      "SU_900001"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0004",
+    "input_refs": [
+      "SRCREP_0004"
+    ],
+    "name": "map_mes_unit_representation_to_unit_processed_event",
+    "output_refs": [
+      "EVT_0005"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0005",
+    "input_refs": [
+      "SRCREP_0005"
+    ],
+    "name": "map_mes_unit_representation_to_serial_unit_entity",
+    "output_refs": [
+      "SU_900002"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0006",
+    "input_refs": [
+      "SRCREP_0005"
+    ],
+    "name": "map_mes_unit_representation_to_unit_processed_event",
+    "output_refs": [
+      "EVT_0006"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0007",
+    "input_refs": [
+      "SRCREP_0006"
+    ],
+    "name": "map_mes_unit_representation_to_serial_unit_entity",
+    "output_refs": [
+      "SU_900101"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0008",
+    "input_refs": [
+      "SRCREP_0006"
+    ],
+    "name": "map_mes_unit_representation_to_unit_processed_event",
+    "output_refs": [
+      "EVT_0007"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0009",
+    "input_refs": [
+      "SRCREP_0003"
+    ],
+    "name": "map_eam_maintenance_representation_to_activity_entity",
     "output_refs": [
       "MA_7001"
     ]
   },
   {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0010",
+    "input_refs": [
+      "SRCREP_0003"
+    ],
+    "name": "map_eam_maintenance_representation_to_maintenance_overdue_threshold_crossed_event",
+    "output_refs": [
+      "EVT_0001"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0011",
+    "input_refs": [
+      "SRCREP_0003"
+    ],
+    "name": "map_eam_maintenance_representation_to_maintenance_performed_event",
+    "output_refs": [
+      "EVT_0003"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0012",
+    "input_refs": [
+      "SRCREP_0007"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_entity",
+    "output_refs": [
+      "INSP_81001"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0013",
+    "input_refs": [
+      "SRCREP_0007"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_executed_event",
+    "output_refs": [
+      "EVT_0008"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0014",
+    "input_refs": [
+      "SRCREP_0007"
+    ],
+    "name": "map_qms_inspection_representation_to_defect_detected_result",
+    "output_refs": [
+      "RES_0001"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0015",
+    "input_refs": [
+      "SRCREP_0008"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_entity",
+    "output_refs": [
+      "INSP_81002"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0016",
+    "input_refs": [
+      "SRCREP_0008"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_executed_event",
+    "output_refs": [
+      "EVT_0009"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0017",
+    "input_refs": [
+      "SRCREP_0008"
+    ],
+    "name": "map_qms_inspection_representation_to_defect_detected_result",
+    "output_refs": [
+      "RES_0002"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0018",
+    "input_refs": [
+      "SRCREP_0009"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_entity",
+    "output_refs": [
+      "INSP_81003"
+    ]
+  },
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0019",
+    "input_refs": [
+      "SRCREP_0009"
+    ],
+    "name": "map_qms_inspection_representation_to_inspection_executed_event",
+    "output_refs": [
+      "EVT_0010"
+    ]
+  },
+  {
     "artifact_type": "derivation_rule",
-    "id": "LIN_0002",
+    "id": "LIN_0020",
     "input_refs": [
       "MA_7001"
     ],
@@ -23,7 +221,7 @@
   },
   {
     "artifact_type": "derivation_rule",
-    "id": "LIN_0003",
+    "id": "LIN_0021",
     "input_refs": [
       "INSP_81001",
       "INSP_81002",

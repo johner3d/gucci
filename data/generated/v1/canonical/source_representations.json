@@ -1,0 +1,65 @@
+[
+  {
+    "representation_type": "order",
+    "represents_canonical_id": "ORD_10045",
+    "source_record_id": "ERP_ORD_77821",
+    "source_representation_id": "SRCREP_0001",
+    "source_system": "ERP"
+  },
+  {
+    "representation_type": "order",
+    "represents_canonical_id": "ORD_10046",
+    "source_record_id": "ERP_ORD_77822",
+    "source_representation_id": "SRCREP_0002",
+    "source_system": "ERP"
+  },
+  {
+    "representation_type": "maintenance",
+    "represents_canonical_id": "MA_7001",
+    "source_record_id": "EAM_WO_12090",
+    "source_representation_id": "SRCREP_0003",
+    "source_system": "EAM"
+  },
+  {
+    "representation_type": "unit",
+    "represents_canonical_id": "SU_900001",
+    "source_record_id": "MES_TRK_5001",
+    "source_representation_id": "SRCREP_0004",
+    "source_system": "MES"
+  },
+  {
+    "representation_type": "unit",
+    "represents_canonical_id": "SU_900002",
+    "source_record_id": "MES_TRK_5002",
+    "source_representation_id": "SRCREP_0005",
+    "source_system": "MES"
+  },
+  {
+    "representation_type": "unit",
+    "represents_canonical_id": "SU_900101",
+    "source_record_id": "MES_TRK_5003",
+    "source_representation_id": "SRCREP_0006",
+    "source_system": "MES"
+  },
+  {
+    "representation_type": "inspection",
+    "represents_canonical_id": "INSP_81001",
+    "source_record_id": "QMS_INSP_3001",
+    "source_representation_id": "SRCREP_0007",
+    "source_system": "QMS"
+  },
+  {
+    "representation_type": "inspection",
+    "represents_canonical_id": "INSP_81002",
+    "source_record_id": "QMS_INSP_3002",
+    "source_representation_id": "SRCREP_0008",
+    "source_system": "QMS"
+  },
+  {
+    "representation_type": "inspection",
+    "represents_canonical_id": "INSP_81003",
+    "source_record_id": "QMS_INSP_3003",
+    "source_representation_id": "SRCREP_0009",
+    "source_system": "QMS"
+  }
+]
