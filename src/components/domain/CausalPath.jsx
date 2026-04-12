@@ -15,12 +15,15 @@ export function CausalPath({
   focus,
   selectedNode,
   selectedPathId,
+  highlightedId,
   query,
   queryModeOptions,
   onQueryChange,
   onFocusChange,
   onSelectNode,
   onSelectPath,
+  onHighlight,
+  scopedPathFor,
   objectPathForNode,
 }) {
   const classOptions = [
@@ -103,13 +106,25 @@ export function CausalPath({
               const terminalNode = pathTerminalNode(path, focus)
 
               return (
-                <li key={pathId} className={isSelected ? 'path-row is-selected' : 'path-row'}>
+                <li
+                  key={pathId}
+                  className={`${isSelected ? 'path-row is-selected' : 'path-row'} ${highlightedId && path.edges.some((edge) => edge.id === highlightedId) ? 'is-highlighted' : ''}`.trim()}
+                >
                   <button type="button" className="btn" onClick={() => onSelectPath(pathId, terminalNode)}>
                     {path.edges.map((edge) => edge.id).join(' → ')}
                   </button>
                   <div className="meta">
                     hops {path.hops} | confidence {path.confidence} | business impact {path.businessImpact} | rank {path.score}
                   </div>
+                  {onHighlight ? (
+                    <div className="button-row">
+                      {path.edges.map((edge) => (
+                        <button key={edge.id} type="button" className="btn" onClick={() => onHighlight(edge.id)}>
+                          Highlight {edge.id}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
                 </li>
               )
             })}
@@ -140,7 +155,7 @@ export function CausalPath({
           {!evidenceEdges.length ? <p className="meta">Select a path to inspect supporting edges.</p> : null}
           <ul className="row-list">
             {evidenceEdges.map((edge) => (
-              <li key={edge.id}>
+              <li key={edge.id} className={highlightedId === edge.id ? 'is-highlighted' : ''}>
                 <strong>{edge.id}</strong> — {edge.source_id} → {edge.target_id}
                 <div className="meta">{edge.type} | {edge.category}</div>
                 <div className="meta">
@@ -148,6 +163,13 @@ export function CausalPath({
                   {edge.qualifiers?.polarity ?? 'n/a'}
                 </div>
                 <div className="meta">evidence refs: {(edge.qualifiers?.evidence_refs || []).join(', ') || 'none'}</div>
+                {scopedPathFor ? (
+                  <div className="button-row">
+                    <Link className="btn" to={scopedPathFor('/events', { highlight: edge.id, focus: edge.target_id })}>Events</Link>
+                    <Link className="btn" to={scopedPathFor('/process', { highlight: edge.id, step: edge.target_id })}>Process</Link>
+                    <Link className="btn" to={scopedPathFor(`/object-explorer/${edge.target_id}`, { highlight: edge.id })}>Entity</Link>
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -81,6 +81,8 @@ export function EventTimeline({
   onJumpToProcess,
   onJumpToEntity,
   onJumpToLineage,
+  highlightedId,
+  onHighlight,
 }) {
   const normalized = buildTimelineEvents(events)
   const domains = [...new Set(normalized.map((event) => event.domain))]
@@ -175,7 +177,10 @@ export function EventTimeline({
 
             <ul className="timeline list-reset">
               {track.events.map((event) => (
-                <li key={event.id} className={`timeline-event ${event.anomaly ? 'is-anomaly' : ''}`}>
+                <li
+                  key={event.id}
+                  className={`timeline-event ${event.anomaly ? 'is-anomaly' : ''} ${highlightedId === event.id ? 'is-highlighted' : ''}`.trim()}
+                >
                   <div className="timeline-event-head">
                     <strong>{event.id}</strong>
                     <span className="meta">{event.occurred_at_utc}</span>
@@ -209,6 +214,11 @@ export function EventTimeline({
                       {onJumpToLineage ? (
                         <button type="button" className="btn" onClick={() => onJumpToLineage(event)}>
                           Lineage artifact
+                        </button>
+                      ) : null}
+                      {onHighlight ? (
+                        <button type="button" className="btn" onClick={() => onHighlight(event.id)}>
+                          Cross-highlight
                         </button>
                       ) : null}
                     </div>

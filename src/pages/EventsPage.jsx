@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useOutletContext } from 'react-router-dom'
+import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
@@ -24,6 +24,8 @@ export function EventsPage() {
   const outletContext = useOutletContext()
   const globalContext = outletContext?.globalContext || {}
   const incidentScope = outletContext?.incidentScope
+  const [searchParams] = useSearchParams()
+  const highlightedId = searchParams.get('highlight') || ''
 
   const [events, setEvents] = useState([])
   const [diagnostics, setDiagnostics] = useState([])
@@ -69,19 +71,19 @@ export function EventsPage() {
 
   const jumpToGraph = (event) => {
     const focus = event.asset_id || event.station_id || event.serial_unit_id || event.inspection_id || event.id
-    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id })}`)
+    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id, highlight: event.id })}`)
   }
 
   const jumpToProcess = (event) => {
     const hint = eventToStepHints.find((entry) => event.type?.includes(entry.match))
     const step = (hint && processStepByType[hint.match]) || processData?.canvas?.steps?.[0]?.id
-    navigate(`/process${asScopedSearch(globalContext, { step, event: event.id })}`)
+    navigate(`/process${asScopedSearch(globalContext, { step, event: event.id, highlight: step || event.id })}`)
   }
 
   const jumpToEntity = (event) => {
     const entityId = event.asset_id || event.serial_unit_id || event.station_id || event.inspection_id
     if (!entityId) return
-    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id })}`)
+    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id, highlight: entityId })}`)
   }
 
   const jumpToLineage = (event) => {
@@ -95,7 +97,7 @@ export function EventsPage() {
             : 'derive_order_delay_risk_kpi'
     const artifactId = lineageByRule[ruleName] || lineageArtifacts[0]?.id
     if (!artifactId) return
-    navigate(`/lineage/${artifactId}${asScopedSearch(globalContext, { event: event.id })}`)
+    navigate(`/lineage/${artifactId}${asScopedSearch(globalContext, { event: event.id, highlight: artifactId })}`)
   }
 
   if (!events.length && !diagnostics.length) return <p>Loading events…</p>
@@ -121,6 +123,8 @@ export function EventsPage() {
           onJumpToProcess={jumpToProcess}
           onJumpToEntity={jumpToEntity}
           onJumpToLineage={jumpToLineage}
+          highlightedId={highlightedId}
+          onHighlight={(eventId) => navigate(`/events${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId })}`)}
         />
       ) : (
         <p>No events available.</p>

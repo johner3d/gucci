@@ -159,6 +159,7 @@ export function GraphPage() {
   const focus = searchParams.get('focus') || globalContext.focus || 'KPIOBS_2101'
   const selectedNode = searchParams.get('selectedNode') || globalContext.selectedNode || focus
   const selectedPathId = searchParams.get('selectedPath') || globalContext.selectedPath || ''
+  const highlightedId = searchParams.get('highlight') || ''
 
   const query = {
     mode: normalizeMode(searchParams.get('mode')),
@@ -197,6 +198,19 @@ export function GraphPage() {
           <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus })}>Impact analysis</Link>
           <Link className="btn" to={toScopedPath('/events', globalContext, { focus })}>Events evidence</Link>
           <Link className="btn" to={toScopedPath('/process', globalContext, { focus })}>Process context</Link>
+          <Link className="btn" to={toScopedPath('/lineage', globalContext, { focus, highlight: highlightedId })}>Lineage flow</Link>
+        </div>
+      </Panel>
+      <Panel title="Impact propagation mapping">
+        <p className="meta">
+          Reachable propagation surface: <strong>{details.reachableNodeIds.length}</strong> nodes from focus <strong>{focus}</strong>.
+        </p>
+        <div className="button-row">
+          {details.reachableNodeIds.slice(0, 8).map((nodeId) => (
+            <Link key={nodeId} className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus: nodeId, highlight: highlightedId })}>
+              Propagate to {nodeId}
+            </Link>
+          ))}
         </div>
       </Panel>
       {graph ? (
@@ -205,12 +219,15 @@ export function GraphPage() {
           focus={focus}
           selectedNode={selectedNode}
           selectedPathId={selectedPathId}
+          highlightedId={highlightedId}
           query={query}
           queryModeOptions={queryModeOptions}
           onQueryChange={(patch) => updateSearch(patch)}
           onFocusChange={(nextFocus) => updateSearch({ focus: nextFocus, selectedNode: nextFocus })}
           onSelectNode={(nextNode) => updateSearch({ selectedNode: nextNode })}
           onSelectPath={(pathId, nodeId) => updateSearch({ selectedPath: pathId, selectedNode: nodeId })}
+          onHighlight={(edgeId) => updateSearch({ highlight: edgeId })}
+          scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch })}
           objectPathForNode={(nodeId) => toScopedPath(`/object-explorer/${nodeId}`, globalContext)}
         />
       ) : (
