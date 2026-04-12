@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router-dom'
 
 const routes = [
   { to: '/', label: 'Overview', end: true },
@@ -9,6 +9,19 @@ const routes = [
   { to: '/lineage/LIN_0039', label: 'Lineage' },
 ]
 
+const defaultGlobalContext = {
+  plant: 'PLANT_DE_01',
+  line: 'LINE_PAINT_A',
+  time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
+  severity: 'high',
+}
+
+const defaultIncidentScope = {
+  incidentId: 'INC_PAINT_A_20260115_01',
+  relatedEntityIds: ['ASSET_PAINT_ROBOT_07', 'ST_PAINT_BOOTH_03', 'SU_900001', 'ORD_10045', 'KPIOBS_2101'],
+  eventTypePrefixes: ['maintenance', 'asset', 'inspection', 'quality', 'kpi'],
+}
+
 function toCrumbs(pathname) {
   if (pathname === '/') return ['Overview']
   return pathname.split('/').filter(Boolean).map((part) => decodeURIComponent(part))
@@ -16,7 +29,15 @@ function toCrumbs(pathname) {
 
 export function AppShell() {
   const location = useLocation()
+  const [searchParams] = useSearchParams()
   const crumbs = toCrumbs(location.pathname)
+
+  const globalContext = {
+    plant: searchParams.get('plant') || defaultGlobalContext.plant,
+    line: searchParams.get('line') || defaultGlobalContext.line,
+    time: searchParams.get('time') || defaultGlobalContext.time,
+    severity: searchParams.get('severity') || defaultGlobalContext.severity,
+  }
 
   return (
     <div className="app-shell">
@@ -34,9 +55,11 @@ export function AppShell() {
       </aside>
 
       <main className="shell-main">
-        <div className="context-bar meta">Context: Paint Line A Incident / Shift 1</div>
+        <div className="context-bar meta">
+          Context: {globalContext.plant} / {globalContext.line} / {globalContext.severity} / {globalContext.time}
+        </div>
         <div className="breadcrumb-zone meta">{crumbs.join(' / ')}</div>
-        <Outlet />
+        <Outlet context={{ globalContext, incidentScope: defaultIncidentScope }} />
       </main>
 
       <aside className="shell-rail">

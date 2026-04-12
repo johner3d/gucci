@@ -241,3 +241,95 @@ a:hover {
 .risk-high {
   border-left-color: #d9480f;
 }
+
+.timeline-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  align-items: end;
+}
+
+.timeline-filter-bar label {
+  display: grid;
+  gap: var(--space-1);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.timeline-filter-bar select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  padding: var(--space-2);
+  color: var(--color-text);
+}
+
+.timeline-check {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-1);
+  padding-bottom: var(--space-2);
+}
+
+.timeline-tracks {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.timeline-track {
+  border: 1px solid var(--color-border);
+  background: #fafbff;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+}
+
+.timeline-track-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.timeline-event {
+  border: 1px solid var(--color-border);
+  border-left-width: 4px;
+  border-left-color: #91a7ff;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  padding: var(--space-3);
+}
+
+.timeline-event.is-anomaly {
+  border-left-color: var(--color-danger);
+  background: #fff7f7;
+}
+
+.timeline-event-head {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.timeline-markers {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+
+.chip-primary {
+  background: var(--color-primary-soft);
+  border-color: #bfd0ff;
+  color: var(--color-primary);
+}
+
+.chip-danger {
+  background: #fee4e2;
+  border-color: #fecdca;
+  color: var(--color-danger);
+}
+
+.timeline-actions {
+  margin-top: var(--space-2);
+}
