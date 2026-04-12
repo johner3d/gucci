@@ -4,3 +4,8 @@ export { eventContract, validateEvent } from './event'
 export { lineageContract, validateLineageArtifact } from './lineage'
 export { provenanceContract, validateProvenance } from './provenance'
 export { DataValidationError } from './validation'
+
+export { processNodeContract, validateProcessNode } from './process-node'
+export { causalLinkContract, validateCausalLink } from './causal-link'
+export { kpiObservationContract, validateKpiObservation } from './kpi-observation'
+export { semanticConceptContract, validateSemanticConcept } from './semantic-concept'
