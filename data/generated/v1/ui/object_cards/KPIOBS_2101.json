@@ -60,12 +60,38 @@
   },
   "lineage_entry_links": [
     {
-      "artifact_id": "LIN_0021",
+      "artifact_id": "LIN_0039",
       "name": "derive_defect_rate_kpi",
-      "route": "/lineage/LIN_0021"
+      "route": "/lineage/LIN_0039"
+    },
+    {
+      "artifact_id": "LIN_0041",
+      "name": "derive_order_delay_risk_kpi",
+      "route": "/lineage/LIN_0041"
+    },
+    {
+      "artifact_id": "LIN_0042",
+      "name": "bind_kpi_to_overview_issue_card",
+      "route": "/lineage/LIN_0042"
+    },
+    {
+      "artifact_id": "LIN_0044",
+      "name": "bind_order_risk_object_card",
+      "route": "/lineage/LIN_0044"
+    },
+    {
+      "artifact_id": "LIN_0045",
+      "name": "bind_serial_unit_object_card",
+      "route": "/lineage/LIN_0045"
+    },
+    {
+      "artifact_id": "LIN_0046",
+      "name": "bind_defect_rate_kpi_object_card",
+      "route": "/lineage/LIN_0046"
     }
   ],
   "object_id": "KPIOBS_2101",
+  "primary_lineage_artifact_id": "LIN_0046",
   "related_timeline": [
     {
       "id": "KPIOBS_2101",

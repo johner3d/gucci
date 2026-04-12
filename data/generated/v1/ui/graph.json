@@ -13,7 +13,7 @@
       "relationship": "derived_from",
       "relationship_class": "technical_lineage",
       "source": "KPIOBS_2101",
-      "target": "LIN_0021"
+      "target": "LIN_0039"
     },
     {
       "id": "E003",
@@ -75,21 +75,21 @@
       "id": "E011",
       "relationship": "mapped_from",
       "relationship_class": "technical_lineage",
-      "source": "LIN_0021",
+      "source": "LIN_0039",
       "target": "SRCREP_0007"
     },
     {
       "id": "E012",
       "relationship": "mapped_from",
       "relationship_class": "technical_lineage",
-      "source": "LIN_0021",
+      "source": "LIN_0039",
       "target": "SRCREP_0008"
     },
     {
       "id": "E013",
       "relationship": "mapped_from",
       "relationship_class": "technical_lineage",
-      "source": "LIN_0021",
+      "source": "LIN_0039",
       "target": "SRCREP_0009"
     }
   ],
@@ -125,7 +125,7 @@
       "value": "high"
     },
     {
-      "id": "LIN_0021",
+      "id": "LIN_0039",
       "label": "derive_defect_rate_kpi",
       "type": "DerivationRule"
     },

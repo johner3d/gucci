@@ -317,6 +317,7 @@ def stage_4_kpis(
 def stage_5_lineage(
     normalized: dict[str, list[dict[str, Any]]],
     source_representations: list[dict[str, Any]],
+    entities: dict[str, list[dict[str, Any]]],
     events: list[dict[str, Any]],
     results: list[dict[str, Any]],
     kpis: list[dict[str, Any]],
@@ -326,18 +327,83 @@ def stage_5_lineage(
         rep["source_record_id"]: rep["source_representation_id"] for rep in source_representations
     }
     lineage: list[dict[str, Any]] = []
+    maintenance_activity_by_record = {
+        row["source_record_id"]: row["payload"]["activity_id"] for row in normalized["maintenance_logs"]
+    }
+    inspection_by_record = {
+        row["source_record_id"]: row["payload"]["inspection_id"] for row in normalized["quality_inspections"]
+    }
+    serial_unit_by_record = {
+        row["source_record_id"]: row["payload"]["serial_unit_id"] for row in normalized["mes_unit_tracking"]
+    }
+    order_by_record = {
+        row["source_record_id"]: row["payload"]["order_id"] for row in normalized["erp_orders"]
+    }
+    event_ids_by_type = {
+        event_type: [event["id"] for event in events if event["type"] == event_type]
+        for event_type in {event["type"] for event in events}
+    }
+    result_ids = [result["id"] for result in results]
+
+    def append_artifact(
+        artifact_id: str,
+        artifact_type: str,
+        rule_name: str,
+        version: str,
+        input_refs: list[str],
+        output_refs: list[str],
+        rationale: str,
+    ) -> None:
+        lineage.append(
+            {
+                "id": artifact_id,
+                "artifact_type": artifact_type,
+                "rule_name": rule_name,
+                "version": version,
+                "input_refs": input_refs,
+                "output_refs": output_refs,
+                "rationale": rationale,
+            }
+        )
+
     n = 1
+
+    for source_name in sorted(normalized.keys()):
+        for row in normalized[source_name]:
+            payload = row["payload"]
+            append_artifact(
+                deterministic_id("LIN", n),
+                "source_input_record",
+                f"capture_{source_name}_record",
+                "v1",
+                [f"{row['source_system']}:{row['source_record_id']}"],
+                [row["source_record_id"]],
+                f"Ingested source record {row['source_record_id']} from {row['source_system']} to create a stable lineage entry point.",
+            )
+            n += 1
+
+    for rep in source_representations:
+        append_artifact(
+            deterministic_id("LIN", n),
+            "source_representation",
+            f"normalize_{rep['representation_type']}_source_representation",
+            "v1",
+            [rep["source_record_id"]],
+            [rep["source_representation_id"]],
+            f"Normalized {rep['source_system']} source payload {rep['source_record_id']} into representation {rep['source_representation_id']}.",
+        )
+        n += 1
 
     for row in normalized["erp_orders"]:
         payload = row["payload"]
-        lineage.append(
-            {
-                "id": deterministic_id("LIN", n),
-                "artifact_type": "mapping_rule",
-                "name": "map_erp_order_representation_to_order_entity",
-                "input_refs": [source_rep_by_record[row["source_record_id"]]],
-                "output_refs": [payload["order_id"]],
-            }
+        append_artifact(
+            deterministic_id("LIN", n),
+            "canonical_mapping",
+            "map_erp_order_representation_to_order_entity",
+            "v1",
+            [source_rep_by_record[row["source_record_id"]]],
+            [payload["order_id"]],
+            "Mapped normalized ERP order representation to canonical production order entity for cross-system joins.",
         )
         n += 1
 
@@ -351,23 +417,23 @@ def stage_5_lineage(
             and event["serial_unit_id"] == payload["serial_unit_id"]
             and event["occurred_at_utc"] == payload["processed_at_utc"]
         )
-        lineage.extend(
-            [
-                {
-                    "id": deterministic_id("LIN", n),
-                    "artifact_type": "mapping_rule",
-                    "name": "map_mes_unit_representation_to_serial_unit_entity",
-                    "input_refs": [source_rep],
-                    "output_refs": [payload["serial_unit_id"]],
-                },
-                {
-                    "id": deterministic_id("LIN", n + 1),
-                    "artifact_type": "mapping_rule",
-                    "name": "map_mes_unit_representation_to_unit_processed_event",
-                    "input_refs": [source_rep],
-                    "output_refs": [unit_processed_event["id"]],
-                },
-            ]
+        append_artifact(
+            deterministic_id("LIN", n),
+            "canonical_mapping",
+            "map_mes_unit_representation_to_serial_unit_entity",
+            "v1",
+            [source_rep],
+            [payload["serial_unit_id"]],
+            "Mapped MES unit representation to canonical serial unit identity.",
+        )
+        append_artifact(
+            deterministic_id("LIN", n + 1),
+            "derivation",
+            "derive_unit_processed_event_from_mes_unit_representation",
+            "v1",
+            [source_rep, payload["serial_unit_id"]],
+            [unit_processed_event["id"]],
+            "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
         )
         n += 2
 
@@ -381,25 +447,25 @@ def stage_5_lineage(
             and event["type"]
             in {"maintenance_overdue_threshold_crossed", "maintenance_performed"}
         ]
-        lineage.append(
-            {
-                "id": deterministic_id("LIN", n),
-                "artifact_type": "mapping_rule",
-                "name": "map_eam_maintenance_representation_to_activity_entity",
-                "input_refs": [source_rep],
-                "output_refs": [payload["activity_id"]],
-            }
+        append_artifact(
+            deterministic_id("LIN", n),
+            "canonical_mapping",
+            "map_eam_maintenance_representation_to_activity_entity",
+            "v1",
+            [source_rep],
+            [payload["activity_id"]],
+            "Mapped EAM maintenance representation to canonical maintenance activity.",
         )
         n += 1
         for event in maintenance_events:
-            lineage.append(
-                {
-                    "id": deterministic_id("LIN", n),
-                    "artifact_type": "mapping_rule",
-                    "name": f"map_eam_maintenance_representation_to_{event['type']}_event",
-                    "input_refs": [source_rep],
-                    "output_refs": [event["id"]],
-                }
+            append_artifact(
+                deterministic_id("LIN", n),
+                "derivation",
+                f"derive_{event['type']}_event_from_maintenance_activity",
+                "v1",
+                [source_rep, payload["activity_id"]],
+                [event["id"]],
+                f"Derived {event['type']} event from maintenance activity timing and state transitions.",
             )
             n += 1
 
@@ -412,23 +478,23 @@ def stage_5_lineage(
             if event["type"] == "inspection_executed"
             and event["inspection_id"] == payload["inspection_id"]
         )
-        lineage.extend(
-            [
-                {
-                    "id": deterministic_id("LIN", n),
-                    "artifact_type": "mapping_rule",
-                    "name": "map_qms_inspection_representation_to_inspection_entity",
-                    "input_refs": [source_rep],
-                    "output_refs": [payload["inspection_id"]],
-                },
-                {
-                    "id": deterministic_id("LIN", n + 1),
-                    "artifact_type": "mapping_rule",
-                    "name": "map_qms_inspection_representation_to_inspection_executed_event",
-                    "input_refs": [source_rep],
-                    "output_refs": [inspection_event["id"]],
-                },
-            ]
+        append_artifact(
+            deterministic_id("LIN", n),
+            "canonical_mapping",
+            "map_qms_inspection_representation_to_inspection_entity",
+            "v1",
+            [source_rep],
+            [payload["inspection_id"]],
+            "Mapped QMS inspection representation to canonical inspection object.",
+        )
+        append_artifact(
+            deterministic_id("LIN", n + 1),
+            "derivation",
+            "derive_inspection_executed_event_from_inspection_representation",
+            "v1",
+            [source_rep, payload["inspection_id"]],
+            [inspection_event["id"]],
+            "Derived inspection executed event from inspection execution timestamp.",
         )
         n += 2
         defect_result = next(
@@ -436,43 +502,144 @@ def stage_5_lineage(
             None,
         )
         if defect_result:
-            lineage.append(
-                {
-                    "id": deterministic_id("LIN", n),
-                    "artifact_type": "mapping_rule",
-                    "name": "map_qms_inspection_representation_to_defect_detected_result",
-                    "input_refs": [source_rep],
-                    "output_refs": [defect_result["id"]],
-                }
+            append_artifact(
+                deterministic_id("LIN", n),
+                "derivation",
+                "derive_defect_detected_result_from_inspection_representation",
+                "v1",
+                [source_rep, payload["inspection_id"]],
+                [defect_result["id"]],
+                "Derived defect result when inspection outcome is NOK and includes a defect code.",
             )
             n += 1
 
     first_overdue = next(e for e in events if e["type"] == "maintenance_overdue_threshold_crossed")
-    lineage.append(
-        {
-            "id": deterministic_id("LIN", n),
-            "artifact_type": "derivation_rule",
-            "name": "derive_maintenance_overdue_event",
-            "input_refs": [normalized["maintenance_logs"][0]["payload"]["activity_id"]],
-            "output_refs": [first_overdue["id"]],
-        }
+    append_artifact(
+        deterministic_id("LIN", n),
+        "derivation",
+        "derive_maintenance_overdue_event",
+        "v1",
+        [maintenance_activity_by_record[normalized["maintenance_logs"][0]["source_record_id"]]],
+        [first_overdue["id"]],
+        "Derived maintenance overdue threshold crossing from due-by and performed timestamps.",
     )
     n += 1
 
-    lineage.append(
-        {
-            "id": deterministic_id("LIN", n),
-            "artifact_type": "derivation_rule",
-            "name": "derive_defect_rate_kpi",
-            "input_refs": [r["payload"]["inspection_id"] for r in normalized["quality_inspections"]],
-            "output_refs": [kpis[0]["id"]],
-        }
+    append_artifact(
+        deterministic_id("LIN", n),
+        "derivation",
+        "derive_defect_rate_kpi",
+        "v1",
+        [r["payload"]["inspection_id"] for r in normalized["quality_inspections"]] + result_ids,
+        [kpis[0]["id"]],
+        "Calculated defect-rate KPI by dividing NOK defect results by executed inspections in the active window.",
     )
+    n += 1
+
+    append_artifact(
+        deterministic_id("LIN", n),
+        "derivation",
+        "derive_disturbance_duration_kpi",
+        "v1",
+        event_ids_by_type["asset_disturbance_started"] + event_ids_by_type["asset_disturbance_cleared"],
+        [kpis[1]["id"]],
+        "Calculated disturbance-duration KPI from disturbance start and clear event timestamps.",
+    )
+    n += 1
+    append_artifact(
+        deterministic_id("LIN", n),
+        "derivation",
+        "derive_order_delay_risk_kpi",
+        "v1",
+        [kpis[0]["id"], kpis[1]["id"], order_by_record[normalized["erp_orders"][0]["source_record_id"]]],
+        [kpis[2]["id"]],
+        "Derived order-delay risk KPI from elevated quality and disturbance signals for the impacted order.",
+    )
+    n += 1
+
+    append_artifact(
+        deterministic_id("LIN", n),
+        "ui_binding",
+        "bind_kpi_to_overview_issue_card",
+        "v1",
+        [kpis[0]["id"]],
+        ["UI_OVERVIEW_CARD_ISSUE_01"],
+        "Bound the violated defect-rate KPI to the overview issue card so operators can quickly triage.",
+    )
+    n += 1
+    append_artifact(
+        deterministic_id("LIN", n),
+        "ui_binding",
+        "bind_asset_incident_object_card",
+        "v1",
+        [entities["asset"][0]["id"], kpis[1]["id"], first_overdue["id"]],
+        ["UI_OBJECT_CARD_ASSET_PAINT_ROBOT_07"],
+        "Rendered asset object card using canonical asset context and disturbance/maintenance signals.",
+    )
+    n += 1
+    append_artifact(
+        deterministic_id("LIN", n),
+        "ui_binding",
+        "bind_order_risk_object_card",
+        "v1",
+        [entities["production_order"][0]["id"], kpis[2]["id"], kpis[0]["id"]],
+        ["UI_OBJECT_CARD_ORD_10045"],
+        "Rendered order object card to explain downstream risk from defect-rate and delay indicators.",
+    )
+    n += 1
+    append_artifact(
+        deterministic_id("LIN", n),
+        "ui_binding",
+        "bind_serial_unit_object_card",
+        "v1",
+        [serial_unit_by_record[normalized["mes_unit_tracking"][0]["source_record_id"]], results[0]["id"], kpis[0]["id"]],
+        ["UI_OBJECT_CARD_SU_900001"],
+        "Rendered serial-unit card with defect evidence and KPI impact context.",
+    )
+    n += 1
+    append_artifact(
+        deterministic_id("LIN", n),
+        "ui_binding",
+        "bind_defect_rate_kpi_object_card",
+        "v1",
+        [kpis[0]["id"], kpis[1]["id"], kpis[2]["id"]],
+        ["UI_OBJECT_CARD_KPIOBS_2101"],
+        "Rendered KPI object card showing why this KPI is violated and how it connects to nearby indicators.",
+    )
+
+    output_to_artifact_ids: dict[str, list[str]] = {}
+    for artifact in lineage:
+        for output_ref in artifact["output_refs"]:
+            output_to_artifact_ids.setdefault(output_ref, []).append(artifact["id"])
+
+    for artifact in lineage:
+        upstream = sorted(
+            {
+                upstream_id
+                for input_ref in artifact["input_refs"]
+                for upstream_id in output_to_artifact_ids.get(input_ref, [])
+                if upstream_id != artifact["id"]
+            }
+        )
+        downstream = sorted(
+            {
+                candidate["id"]
+                for candidate in lineage
+                if candidate["id"] != artifact["id"]
+                and any(output_ref in candidate["input_refs"] for output_ref in artifact["output_refs"])
+            }
+        )
+        artifact["upstream_artifact_ids"] = upstream
+        artifact["downstream_artifact_ids"] = downstream
 
     return lineage
 
 
-def stage_6_ui_payload(kpis: list[dict[str, Any]], events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def stage_6_ui_payload(
+    kpis: list[dict[str, Any]],
+    events: list[dict[str, Any]],
+    lineage: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
     """6) UI binding emission."""
     defect_kpi = next(k for k in kpis if k["kpi"] == "defect_rate")
     top_events = [
@@ -483,6 +650,9 @@ def stage_6_ui_payload(kpis: list[dict[str, Any]], events: list[dict[str, Any]])
         }
         for event in events[:6]
     ]
+    overview_binding = next(
+        artifact for artifact in lineage if "UI_OVERVIEW_CARD_ISSUE_01" in artifact["output_refs"]
+    )
     return [
         {
             "page_id": "UI_PAGE_OVERVIEW_V1",
@@ -494,6 +664,7 @@ def stage_6_ui_payload(kpis: list[dict[str, Any]], events: list[dict[str, Any]])
                     "value": defect_kpi["value"],
                     "status": defect_kpi["status"],
                     "source_kpi_observation_id": defect_kpi["id"],
+                    "lineage_artifact_id": overview_binding["id"],
                     "deep_link": {
                         "route": "/graph",
                         "focus_node_id": "KPIOBS_2101",
@@ -518,7 +689,7 @@ def stage_7_graph_payload(
     duration_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2102")
     risk_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2103")
 
-    derivation = next(a for a in lineage if a["artifact_type"] == "derivation_rule" and "defect_rate" in a["name"])
+    derivation = next(a for a in lineage if a["artifact_type"] == "derivation" and "defect_rate" in a["rule_name"])
     defect = results[0]
 
     nodes = [
@@ -526,7 +697,7 @@ def stage_7_graph_payload(
         {"id": defect_kpi["id"], "type": "KPIObservation", "label": "Defect Rate KPI", "kpi": defect_kpi["kpi"], "value": defect_kpi["value"], "status": defect_kpi["status"]},
         {"id": duration_kpi["id"], "type": "KPIObservation", "label": "Disturbance Duration KPI", "kpi": duration_kpi["kpi"], "value": duration_kpi["value"], "status": duration_kpi["status"]},
         {"id": risk_kpi["id"], "type": "KPIObservation", "label": "Order Delay Risk KPI", "kpi": risk_kpi["kpi"], "value": risk_kpi["value"], "status": risk_kpi["status"]},
-        {"id": derivation["id"], "type": "DerivationRule", "label": derivation["name"]},
+        {"id": derivation["id"], "type": "DerivationRule", "label": derivation["rule_name"]},
         {"id": entities["asset"][0]["id"], "type": "Asset", "label": entities["asset"][0]["id"]},
         {"id": entities["station"][0]["id"], "type": "Station", "label": entities["station"][0]["id"]},
         {"id": defect["id"], "type": "Defect", "label": defect["defect_code"], "code": defect["defect_code"]},
@@ -613,11 +784,26 @@ def stage_8_object_cards(
                 links.append(
                     {
                         "artifact_id": artifact["id"],
-                        "name": artifact["name"],
+                        "name": artifact["rule_name"],
                         "route": f"/lineage/{artifact['id']}",
                     }
                 )
         return links
+
+    object_ui_binding_id = {
+        "ASSET_PAINT_ROBOT_07": next(
+            artifact["id"] for artifact in lineage if "UI_OBJECT_CARD_ASSET_PAINT_ROBOT_07" in artifact["output_refs"]
+        ),
+        "ORD_10045": next(
+            artifact["id"] for artifact in lineage if "UI_OBJECT_CARD_ORD_10045" in artifact["output_refs"]
+        ),
+        "SU_900001": next(
+            artifact["id"] for artifact in lineage if "UI_OBJECT_CARD_SU_900001" in artifact["output_refs"]
+        ),
+        "KPIOBS_2101": next(
+            artifact["id"] for artifact in lineage if "UI_OBJECT_CARD_KPIOBS_2101" in artifact["output_refs"]
+        ),
+    }
 
     def kpi_signal_rows(object_id: str) -> list[dict[str, Any]]:
         related: list[dict[str, Any]] = []
@@ -675,6 +861,7 @@ def stage_8_object_cards(
             "issue_context": {
                 "why_this_object_matters_now": "Maintenance overdue and disturbance around this asset precede the defect-rate violation.",
             },
+            "primary_lineage_artifact_id": object_ui_binding_id["ASSET_PAINT_ROBOT_07"],
         },
         "ORD_10045": {
             "card_schema_version": "v1",
@@ -709,6 +896,7 @@ def stage_8_object_cards(
             "issue_context": {
                 "why_this_object_matters_now": "Defects detected on units within this order raise delay and rework risk.",
             },
+            "primary_lineage_artifact_id": object_ui_binding_id["ORD_10045"],
         },
         "SU_900001": {
             "card_schema_version": "v1",
@@ -743,6 +931,7 @@ def stage_8_object_cards(
             "issue_context": {
                 "why_this_object_matters_now": "This unit carries the defect result feeding the active defect-rate issue.",
             },
+            "primary_lineage_artifact_id": object_ui_binding_id["SU_900001"],
         },
         "KPIOBS_2101": {
             "card_schema_version": "v1",
@@ -782,6 +971,7 @@ def stage_8_object_cards(
             "issue_context": {
                 "why_this_object_matters_now": "This violated KPI is the top-level trigger for the current incident workflow.",
             },
+            "primary_lineage_artifact_id": object_ui_binding_id["KPIOBS_2101"],
         },
     }
     return cards
@@ -793,8 +983,8 @@ def main() -> None:
     canonical_entities = stage_2_canonical_mapping(normalized, config)
     events, results = stage_3_events_and_results(normalized, config)
     kpis = stage_4_kpis(events, results, config)
-    lineage = stage_5_lineage(normalized, source_representations, events, results, kpis)
-    ui_pages = stage_6_ui_payload(kpis, events)
+    lineage = stage_5_lineage(normalized, source_representations, canonical_entities, events, results, kpis)
+    ui_pages = stage_6_ui_payload(kpis, events, lineage)
     graph = stage_7_graph_payload(canonical_entities, source_representations, results, kpis, lineage)
     object_cards = stage_8_object_cards(
         canonical_entities, source_representations, events, results, kpis, lineage

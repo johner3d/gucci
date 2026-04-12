@@ -1,235 +1,906 @@
 [
   {
-    "artifact_type": "mapping_rule",
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0010"
+    ],
     "id": "LIN_0001",
+    "input_refs": [
+      "ERP:ERP_ORD_77821"
+    ],
+    "output_refs": [
+      "ERP_ORD_77821"
+    ],
+    "rationale": "Ingested source record ERP_ORD_77821 from ERP to create a stable lineage entry point.",
+    "rule_name": "capture_erp_orders_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0011"
+    ],
+    "id": "LIN_0002",
+    "input_refs": [
+      "ERP:ERP_ORD_77822"
+    ],
+    "output_refs": [
+      "ERP_ORD_77822"
+    ],
+    "rationale": "Ingested source record ERP_ORD_77822 from ERP to create a stable lineage entry point.",
+    "rule_name": "capture_erp_orders_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0012"
+    ],
+    "id": "LIN_0003",
+    "input_refs": [
+      "EAM:EAM_WO_12090"
+    ],
+    "output_refs": [
+      "EAM_WO_12090"
+    ],
+    "rationale": "Ingested source record EAM_WO_12090 from EAM to create a stable lineage entry point.",
+    "rule_name": "capture_maintenance_logs_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0013"
+    ],
+    "id": "LIN_0004",
+    "input_refs": [
+      "MES:MES_TRK_5001"
+    ],
+    "output_refs": [
+      "MES_TRK_5001"
+    ],
+    "rationale": "Ingested source record MES_TRK_5001 from MES to create a stable lineage entry point.",
+    "rule_name": "capture_mes_unit_tracking_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0014"
+    ],
+    "id": "LIN_0005",
+    "input_refs": [
+      "MES:MES_TRK_5002"
+    ],
+    "output_refs": [
+      "MES_TRK_5002"
+    ],
+    "rationale": "Ingested source record MES_TRK_5002 from MES to create a stable lineage entry point.",
+    "rule_name": "capture_mes_unit_tracking_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0015"
+    ],
+    "id": "LIN_0006",
+    "input_refs": [
+      "MES:MES_TRK_5003"
+    ],
+    "output_refs": [
+      "MES_TRK_5003"
+    ],
+    "rationale": "Ingested source record MES_TRK_5003 from MES to create a stable lineage entry point.",
+    "rule_name": "capture_mes_unit_tracking_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0016"
+    ],
+    "id": "LIN_0007",
+    "input_refs": [
+      "QMS:QMS_INSP_3001"
+    ],
+    "output_refs": [
+      "QMS_INSP_3001"
+    ],
+    "rationale": "Ingested source record QMS_INSP_3001 from QMS to create a stable lineage entry point.",
+    "rule_name": "capture_quality_inspections_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0017"
+    ],
+    "id": "LIN_0008",
+    "input_refs": [
+      "QMS:QMS_INSP_3002"
+    ],
+    "output_refs": [
+      "QMS_INSP_3002"
+    ],
+    "rationale": "Ingested source record QMS_INSP_3002 from QMS to create a stable lineage entry point.",
+    "rule_name": "capture_quality_inspections_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_input_record",
+    "downstream_artifact_ids": [
+      "LIN_0018"
+    ],
+    "id": "LIN_0009",
+    "input_refs": [
+      "QMS:QMS_INSP_3003"
+    ],
+    "output_refs": [
+      "QMS_INSP_3003"
+    ],
+    "rationale": "Ingested source record QMS_INSP_3003 from QMS to create a stable lineage entry point.",
+    "rule_name": "capture_quality_inspections_record",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0019"
+    ],
+    "id": "LIN_0010",
+    "input_refs": [
+      "ERP_ORD_77821"
+    ],
+    "output_refs": [
+      "SRCREP_0001"
+    ],
+    "rationale": "Normalized ERP source payload ERP_ORD_77821 into representation SRCREP_0001.",
+    "rule_name": "normalize_order_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0001"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0020"
+    ],
+    "id": "LIN_0011",
+    "input_refs": [
+      "ERP_ORD_77822"
+    ],
+    "output_refs": [
+      "SRCREP_0002"
+    ],
+    "rationale": "Normalized ERP source payload ERP_ORD_77822 into representation SRCREP_0002.",
+    "rule_name": "normalize_order_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0002"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0027",
+      "LIN_0028",
+      "LIN_0029"
+    ],
+    "id": "LIN_0012",
+    "input_refs": [
+      "EAM_WO_12090"
+    ],
+    "output_refs": [
+      "SRCREP_0003"
+    ],
+    "rationale": "Normalized EAM source payload EAM_WO_12090 into representation SRCREP_0003.",
+    "rule_name": "normalize_maintenance_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0003"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0021",
+      "LIN_0022"
+    ],
+    "id": "LIN_0013",
+    "input_refs": [
+      "MES_TRK_5001"
+    ],
+    "output_refs": [
+      "SRCREP_0004"
+    ],
+    "rationale": "Normalized MES source payload MES_TRK_5001 into representation SRCREP_0004.",
+    "rule_name": "normalize_unit_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0004"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0023",
+      "LIN_0024"
+    ],
+    "id": "LIN_0014",
+    "input_refs": [
+      "MES_TRK_5002"
+    ],
+    "output_refs": [
+      "SRCREP_0005"
+    ],
+    "rationale": "Normalized MES source payload MES_TRK_5002 into representation SRCREP_0005.",
+    "rule_name": "normalize_unit_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0005"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0025",
+      "LIN_0026"
+    ],
+    "id": "LIN_0015",
+    "input_refs": [
+      "MES_TRK_5003"
+    ],
+    "output_refs": [
+      "SRCREP_0006"
+    ],
+    "rationale": "Normalized MES source payload MES_TRK_5003 into representation SRCREP_0006.",
+    "rule_name": "normalize_unit_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0006"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0030",
+      "LIN_0031",
+      "LIN_0032"
+    ],
+    "id": "LIN_0016",
+    "input_refs": [
+      "QMS_INSP_3001"
+    ],
+    "output_refs": [
+      "SRCREP_0007"
+    ],
+    "rationale": "Normalized QMS source payload QMS_INSP_3001 into representation SRCREP_0007.",
+    "rule_name": "normalize_inspection_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0007"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0033",
+      "LIN_0034",
+      "LIN_0035"
+    ],
+    "id": "LIN_0017",
+    "input_refs": [
+      "QMS_INSP_3002"
+    ],
+    "output_refs": [
+      "SRCREP_0008"
+    ],
+    "rationale": "Normalized QMS source payload QMS_INSP_3002 into representation SRCREP_0008.",
+    "rule_name": "normalize_inspection_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0008"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "source_representation",
+    "downstream_artifact_ids": [
+      "LIN_0036",
+      "LIN_0037"
+    ],
+    "id": "LIN_0018",
+    "input_refs": [
+      "QMS_INSP_3003"
+    ],
+    "output_refs": [
+      "SRCREP_0009"
+    ],
+    "rationale": "Normalized QMS source payload QMS_INSP_3003 into representation SRCREP_0009.",
+    "rule_name": "normalize_inspection_source_representation",
+    "upstream_artifact_ids": [
+      "LIN_0009"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0041",
+      "LIN_0044"
+    ],
+    "id": "LIN_0019",
     "input_refs": [
       "SRCREP_0001"
     ],
-    "name": "map_erp_order_representation_to_order_entity",
     "output_refs": [
       "ORD_10045"
-    ]
+    ],
+    "rationale": "Mapped normalized ERP order representation to canonical production order entity for cross-system joins.",
+    "rule_name": "map_erp_order_representation_to_order_entity",
+    "upstream_artifact_ids": [
+      "LIN_0010"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0002",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0020",
     "input_refs": [
       "SRCREP_0002"
     ],
-    "name": "map_erp_order_representation_to_order_entity",
     "output_refs": [
       "ORD_10046"
-    ]
+    ],
+    "rationale": "Mapped normalized ERP order representation to canonical production order entity for cross-system joins.",
+    "rule_name": "map_erp_order_representation_to_order_entity",
+    "upstream_artifact_ids": [
+      "LIN_0011"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0003",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0022",
+      "LIN_0045"
+    ],
+    "id": "LIN_0021",
     "input_refs": [
       "SRCREP_0004"
     ],
-    "name": "map_mes_unit_representation_to_serial_unit_entity",
     "output_refs": [
       "SU_900001"
-    ]
+    ],
+    "rationale": "Mapped MES unit representation to canonical serial unit identity.",
+    "rule_name": "map_mes_unit_representation_to_serial_unit_entity",
+    "upstream_artifact_ids": [
+      "LIN_0013"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0004",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0022",
     "input_refs": [
-      "SRCREP_0004"
+      "SRCREP_0004",
+      "SU_900001"
     ],
-    "name": "map_mes_unit_representation_to_unit_processed_event",
     "output_refs": [
       "EVT_0005"
-    ]
+    ],
+    "rationale": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "rule_name": "derive_unit_processed_event_from_mes_unit_representation",
+    "upstream_artifact_ids": [
+      "LIN_0013",
+      "LIN_0021"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0005",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0024"
+    ],
+    "id": "LIN_0023",
     "input_refs": [
       "SRCREP_0005"
     ],
-    "name": "map_mes_unit_representation_to_serial_unit_entity",
     "output_refs": [
       "SU_900002"
-    ]
+    ],
+    "rationale": "Mapped MES unit representation to canonical serial unit identity.",
+    "rule_name": "map_mes_unit_representation_to_serial_unit_entity",
+    "upstream_artifact_ids": [
+      "LIN_0014"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0006",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0024",
     "input_refs": [
-      "SRCREP_0005"
+      "SRCREP_0005",
+      "SU_900002"
     ],
-    "name": "map_mes_unit_representation_to_unit_processed_event",
     "output_refs": [
       "EVT_0006"
-    ]
+    ],
+    "rationale": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "rule_name": "derive_unit_processed_event_from_mes_unit_representation",
+    "upstream_artifact_ids": [
+      "LIN_0014",
+      "LIN_0023"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0007",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0026"
+    ],
+    "id": "LIN_0025",
     "input_refs": [
       "SRCREP_0006"
     ],
-    "name": "map_mes_unit_representation_to_serial_unit_entity",
     "output_refs": [
       "SU_900101"
-    ]
+    ],
+    "rationale": "Mapped MES unit representation to canonical serial unit identity.",
+    "rule_name": "map_mes_unit_representation_to_serial_unit_entity",
+    "upstream_artifact_ids": [
+      "LIN_0015"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0008",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0026",
     "input_refs": [
-      "SRCREP_0006"
+      "SRCREP_0006",
+      "SU_900101"
     ],
-    "name": "map_mes_unit_representation_to_unit_processed_event",
     "output_refs": [
       "EVT_0007"
-    ]
+    ],
+    "rationale": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "rule_name": "derive_unit_processed_event_from_mes_unit_representation",
+    "upstream_artifact_ids": [
+      "LIN_0015",
+      "LIN_0025"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0009",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0028",
+      "LIN_0029",
+      "LIN_0038"
+    ],
+    "id": "LIN_0027",
     "input_refs": [
       "SRCREP_0003"
     ],
-    "name": "map_eam_maintenance_representation_to_activity_entity",
     "output_refs": [
       "MA_7001"
-    ]
+    ],
+    "rationale": "Mapped EAM maintenance representation to canonical maintenance activity.",
+    "rule_name": "map_eam_maintenance_representation_to_activity_entity",
+    "upstream_artifact_ids": [
+      "LIN_0012"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0010",
-    "input_refs": [
-      "SRCREP_0003"
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0043"
     ],
-    "name": "map_eam_maintenance_representation_to_maintenance_overdue_threshold_crossed_event",
+    "id": "LIN_0028",
+    "input_refs": [
+      "SRCREP_0003",
+      "MA_7001"
+    ],
     "output_refs": [
       "EVT_0001"
-    ]
+    ],
+    "rationale": "Derived maintenance_overdue_threshold_crossed event from maintenance activity timing and state transitions.",
+    "rule_name": "derive_maintenance_overdue_threshold_crossed_event_from_maintenance_activity",
+    "upstream_artifact_ids": [
+      "LIN_0012",
+      "LIN_0027"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0011",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0029",
     "input_refs": [
-      "SRCREP_0003"
+      "SRCREP_0003",
+      "MA_7001"
     ],
-    "name": "map_eam_maintenance_representation_to_maintenance_performed_event",
     "output_refs": [
       "EVT_0003"
-    ]
+    ],
+    "rationale": "Derived maintenance_performed event from maintenance activity timing and state transitions.",
+    "rule_name": "derive_maintenance_performed_event_from_maintenance_activity",
+    "upstream_artifact_ids": [
+      "LIN_0012",
+      "LIN_0027"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0012",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0031",
+      "LIN_0032",
+      "LIN_0039"
+    ],
+    "id": "LIN_0030",
     "input_refs": [
       "SRCREP_0007"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_entity",
     "output_refs": [
       "INSP_81001"
-    ]
+    ],
+    "rationale": "Mapped QMS inspection representation to canonical inspection object.",
+    "rule_name": "map_qms_inspection_representation_to_inspection_entity",
+    "upstream_artifact_ids": [
+      "LIN_0016"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0013",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0031",
     "input_refs": [
-      "SRCREP_0007"
+      "SRCREP_0007",
+      "INSP_81001"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_executed_event",
     "output_refs": [
       "EVT_0008"
-    ]
+    ],
+    "rationale": "Derived inspection executed event from inspection execution timestamp.",
+    "rule_name": "derive_inspection_executed_event_from_inspection_representation",
+    "upstream_artifact_ids": [
+      "LIN_0016",
+      "LIN_0030"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0014",
-    "input_refs": [
-      "SRCREP_0007"
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0039",
+      "LIN_0045"
     ],
-    "name": "map_qms_inspection_representation_to_defect_detected_result",
+    "id": "LIN_0032",
+    "input_refs": [
+      "SRCREP_0007",
+      "INSP_81001"
+    ],
     "output_refs": [
       "RES_0001"
-    ]
+    ],
+    "rationale": "Derived defect result when inspection outcome is NOK and includes a defect code.",
+    "rule_name": "derive_defect_detected_result_from_inspection_representation",
+    "upstream_artifact_ids": [
+      "LIN_0016",
+      "LIN_0030"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0015",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0034",
+      "LIN_0035",
+      "LIN_0039"
+    ],
+    "id": "LIN_0033",
     "input_refs": [
       "SRCREP_0008"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_entity",
     "output_refs": [
       "INSP_81002"
-    ]
+    ],
+    "rationale": "Mapped QMS inspection representation to canonical inspection object.",
+    "rule_name": "map_qms_inspection_representation_to_inspection_entity",
+    "upstream_artifact_ids": [
+      "LIN_0017"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0016",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0034",
     "input_refs": [
-      "SRCREP_0008"
+      "SRCREP_0008",
+      "INSP_81002"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_executed_event",
     "output_refs": [
       "EVT_0009"
-    ]
+    ],
+    "rationale": "Derived inspection executed event from inspection execution timestamp.",
+    "rule_name": "derive_inspection_executed_event_from_inspection_representation",
+    "upstream_artifact_ids": [
+      "LIN_0017",
+      "LIN_0033"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0017",
-    "input_refs": [
-      "SRCREP_0008"
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0039"
     ],
-    "name": "map_qms_inspection_representation_to_defect_detected_result",
+    "id": "LIN_0035",
+    "input_refs": [
+      "SRCREP_0008",
+      "INSP_81002"
+    ],
     "output_refs": [
       "RES_0002"
-    ]
+    ],
+    "rationale": "Derived defect result when inspection outcome is NOK and includes a defect code.",
+    "rule_name": "derive_defect_detected_result_from_inspection_representation",
+    "upstream_artifact_ids": [
+      "LIN_0017",
+      "LIN_0033"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0018",
+    "artifact_type": "canonical_mapping",
+    "downstream_artifact_ids": [
+      "LIN_0037",
+      "LIN_0039"
+    ],
+    "id": "LIN_0036",
     "input_refs": [
       "SRCREP_0009"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_entity",
     "output_refs": [
       "INSP_81003"
-    ]
+    ],
+    "rationale": "Mapped QMS inspection representation to canonical inspection object.",
+    "rule_name": "map_qms_inspection_representation_to_inspection_entity",
+    "upstream_artifact_ids": [
+      "LIN_0018"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "mapping_rule",
-    "id": "LIN_0019",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0037",
     "input_refs": [
-      "SRCREP_0009"
+      "SRCREP_0009",
+      "INSP_81003"
     ],
-    "name": "map_qms_inspection_representation_to_inspection_executed_event",
     "output_refs": [
       "EVT_0010"
-    ]
+    ],
+    "rationale": "Derived inspection executed event from inspection execution timestamp.",
+    "rule_name": "derive_inspection_executed_event_from_inspection_representation",
+    "upstream_artifact_ids": [
+      "LIN_0018",
+      "LIN_0036"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "derivation_rule",
-    "id": "LIN_0020",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0043"
+    ],
+    "id": "LIN_0038",
     "input_refs": [
       "MA_7001"
     ],
-    "name": "derive_maintenance_overdue_event",
     "output_refs": [
       "EVT_0001"
-    ]
+    ],
+    "rationale": "Derived maintenance overdue threshold crossing from due-by and performed timestamps.",
+    "rule_name": "derive_maintenance_overdue_event",
+    "upstream_artifact_ids": [
+      "LIN_0027"
+    ],
+    "version": "v1"
   },
   {
-    "artifact_type": "derivation_rule",
-    "id": "LIN_0021",
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0041",
+      "LIN_0042",
+      "LIN_0044",
+      "LIN_0045",
+      "LIN_0046"
+    ],
+    "id": "LIN_0039",
     "input_refs": [
       "INSP_81001",
       "INSP_81002",
-      "INSP_81003"
+      "INSP_81003",
+      "RES_0001",
+      "RES_0002"
     ],
-    "name": "derive_defect_rate_kpi",
     "output_refs": [
       "KPIOBS_2101"
-    ]
+    ],
+    "rationale": "Calculated defect-rate KPI by dividing NOK defect results by executed inspections in the active window.",
+    "rule_name": "derive_defect_rate_kpi",
+    "upstream_artifact_ids": [
+      "LIN_0030",
+      "LIN_0032",
+      "LIN_0033",
+      "LIN_0035",
+      "LIN_0036"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0041",
+      "LIN_0043",
+      "LIN_0046"
+    ],
+    "id": "LIN_0040",
+    "input_refs": [
+      "EVT_0002",
+      "EVT_0004"
+    ],
+    "output_refs": [
+      "KPIOBS_2102"
+    ],
+    "rationale": "Calculated disturbance-duration KPI from disturbance start and clear event timestamps.",
+    "rule_name": "derive_disturbance_duration_kpi",
+    "upstream_artifact_ids": [],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "derivation",
+    "downstream_artifact_ids": [
+      "LIN_0044",
+      "LIN_0046"
+    ],
+    "id": "LIN_0041",
+    "input_refs": [
+      "KPIOBS_2101",
+      "KPIOBS_2102",
+      "ORD_10045"
+    ],
+    "output_refs": [
+      "KPIOBS_2103"
+    ],
+    "rationale": "Derived order-delay risk KPI from elevated quality and disturbance signals for the impacted order.",
+    "rule_name": "derive_order_delay_risk_kpi",
+    "upstream_artifact_ids": [
+      "LIN_0019",
+      "LIN_0039",
+      "LIN_0040"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "ui_binding",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0042",
+    "input_refs": [
+      "KPIOBS_2101"
+    ],
+    "output_refs": [
+      "UI_OVERVIEW_CARD_ISSUE_01"
+    ],
+    "rationale": "Bound the violated defect-rate KPI to the overview issue card so operators can quickly triage.",
+    "rule_name": "bind_kpi_to_overview_issue_card",
+    "upstream_artifact_ids": [
+      "LIN_0039"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "ui_binding",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0043",
+    "input_refs": [
+      "ASSET_PAINT_ROBOT_07",
+      "KPIOBS_2102",
+      "EVT_0001"
+    ],
+    "output_refs": [
+      "UI_OBJECT_CARD_ASSET_PAINT_ROBOT_07"
+    ],
+    "rationale": "Rendered asset object card using canonical asset context and disturbance/maintenance signals.",
+    "rule_name": "bind_asset_incident_object_card",
+    "upstream_artifact_ids": [
+      "LIN_0028",
+      "LIN_0038",
+      "LIN_0040"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "ui_binding",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0044",
+    "input_refs": [
+      "ORD_10045",
+      "KPIOBS_2103",
+      "KPIOBS_2101"
+    ],
+    "output_refs": [
+      "UI_OBJECT_CARD_ORD_10045"
+    ],
+    "rationale": "Rendered order object card to explain downstream risk from defect-rate and delay indicators.",
+    "rule_name": "bind_order_risk_object_card",
+    "upstream_artifact_ids": [
+      "LIN_0019",
+      "LIN_0039",
+      "LIN_0041"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "ui_binding",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0045",
+    "input_refs": [
+      "SU_900001",
+      "RES_0001",
+      "KPIOBS_2101"
+    ],
+    "output_refs": [
+      "UI_OBJECT_CARD_SU_900001"
+    ],
+    "rationale": "Rendered serial-unit card with defect evidence and KPI impact context.",
+    "rule_name": "bind_serial_unit_object_card",
+    "upstream_artifact_ids": [
+      "LIN_0021",
+      "LIN_0032",
+      "LIN_0039"
+    ],
+    "version": "v1"
+  },
+  {
+    "artifact_type": "ui_binding",
+    "downstream_artifact_ids": [],
+    "id": "LIN_0046",
+    "input_refs": [
+      "KPIOBS_2101",
+      "KPIOBS_2102",
+      "KPIOBS_2103"
+    ],
+    "output_refs": [
+      "UI_OBJECT_CARD_KPIOBS_2101"
+    ],
+    "rationale": "Rendered KPI object card showing why this KPI is violated and how it connects to nearby indicators.",
+    "rule_name": "bind_defect_rate_kpi_object_card",
+    "upstream_artifact_ids": [
+      "LIN_0039",
+      "LIN_0040",
+      "LIN_0041"
+    ],
+    "version": "v1"
   }
 ]

@@ -27,6 +27,10 @@ function OverviewPage() {
           <h2 style={{ marginTop: 0 }}>{card.label}</h2>
           <p><strong>Value:</strong> {card.value}</p>
           <p><strong>Status:</strong> {card.status}</p>
+          <p>
+            <strong>Lineage:</strong>{' '}
+            <Link to={`/lineage/${card.lineage_artifact_id}`}>{card.lineage_artifact_id}</Link>
+          </p>
           <Link to={`/graph?focus=${card.deep_link.focus_node_id}&path=${card.deep_link.path.join(',')}`}>
             Open graph impact & lineage
           </Link>
@@ -134,6 +138,10 @@ function ObjectCardPage() {
       <p><strong>Object ID:</strong> {card.object_id}</p>
       <p><strong>Type:</strong> {card.canonical_identity.type}</p>
       <p><strong>Issue context:</strong> {card.issue_context.why_this_object_matters_now}</p>
+      <p>
+        <strong>Primary lineage:</strong>{' '}
+        <Link to={`/lineage/${card.primary_lineage_artifact_id}`}>{card.primary_lineage_artifact_id}</Link>
+      </p>
 
       <h2>Source representations</h2>
       <ul>
@@ -194,9 +202,92 @@ function ObjectCardPage() {
       <ul>
         {(card.lineage_entry_links || []).map((link) => (
           <li key={link.artifact_id}>
-            <a href={link.route}>{link.artifact_id}</a> — {link.name}
+            <Link to={link.route}>{link.artifact_id}</Link> — {link.name}
           </li>
         ))}
+      </ul>
+    </main>
+  )
+}
+
+function LineagePage() {
+  const { artifactId } = useParams()
+  const [artifacts, setArtifacts] = useState([])
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    setError('')
+    loadJSON('/data/generated/v1/lineage/artifacts.json')
+      .then(setArtifacts)
+      .catch(() => setError('Could not load lineage artifacts'))
+  }, [])
+
+  const artifact = artifacts.find((entry) => entry.id === artifactId)
+
+  const renderRef = (ref) => {
+    if (ref.startsWith('LIN_')) {
+      return <Link to={`/lineage/${ref}`}>{ref}</Link>
+    }
+    if (
+      ref.startsWith('KPIOBS_')
+      || ref.startsWith('ORD_')
+      || ref.startsWith('SU_')
+      || ref.startsWith('ASSET_')
+    ) {
+      return <Link to={`/objects/${ref}`}>{ref}</Link>
+    }
+    return <span>{ref}</span>
+  }
+
+  if (error) {
+    return (
+      <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
+        <p><Link to="/">← Back to overview</Link></p>
+        <h1>Lineage artifact</h1>
+        <p>{error}</p>
+      </main>
+    )
+  }
+
+  if (!artifact) return <p>Loading lineage artifact…</p>
+
+  return (
+    <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
+      <p><Link to="/">← Back to overview</Link></p>
+      <h1>Lineage artifact {artifact.id}</h1>
+      <p><strong>Type:</strong> {artifact.artifact_type}</p>
+      <p><strong>Rule name:</strong> {artifact.rule_name}</p>
+      <p><strong>Version:</strong> {artifact.version}</p>
+      <p><strong>Rationale:</strong> {artifact.rationale}</p>
+
+      <h2>Inputs</h2>
+      <ul>
+        {(artifact.input_refs || []).map((ref) => (
+          <li key={ref}>{renderRef(ref)}</li>
+        ))}
+      </ul>
+
+      <h2>Outputs</h2>
+      <ul>
+        {(artifact.output_refs || []).map((ref) => (
+          <li key={ref}>{renderRef(ref)}</li>
+        ))}
+      </ul>
+
+      <h2>Upstream artifacts</h2>
+      <ul>
+        {(artifact.upstream_artifact_ids || []).map((id) => (
+          <li key={id}><Link to={`/lineage/${id}`}>{id}</Link></li>
+        ))}
+        {!(artifact.upstream_artifact_ids || []).length && <li>None</li>}
+      </ul>
+
+      <h2>Downstream artifacts</h2>
+      <ul>
+        {(artifact.downstream_artifact_ids || []).map((id) => (
+          <li key={id}><Link to={`/lineage/${id}`}>{id}</Link></li>
+        ))}
+        {!(artifact.downstream_artifact_ids || []).length && <li>None</li>}
       </ul>
     </main>
   )
@@ -208,6 +299,7 @@ export function App() {
       <Route path="/" element={<OverviewPage />} />
       <Route path="/graph" element={<GraphPage />} />
       <Route path="/objects/:id" element={<ObjectCardPage />} />
+      <Route path="/lineage/:artifactId" element={<LineagePage />} />
     </Routes>
   )
 }

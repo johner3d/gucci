@@ -51,12 +51,23 @@
   },
   "lineage_entry_links": [
     {
-      "artifact_id": "LIN_0001",
+      "artifact_id": "LIN_0019",
       "name": "map_erp_order_representation_to_order_entity",
-      "route": "/lineage/LIN_0001"
+      "route": "/lineage/LIN_0019"
+    },
+    {
+      "artifact_id": "LIN_0041",
+      "name": "derive_order_delay_risk_kpi",
+      "route": "/lineage/LIN_0041"
+    },
+    {
+      "artifact_id": "LIN_0044",
+      "name": "bind_order_risk_object_card",
+      "route": "/lineage/LIN_0044"
     }
   ],
   "object_id": "ORD_10045",
+  "primary_lineage_artifact_id": "LIN_0044",
   "related_timeline": [
     {
       "id": "EVT_0005",

@@ -42,8 +42,15 @@
       }
     ]
   },
-  "lineage_entry_links": [],
+  "lineage_entry_links": [
+    {
+      "artifact_id": "LIN_0043",
+      "name": "bind_asset_incident_object_card",
+      "route": "/lineage/LIN_0043"
+    }
+  ],
   "object_id": "ASSET_PAINT_ROBOT_07",
+  "primary_lineage_artifact_id": "LIN_0043",
   "related_timeline": [
     {
       "asset_id": "ASSET_PAINT_ROBOT_07",
