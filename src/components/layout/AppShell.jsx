@@ -1,4 +1,5 @@
-import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router-dom'
+import { NavLink, Link, Outlet, useLocation, useSearchParams } from 'react-router-dom'
+import { buildSemanticBreadcrumbs, readContextKernel, toKernelQuery } from '../../lib/contextKernel'
 
 const spaceRoutes = [
   { to: '/executive', label: 'Executive', end: true },
@@ -10,24 +11,9 @@ const spaceRoutes = [
   { to: '/events', label: 'Events' },
   { to: '/graph', label: 'Graph' },
   { to: '/object-explorer', label: 'Object Explorer' },
-  { to: '/lineage/LIN_0039', label: 'Lineage' },
+  { to: '/lineage', label: 'Lineage' },
   { to: '/impact-analysis', label: 'Impact Analysis' },
 ]
-
-const defaultInvestigationContext = {
-  plant: 'PLANT_DE_01',
-  line: 'LINE_PAINT_A',
-  time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
-  severity: 'high',
-  focusEntity: 'KPIOBS_2101',
-  activeHypothesis: 'Paint booth contamination increased rework and delayed outbound delivery.',
-}
-
-const defaultIncidentScope = {
-  incidentId: 'INC_PAINT_A_20260115_01',
-  relatedEntityIds: ['ASSET_PAINT_ROBOT_07', 'ST_PAINT_BOOTH_03', 'SU_900001', 'ORD_10045', 'KPIOBS_2101'],
-  eventTypePrefixes: ['maintenance', 'asset', 'inspection', 'quality', 'kpi'],
-}
 
 const transitionRules = [
   {
@@ -68,38 +54,21 @@ const transitionRules = [
   },
 ]
 
-function toCrumbs(pathname) {
-  if (pathname === '/') return ['Executive']
-  return pathname
-    .split('/')
-    .filter(Boolean)
-    .map((part) => decodeURIComponent(part))
-}
-
 export function AppShell() {
   const location = useLocation()
   const [searchParams] = useSearchParams()
-  const crumbs = toCrumbs(location.pathname)
+  const contextKernel = readContextKernel(searchParams)
 
   const scopedParams = Object.fromEntries(searchParams.entries())
-
-  const investigationContext = {
-    plant: searchParams.get('plant') || defaultInvestigationContext.plant,
-    line: searchParams.get('line') || defaultInvestigationContext.line,
-    time: searchParams.get('time') || defaultInvestigationContext.time,
-    severity: searchParams.get('severity') || defaultInvestigationContext.severity,
-    focusEntity: searchParams.get('focusEntity') || searchParams.get('focus') || defaultInvestigationContext.focusEntity,
-    activeHypothesis: searchParams.get('activeHypothesis') || defaultInvestigationContext.activeHypothesis,
-  }
-
   const routeContract = {
-    ...investigationContext,
-    focus: investigationContext.focusEntity,
-    selectedNode: searchParams.get('selectedNode') || investigationContext.focusEntity,
+    ...contextKernel,
+    focus: searchParams.get('focus') || contextKernel.focusEntity,
+    selectedNode: searchParams.get('selectedNode') || contextKernel.focusEntity,
     selectedPath: searchParams.get('selectedPath') || '',
   }
 
-  const scopedQuery = new URLSearchParams({ ...routeContract, ...scopedParams }).toString()
+  const scopedQuery = toKernelQuery(contextKernel, scopedParams).toString()
+  const breadcrumbs = buildSemanticBreadcrumbs(location.pathname, contextKernel)
 
   return (
     <div className="app-shell">
@@ -118,13 +87,23 @@ export function AppShell() {
 
       <main className="shell-main">
         <div className="context-bar meta">
-          Context: {investigationContext.plant} / {investigationContext.line} / {investigationContext.severity} / {investigationContext.time}
+          Context kernel: {contextKernel.plant} / {contextKernel.line} / {contextKernel.severity} / {contextKernel.time}
         </div>
         <div className="context-bar meta">
-          Focus: {investigationContext.focusEntity} · Hypothesis: {investigationContext.activeHypothesis}
+          Scope: {contextKernel.incidentScope.incidentId} · Focus: {contextKernel.focusEntity}
         </div>
-        <div className="breadcrumb-zone meta">{crumbs.join(' / ')}</div>
-        <Outlet context={{ globalContext: routeContract, investigationContext, incidentScope: defaultIncidentScope, transitionRules }} />
+        <div className="context-bar meta">Hypothesis: {contextKernel.hypothesis}</div>
+        <div className="breadcrumb-zone">
+          <ul className="semantic-crumbs list-reset">
+            {breadcrumbs.map((crumb, idx) => (
+              <li key={`${crumb.label}-${idx}`}>
+                <Link to={`${crumb.to}?${scopedQuery}`}>{crumb.label}</Link>
+                <div className="meta">{crumb.hint}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <Outlet context={{ globalContext: routeContract, contextKernel, incidentScope: contextKernel.incidentScope, transitionRules }} />
       </main>
 
       <aside className="shell-rail">

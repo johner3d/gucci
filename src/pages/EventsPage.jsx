@@ -79,7 +79,7 @@ export function EventsPage() {
   const jumpToEntity = (event) => {
     const entityId = event.asset_id || event.serial_unit_id || event.station_id || event.inspection_id
     if (!entityId) return
-    navigate(`/objects/${entityId}${asScopedSearch(globalContext, { event: event.id })}`)
+    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id })}`)
   }
 
   const jumpToLineage = (event) => {

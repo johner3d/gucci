@@ -162,7 +162,7 @@ export function ObjectSearchPage() {
               <strong>{entity.id}</strong> <span className="chip">{entity.entity_type}</span> <span className="chip">{entity.domain}</span>
               <div className="meta">status {entity.statusFacet} | severity {entity.severityFacet} | time {entity.timeFacet} | provenance {entity.provenanceFacet}</div>
               <div className="button-row">
-                <button type="button" className="btn" onClick={() => navigate(`/objects/${entity.id}?${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), selectedEntity: entity.id })}`)}>Open entity detail</button>
+                <button type="button" className="btn" onClick={() => navigate(`/object-explorer/${entity.id}?${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), selectedEntity: entity.id })}`)}>Open entity detail</button>
                 <button type="button" className="btn" onClick={() => toggleListItem('pin', entity.id)}>{pinned.includes(entity.id) ? 'Unpin' : 'Pin'}</button>
                 <button type="button" className="btn" onClick={() => toggleListItem('compare', entity.id)}>{compared.includes(entity.id) ? 'Remove compare' : 'Compare'}</button>
               </div>
@@ -176,7 +176,7 @@ export function ObjectSearchPage() {
         {pinned.concat(compared).length ? (
           <div className="button-row">
             {[...new Set([...pinned, ...compared])].map((entityId) => (
-              <Link key={entityId} className="btn" to={`/objects/${entityId}?${asScopedSearch(globalContext, Object.fromEntries(searchParams.entries()))}`}>
+              <Link key={entityId} className="btn" to={`/object-explorer/${entityId}?${asScopedSearch(globalContext, Object.fromEntries(searchParams.entries()))}`}>
                 Open {entityId}
               </Link>
             ))}

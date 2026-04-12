@@ -378,3 +378,21 @@ a:hover {
   border-color: #bfd0ff;
   background: var(--color-primary-soft);
 }
+
+.semantic-crumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-2);
+}
+
+.semantic-crumbs li {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2);
+  background: var(--color-surface-muted);
+}
+
+.panel-next-actions {
+  border-top: 1px dashed var(--color-border);
+  padding-top: var(--space-2);
+}

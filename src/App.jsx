@@ -1,5 +1,6 @@
-import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { AppShell } from './components/layout/AppShell'
+import { Panel } from './components/primitives/Primitives'
 import { EventsPage } from './pages/EventsPage'
 import { GraphPage } from './pages/GraphPage'
 import { LineagePage } from './pages/LineagePage'
@@ -10,10 +11,16 @@ import { ProcessPage } from './pages/ProcessPage'
 
 function SpacePlaceholder({ title, description }) {
   return (
-    <section>
-      <h2>{title}</h2>
+    <Panel
+      title={title}
+      nextActions={[
+        { label: 'Open Events', to: '/events' },
+        { label: 'Open Graph', to: '/graph' },
+        { label: 'Open Impact Analysis', to: '/impact-analysis' },
+      ]}
+    >
       <p className="meta">{description}</p>
-    </section>
+    </Panel>
   )
 }
 
@@ -21,6 +28,12 @@ function LegacyObjectRedirect() {
   const { id } = useParams()
   const location = useLocation()
   return <Navigate to={`/object-explorer/${id}${location.search}`} replace />
+}
+
+function LineageRedirect() {
+  const [searchParams] = useSearchParams()
+  const artifactId = searchParams.get('lineageArtifact') || 'LIN_0039'
+  return <Navigate to={`/lineage/${artifactId}?${searchParams.toString()}`} replace />
 }
 
 export function App() {
@@ -45,6 +58,7 @@ export function App() {
         <Route path="/graph" element={<GraphPage />} />
         <Route path="/object-explorer" element={<ObjectSearchPage />} />
         <Route path="/object-explorer/:id" element={<ObjectsPage />} />
+        <Route path="/lineage" element={<LineageRedirect />} />
         <Route path="/lineage/:artifactId" element={<LineagePage />} />
         <Route path="/impact-analysis" element={<GraphPage />} />
 

@@ -137,7 +137,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {selectedStep.related.impacted_entities.map((entityId) => (
                   <li key={entityId}>
-                    <Link to={`/objects/${entityId}${toQueryString({ ...context, step: selectedStep.id })}`}>{entityId}</Link>
+                    <Link to={`/object-explorer/${entityId}${toQueryString({ ...context, step: selectedStep.id })}`}>{entityId}</Link>
                   </li>
                 ))}
               </ul>
@@ -158,7 +158,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.kpis.map((kpi) => (
                   <li key={kpi.id}>
-                    <Link to={`/objects/${kpi.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
+                    <Link to={`/object-explorer/${kpi.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
                       {kpi.id} — {kpi.kpi}
                     </Link>
                     <div className="meta">status {kpi.status} | value {String(kpi.value)}</div>

@@ -128,7 +128,7 @@ export function CausalPath({
               Set selected node as focus
             </Button>
           </div>
-          <Link to={`/objects/${selectedNode || details.node?.id || focus}`}>Inspect selected object</Link>
+          <Link to={`/object-explorer/${selectedNode || details.node?.id || focus}`}>Inspect selected object</Link>
         </Panel>
       </section>
 

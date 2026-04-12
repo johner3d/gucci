@@ -107,7 +107,7 @@ export function ObjectsPage() {
         <DataDiagnostics diagnostics={diagnostics} />
         <Panel title="Lookup error">
           <p>Canonical entity not available for {id}.</p>
-          <Link to="/objects/search">Return to object search workspace</Link>
+          <Link to="/object-explorer">Return to object search workspace</Link>
         </Panel>
       </div>
     )
@@ -125,7 +125,7 @@ export function ObjectsPage() {
           <button type="button" className="btn" onClick={() => toggleEntityList('compare')}>{compared.includes(entity.id) ? 'Remove from compare' : 'Add to compare'}</button>
           <Link className="btn" to={`/graph?focus=${entity.id}&mode=downstream-impact`}>Impact view</Link>
           <Link className="btn" to={`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`}>Lineage view</Link>
-          <Link className="btn" to={`/objects/search?${searchParams.toString()}`}>Back to object search</Link>
+          <Link className="btn" to={`/object-explorer?${searchParams.toString()}`}>Back to object search</Link>
         </div>
         <p className="meta">Pinned: {pinned.join(', ') || 'none'} | Compare: {compared.join(', ') || 'none'}</p>
       </Panel>
@@ -134,7 +134,7 @@ export function ObjectsPage() {
         <Panel title="Quick entity transitions">
           <div className="button-row">
             {[...new Set([...pinned, ...compared])].filter((entityId) => entityId !== entity.id).map((entityId) => (
-              <Link key={entityId} className="btn" to={`/objects/${entityId}?${searchParams.toString()}`}>{entityId}</Link>
+              <Link key={entityId} className="btn" to={`/object-explorer/${entityId}?${searchParams.toString()}`}>{entityId}</Link>
             ))}
           </div>
         </Panel>
@@ -167,7 +167,7 @@ export function ObjectsPage() {
       <Panel title="Impacted objects">
         <ul className="list-reset">
           {impactedObjects.map((obj) => (
-            <li key={obj.id}><Link to={`/objects/${obj.id}?${searchParams.toString()}`}>{obj.id}</Link> ({obj.type}) — {obj.reason}</li>
+            <li key={obj.id}><Link to={`/object-explorer/${obj.id}?${searchParams.toString()}`}>{obj.id}</Link> ({obj.type}) — {obj.reason}</li>
           ))}
         </ul>
       </Panel>
