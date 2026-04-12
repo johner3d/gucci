@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Panel } from '../primitives/Primitives'
 
-export function ObjectRelationships({ card }) {
+export function ObjectRelationships({ card, relationships = [] }) {
   return (
     <div className="stack">
       <Panel title="Object relationships">
@@ -16,9 +16,16 @@ export function ObjectRelationships({ card }) {
 
       <Panel title="Business graph relationships">
         <ul className="list-reset">
-          {(card.key_relationships?.business_graph || []).map((relationship) => (
-            <li key={`${relationship.relationship}-${relationship.target_id}`}>
-              {relationship.relationship} → <Link to={`/objects/${relationship.target_id}`}>{relationship.target_id}</Link>
+          {relationships.map((relationship) => (
+            <li key={relationship.id}>
+              {relationship.type} → <Link to={`/objects/${relationship.target_id}`}>{relationship.target_id}</Link>
+              <div className="meta">
+                {relationship.category} | confidence {relationship.qualifiers?.confidence ?? 'n/a'} | polarity {relationship.qualifiers?.polarity ?? 'n/a'}
+              </div>
+              <div className="meta">
+                validity: {relationship.qualifiers?.validity_interval?.start_utc || 'n/a'} → {relationship.qualifiers?.validity_interval?.end_utc || 'n/a'}
+              </div>
+              <div className="meta">evidence: {(relationship.qualifiers?.evidence_refs || []).join(', ') || 'none'}</div>
             </li>
           ))}
         </ul>

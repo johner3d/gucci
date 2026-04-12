@@ -1,0 +1,258 @@
+[
+  {
+    "category": "semantic",
+    "id": "REL_0001",
+    "qualifiers": {
+      "confidence": 0.97,
+      "evidence_refs": [
+        "LIN_0039"
+      ],
+      "polarity": "positive",
+      "strength": 0.92,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "UI_OVERVIEW_CARD_ISSUE_01",
+    "target_id": "KPIOBS_2101",
+    "type": "rendered_from"
+  },
+  {
+    "category": "lineage",
+    "id": "REL_0002",
+    "qualifiers": {
+      "confidence": 0.99,
+      "evidence_refs": [
+        "LIN_0039"
+      ],
+      "polarity": "positive",
+      "strength": 1.0,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "LIN_0039",
+    "type": "derived_from"
+  },
+  {
+    "category": "operational",
+    "id": "REL_0003",
+    "qualifiers": {
+      "confidence": 0.95,
+      "evidence_refs": [
+        "RES_0001"
+      ],
+      "polarity": "negative",
+      "strength": 0.9,
+      "validity_interval": {
+        "end_utc": "2026-01-15T08:45:00Z",
+        "start_utc": "2026-01-15T08:45:00Z"
+      }
+    },
+    "source_id": "RES_0001",
+    "target_id": "SU_900001",
+    "type": "detected_on"
+  },
+  {
+    "category": "processual",
+    "id": "REL_0004",
+    "qualifiers": {
+      "confidence": 0.98,
+      "evidence_refs": [
+        "EVT_0005"
+      ],
+      "polarity": "neutral",
+      "strength": 0.83,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "SU_900001",
+    "target_id": "ST_PAINT_BOOTH_03",
+    "type": "processed_at"
+  },
+  {
+    "category": "structural",
+    "id": "REL_0005",
+    "qualifiers": {
+      "confidence": 0.99,
+      "evidence_refs": [
+        "ST_PAINT_BOOTH_03",
+        "ASSET_PAINT_ROBOT_07"
+      ],
+      "polarity": "neutral",
+      "strength": 0.88,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "ST_PAINT_BOOTH_03",
+    "target_id": "ASSET_PAINT_ROBOT_07",
+    "type": "processed_at"
+  },
+  {
+    "category": "analytical",
+    "id": "REL_0006",
+    "qualifiers": {
+      "confidence": 0.9,
+      "evidence_refs": [
+        "RES_0001",
+        "KPIOBS_2101"
+      ],
+      "polarity": "negative",
+      "strength": 0.84,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "RES_0001",
+    "type": "detected_on"
+  },
+  {
+    "category": "analytical",
+    "id": "REL_0007",
+    "qualifiers": {
+      "confidence": 0.87,
+      "evidence_refs": [
+        "RES_0001",
+        "SU_900001"
+      ],
+      "polarity": "negative",
+      "strength": 0.8,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "SU_900001",
+    "type": "observed_on"
+  },
+  {
+    "category": "causal",
+    "id": "REL_0008",
+    "qualifiers": {
+      "confidence": 0.86,
+      "evidence_refs": [
+        "KPIOBS_2101",
+        "KPIOBS_2103"
+      ],
+      "polarity": "negative",
+      "strength": 0.79,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "ORD_10045",
+    "type": "impacts"
+  },
+  {
+    "category": "analytical",
+    "id": "REL_0009",
+    "qualifiers": {
+      "confidence": 0.82,
+      "evidence_refs": [
+        "KPIOBS_2101",
+        "KPIOBS_2102"
+      ],
+      "polarity": "negative",
+      "strength": 0.74,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "KPIOBS_2102",
+    "type": "correlates_with"
+  },
+  {
+    "category": "causal",
+    "id": "REL_0010",
+    "qualifiers": {
+      "confidence": 0.85,
+      "evidence_refs": [
+        "KPIOBS_2101",
+        "KPIOBS_2103"
+      ],
+      "polarity": "negative",
+      "strength": 0.81,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "KPIOBS_2101",
+    "target_id": "KPIOBS_2103",
+    "type": "influences"
+  },
+  {
+    "category": "lineage",
+    "id": "REL_0011",
+    "qualifiers": {
+      "confidence": 0.99,
+      "evidence_refs": [
+        "QMS_INSP_3001",
+        "SRCREP_0007"
+      ],
+      "polarity": "positive",
+      "strength": 0.96,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "LIN_0039",
+    "target_id": "SRCREP_0007",
+    "type": "mapped_from"
+  },
+  {
+    "category": "lineage",
+    "id": "REL_0012",
+    "qualifiers": {
+      "confidence": 0.99,
+      "evidence_refs": [
+        "QMS_INSP_3002",
+        "SRCREP_0008"
+      ],
+      "polarity": "positive",
+      "strength": 0.96,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "LIN_0039",
+    "target_id": "SRCREP_0008",
+    "type": "mapped_from"
+  },
+  {
+    "category": "lineage",
+    "id": "REL_0013",
+    "qualifiers": {
+      "confidence": 0.99,
+      "evidence_refs": [
+        "QMS_INSP_3003",
+        "SRCREP_0009"
+      ],
+      "polarity": "positive",
+      "strength": 0.96,
+      "validity_interval": {
+        "end_utc": "2026-01-15T14:00:00Z",
+        "start_utc": "2026-01-15T06:00:00Z"
+      }
+    },
+    "source_id": "LIN_0039",
+    "target_id": "SRCREP_0009",
+    "type": "mapped_from"
+  }
+]

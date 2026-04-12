@@ -29,18 +29,7 @@
     "why_this_object_matters_now": "Maintenance overdue and disturbance around this asset precede the defect-rate violation."
   },
   "key_relationships": {
-    "business_graph": [
-      {
-        "relationship": "located_at_station",
-        "target_id": "ST_PAINT_BOOTH_03",
-        "target_type": "Station"
-      },
-      {
-        "relationship": "drives_disturbance_signal",
-        "target_id": "KPIOBS_2102",
-        "target_type": "KPIObservation"
-      }
-    ]
+    "business_graph": []
   },
   "lineage_entry_links": [
     {

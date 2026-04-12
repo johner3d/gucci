@@ -19,7 +19,10 @@ export function CausalPath({ details, focus, traversal, onTraversalChange, onFoc
       <Panel title="Adjacent path">
         <ul className="row-list">
           {details.edges.map((edge) => (
-            <li key={edge.id}>{edge.source} —[{edge.relationship}]→ {edge.target}</li>
+            <li key={edge.id}>
+              {edge.source_id} —[{edge.type}]→ {edge.target_id}{' '}
+              <span className="meta">({edge.category}, confidence {edge.qualifiers?.confidence ?? 'n/a'})</span>
+            </li>
           ))}
         </ul>
       </Panel>

@@ -14,7 +14,7 @@ export function GraphPage() {
   useEffect(() => {
     loadGraphData()
       .then((payload) => {
-        setGraph(payload.graph)
+        setGraph({ ...payload.graph, edges: payload.relationships })
         setDiagnostics(payload.diagnostics)
       })
       .catch((error) => setDiagnostics(toUiDiagnostics(error, 'graph')))
@@ -26,11 +26,11 @@ export function GraphPage() {
     if (!node) return { node: null, edges: [], nodes: [] }
 
     const edges = graph.edges.filter((edge) => {
-      if (edge.source !== node.id) return false
-      return traversal === 'impact' ? edge.relationship_class === 'business' : edge.relationship_class === 'technical_lineage'
+      if (edge.source_id !== node.id) return false
+      return traversal === 'impact' ? edge.category !== 'lineage' : edge.category === 'lineage'
     })
 
-    const nodes = edges.map((edge) => graph.nodes.find((candidate) => candidate.id === edge.target)).filter(Boolean)
+    const nodes = edges.map((edge) => graph.nodes.find((candidate) => candidate.id === edge.target_id)).filter(Boolean)
     return { node, edges, nodes }
   }, [focus, graph, traversal])
 

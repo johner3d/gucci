@@ -42,19 +42,117 @@
   "key_relationships": {
     "business_graph": [
       {
-        "relationship": "correlates_with",
-        "target_id": "KPIOBS_2102",
-        "target_type": "KPIObservation"
+        "qualifiers": {
+          "confidence": 0.99,
+          "evidence_refs": [
+            "LIN_0039"
+          ],
+          "polarity": "positive",
+          "strength": 1.0,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "derived_from",
+        "relationship_category": "lineage",
+        "target_id": "LIN_0039",
+        "target_type": "Unknown"
       },
       {
-        "relationship": "impacts",
-        "target_id": "ORD_10045",
-        "target_type": "ProductionOrder"
+        "qualifiers": {
+          "confidence": 0.9,
+          "evidence_refs": [
+            "RES_0001",
+            "KPIOBS_2101"
+          ],
+          "polarity": "negative",
+          "strength": 0.84,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "detected_on",
+        "relationship_category": "analytical",
+        "target_id": "RES_0001",
+        "target_type": "Unknown"
       },
       {
+        "qualifiers": {
+          "confidence": 0.87,
+          "evidence_refs": [
+            "RES_0001",
+            "SU_900001"
+          ],
+          "polarity": "negative",
+          "strength": 0.8,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
         "relationship": "observed_on",
+        "relationship_category": "analytical",
         "target_id": "SU_900001",
-        "target_type": "SerialUnit"
+        "target_type": "serial_unit"
+      },
+      {
+        "qualifiers": {
+          "confidence": 0.86,
+          "evidence_refs": [
+            "KPIOBS_2101",
+            "KPIOBS_2103"
+          ],
+          "polarity": "negative",
+          "strength": 0.79,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "impacts",
+        "relationship_category": "causal",
+        "target_id": "ORD_10045",
+        "target_type": "production_order"
+      },
+      {
+        "qualifiers": {
+          "confidence": 0.82,
+          "evidence_refs": [
+            "KPIOBS_2101",
+            "KPIOBS_2102"
+          ],
+          "polarity": "negative",
+          "strength": 0.74,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "correlates_with",
+        "relationship_category": "analytical",
+        "target_id": "KPIOBS_2102",
+        "target_type": "Unknown"
+      },
+      {
+        "qualifiers": {
+          "confidence": 0.85,
+          "evidence_refs": [
+            "KPIOBS_2101",
+            "KPIOBS_2103"
+          ],
+          "polarity": "negative",
+          "strength": 0.81,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "influences",
+        "relationship_category": "causal",
+        "target_id": "KPIOBS_2103",
+        "target_type": "Unknown"
       }
     ]
   },

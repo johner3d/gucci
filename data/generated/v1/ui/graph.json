@@ -2,92 +2,270 @@
   "default_focus_node_id": "KPIOBS_2101",
   "edges": [
     {
-      "id": "E001",
+      "id": "E_0001",
+      "qualifiers": {
+        "confidence": 0.97,
+        "evidence_refs": [
+          "LIN_0039"
+        ],
+        "polarity": "positive",
+        "strength": 0.92,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "rendered_from",
+      "relationship_category": "semantic",
       "relationship_class": "technical_lineage",
       "source": "UI_OVERVIEW_CARD_ISSUE_01",
       "target": "KPIOBS_2101"
     },
     {
-      "id": "E002",
+      "id": "E_0002",
+      "qualifiers": {
+        "confidence": 0.99,
+        "evidence_refs": [
+          "LIN_0039"
+        ],
+        "polarity": "positive",
+        "strength": 1.0,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "derived_from",
+      "relationship_category": "lineage",
       "relationship_class": "technical_lineage",
       "source": "KPIOBS_2101",
       "target": "LIN_0039"
     },
     {
-      "id": "E003",
+      "id": "E_0003",
+      "qualifiers": {
+        "confidence": 0.95,
+        "evidence_refs": [
+          "RES_0001"
+        ],
+        "polarity": "negative",
+        "strength": 0.9,
+        "validity_interval": {
+          "end_utc": "2026-01-15T08:45:00Z",
+          "start_utc": "2026-01-15T08:45:00Z"
+        }
+      },
       "relationship": "detected_on",
+      "relationship_category": "operational",
       "relationship_class": "business",
       "source": "RES_0001",
       "target": "SU_900001"
     },
     {
-      "id": "E004",
+      "id": "E_0004",
+      "qualifiers": {
+        "confidence": 0.98,
+        "evidence_refs": [
+          "EVT_0005"
+        ],
+        "polarity": "neutral",
+        "strength": 0.83,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "processed_at",
+      "relationship_category": "processual",
       "relationship_class": "business",
       "source": "SU_900001",
       "target": "ST_PAINT_BOOTH_03"
     },
     {
-      "id": "E005",
+      "id": "E_0005",
+      "qualifiers": {
+        "confidence": 0.99,
+        "evidence_refs": [
+          "ST_PAINT_BOOTH_03",
+          "ASSET_PAINT_ROBOT_07"
+        ],
+        "polarity": "neutral",
+        "strength": 0.88,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "processed_at",
+      "relationship_category": "structural",
       "relationship_class": "business",
       "source": "ST_PAINT_BOOTH_03",
       "target": "ASSET_PAINT_ROBOT_07"
     },
     {
-      "id": "E006",
+      "id": "E_0006",
+      "qualifiers": {
+        "confidence": 0.9,
+        "evidence_refs": [
+          "RES_0001",
+          "KPIOBS_2101"
+        ],
+        "polarity": "negative",
+        "strength": 0.84,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "detected_on",
+      "relationship_category": "analytical",
       "relationship_class": "business",
       "source": "KPIOBS_2101",
       "target": "RES_0001"
     },
     {
-      "id": "E007",
-      "relationship": "detected_on",
+      "id": "E_0007",
+      "qualifiers": {
+        "confidence": 0.87,
+        "evidence_refs": [
+          "RES_0001",
+          "SU_900001"
+        ],
+        "polarity": "negative",
+        "strength": 0.8,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
+      "relationship": "observed_on",
+      "relationship_category": "analytical",
       "relationship_class": "business",
       "source": "KPIOBS_2101",
       "target": "SU_900001"
     },
     {
-      "id": "E008",
-      "relationship": "belongs_to_order",
+      "id": "E_0008",
+      "qualifiers": {
+        "confidence": 0.86,
+        "evidence_refs": [
+          "KPIOBS_2101",
+          "KPIOBS_2103"
+        ],
+        "polarity": "negative",
+        "strength": 0.79,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
+      "relationship": "impacts",
+      "relationship_category": "causal",
       "relationship_class": "business",
       "source": "KPIOBS_2101",
       "target": "ORD_10045"
     },
     {
-      "id": "E009",
-      "relationship": "derived_from",
+      "id": "E_0009",
+      "qualifiers": {
+        "confidence": 0.82,
+        "evidence_refs": [
+          "KPIOBS_2101",
+          "KPIOBS_2102"
+        ],
+        "polarity": "negative",
+        "strength": 0.74,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
+      "relationship": "correlates_with",
+      "relationship_category": "analytical",
       "relationship_class": "business",
       "source": "KPIOBS_2101",
       "target": "KPIOBS_2102"
     },
     {
-      "id": "E010",
-      "relationship": "belongs_to_order",
+      "id": "E_0010",
+      "qualifiers": {
+        "confidence": 0.85,
+        "evidence_refs": [
+          "KPIOBS_2101",
+          "KPIOBS_2103"
+        ],
+        "polarity": "negative",
+        "strength": 0.81,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
+      "relationship": "influences",
+      "relationship_category": "causal",
       "relationship_class": "business",
       "source": "KPIOBS_2101",
       "target": "KPIOBS_2103"
     },
     {
-      "id": "E011",
+      "id": "E_0011",
+      "qualifiers": {
+        "confidence": 0.99,
+        "evidence_refs": [
+          "QMS_INSP_3001",
+          "SRCREP_0007"
+        ],
+        "polarity": "positive",
+        "strength": 0.96,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "mapped_from",
+      "relationship_category": "lineage",
       "relationship_class": "technical_lineage",
       "source": "LIN_0039",
       "target": "SRCREP_0007"
     },
     {
-      "id": "E012",
+      "id": "E_0012",
+      "qualifiers": {
+        "confidence": 0.99,
+        "evidence_refs": [
+          "QMS_INSP_3002",
+          "SRCREP_0008"
+        ],
+        "polarity": "positive",
+        "strength": 0.96,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "mapped_from",
+      "relationship_category": "lineage",
       "relationship_class": "technical_lineage",
       "source": "LIN_0039",
       "target": "SRCREP_0008"
     },
     {
-      "id": "E013",
+      "id": "E_0013",
+      "qualifiers": {
+        "confidence": 0.99,
+        "evidence_refs": [
+          "QMS_INSP_3003",
+          "SRCREP_0009"
+        ],
+        "polarity": "positive",
+        "strength": 0.96,
+        "validity_interval": {
+          "end_utc": "2026-01-15T14:00:00Z",
+          "start_utc": "2026-01-15T06:00:00Z"
+        }
+      },
       "relationship": "mapped_from",
+      "relationship_category": "lineage",
       "relationship_class": "technical_lineage",
       "source": "LIN_0039",
       "target": "SRCREP_0009"
