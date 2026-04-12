@@ -1,0 +1,12 @@
+[
+  {
+    "source_system": "EAM",
+    "source_record_id": "EAM_WO_12090",
+    "asset_code": "ASSET_PAINT_ROBOT_07",
+    "activity_id": "MA_7001",
+    "activity_type": "preventive",
+    "due_by_utc": "2026-01-15T07:30:00Z",
+    "performed_at_utc": "2026-01-15T09:10:00Z",
+    "status": "completed_late"
+  }
+]

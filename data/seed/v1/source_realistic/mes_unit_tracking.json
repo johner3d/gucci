@@ -1,0 +1,29 @@
+[
+  {
+    "source_system": "MES",
+    "source_record_id": "MES_TRK_5001",
+    "serial_unit_id": "SU_900001",
+    "order_id": "ORD_10045",
+    "station_code": "ST_PAINT_BOOTH_03",
+    "processed_at_utc": "2026-01-15T08:20:00Z",
+    "batch_lot_code": "LOT_PAINT_20260115_A"
+  },
+  {
+    "source_system": "MES",
+    "source_record_id": "MES_TRK_5002",
+    "serial_unit_id": "SU_900002",
+    "order_id": "ORD_10045",
+    "station_code": "ST_PAINT_BOOTH_03",
+    "processed_at_utc": "2026-01-15T08:22:00Z",
+    "batch_lot_code": "LOT_PAINT_20260115_A"
+  },
+  {
+    "source_system": "MES",
+    "source_record_id": "MES_TRK_5003",
+    "serial_unit_id": "SU_900101",
+    "order_id": "ORD_10046",
+    "station_code": "ST_PAINT_BOOTH_03",
+    "processed_at_utc": "2026-01-15T10:05:00Z",
+    "batch_lot_code": "LOT_PAINT_20260115_B"
+  }
+]

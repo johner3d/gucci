@@ -1,0 +1,19 @@
+{
+  "seed_name": "poc_v1_baseline",
+  "seed_version": "1.0.0",
+  "generation_mode": "source_realistic",
+  "deterministic": true,
+  "seed_value": 42,
+  "time_window": {
+    "start_utc": "2026-01-15T06:00:00Z",
+    "end_utc": "2026-01-15T14:00:00Z"
+  },
+  "primary_issue_context": {
+    "plant_id": "PLANT_DE_01",
+    "line_id": "LINE_PAINT_A",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "related_order_ids": ["ORD_10045", "ORD_10046"],
+    "related_variant_ids": ["VAR_SEDAN_RED_PREM"]
+  }
+}
