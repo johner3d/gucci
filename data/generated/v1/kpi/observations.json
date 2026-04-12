@@ -1,6 +1,6 @@
 [
   {
-    "id": "KPIOBS_0001",
+    "id": "KPIOBS_2101",
     "kpi": "defect_rate",
     "line_id": "LINE_PAINT_A",
     "status": "violated",
@@ -11,7 +11,7 @@
   },
   {
     "asset_id": "ASSET_PAINT_ROBOT_07",
-    "id": "KPIOBS_0002",
+    "id": "KPIOBS_2102",
     "kpi": "disturbance_duration_minutes",
     "status": "high",
     "value": 75,
@@ -19,7 +19,7 @@
     "window_start_utc": "2026-01-15T06:00:00Z"
   },
   {
-    "id": "KPIOBS_0003",
+    "id": "KPIOBS_2103",
     "kpi": "order_delay_risk",
     "order_id": "ORD_10045",
     "status": "elevated",

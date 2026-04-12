@@ -229,7 +229,7 @@
     ],
     "name": "derive_defect_rate_kpi",
     "output_refs": [
-      "KPIOBS_0001"
+      "KPIOBS_2101"
     ]
   }
 ]

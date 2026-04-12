@@ -284,7 +284,7 @@ def stage_4_kpis(
 
     return [
         {
-            "id": "KPIOBS_0001",
+            "id": "KPIOBS_2101",
             "kpi": "defect_rate",
             "line_id": ctx["line_id"],
             "window_start_utc": start,
@@ -294,7 +294,7 @@ def stage_4_kpis(
             "status": "violated" if defect_rate > 0.05 else "ok",
         },
         {
-            "id": "KPIOBS_0002",
+            "id": "KPIOBS_2102",
             "kpi": "disturbance_duration_minutes",
             "asset_id": ctx["asset_id"],
             "window_start_utc": start,
@@ -303,7 +303,7 @@ def stage_4_kpis(
             "status": "high" if duration_minutes >= 30 else "normal",
         },
         {
-            "id": "KPIOBS_0003",
+            "id": "KPIOBS_2103",
             "kpi": "order_delay_risk",
             "order_id": ctx["related_order_ids"][0],
             "window_start_utc": start,
@@ -489,16 +489,100 @@ def stage_6_ui_payload(kpis: list[dict[str, Any]], events: list[dict[str, Any]])
             "title": "Paint Line A Incident Overview",
             "cards": [
                 {
-                    "card_id": "UI_CARD_DEFECT_RATE",
+                    "card_id": "UI_OVERVIEW_CARD_ISSUE_01",
                     "label": "Defect Rate",
                     "value": defect_kpi["value"],
                     "status": defect_kpi["status"],
                     "source_kpi_observation_id": defect_kpi["id"],
+                    "deep_link": {
+                        "route": "/graph",
+                        "focus_node_id": "KPIOBS_2101",
+                        "path": ["UI_OVERVIEW_CARD_ISSUE_01", "KPIOBS_2101"],
+                    },
                 }
             ],
             "timeline": top_events,
         }
     ]
+
+
+def stage_7_graph_payload(
+    entities: dict[str, list[dict[str, Any]]],
+    source_representations: list[dict[str, Any]],
+    results: list[dict[str, Any]],
+    kpis: list[dict[str, Any]],
+    lineage: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """7) typed graph payload for graph exploration."""
+    defect_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2101")
+    duration_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2102")
+    risk_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2103")
+
+    derivation = next(a for a in lineage if a["artifact_type"] == "derivation_rule" and "defect_rate" in a["name"])
+    defect = results[0]
+
+    nodes = [
+        {"id": "UI_OVERVIEW_CARD_ISSUE_01", "type": "OverviewIssueCard", "label": "Overview Issue Card"},
+        {"id": defect_kpi["id"], "type": "KPIObservation", "label": "Defect Rate KPI", "kpi": defect_kpi["kpi"], "value": defect_kpi["value"], "status": defect_kpi["status"]},
+        {"id": duration_kpi["id"], "type": "KPIObservation", "label": "Disturbance Duration KPI", "kpi": duration_kpi["kpi"], "value": duration_kpi["value"], "status": duration_kpi["status"]},
+        {"id": risk_kpi["id"], "type": "KPIObservation", "label": "Order Delay Risk KPI", "kpi": risk_kpi["kpi"], "value": risk_kpi["value"], "status": risk_kpi["status"]},
+        {"id": derivation["id"], "type": "DerivationRule", "label": derivation["name"]},
+        {"id": entities["asset"][0]["id"], "type": "Asset", "label": entities["asset"][0]["id"]},
+        {"id": entities["station"][0]["id"], "type": "Station", "label": entities["station"][0]["id"]},
+        {"id": defect["id"], "type": "Defect", "label": defect["defect_code"], "code": defect["defect_code"]},
+    ]
+
+    nodes.extend(
+        {"id": unit["id"], "type": "SerialUnit", "label": unit["id"]}
+        for unit in entities["serial_unit"]
+    )
+    nodes.extend(
+        {"id": order["id"], "type": "ProductionOrder", "label": order["id"]}
+        for order in entities["production_order"]
+    )
+    nodes.extend(
+        {
+            "id": rep["source_representation_id"],
+            "type": "SourceRepresentation",
+            "label": rep["source_record_id"],
+            "source_system": rep["source_system"],
+        }
+        for rep in source_representations
+        if rep["represents_canonical_id"] in derivation["input_refs"]
+    )
+
+    edges = [
+        {"id": "E001", "source": "UI_OVERVIEW_CARD_ISSUE_01", "target": "KPIOBS_2101", "relationship_class": "technical_lineage", "relationship": "rendered_from"},
+        {"id": "E002", "source": "KPIOBS_2101", "target": derivation["id"], "relationship_class": "technical_lineage", "relationship": "derived_from"},
+        {"id": "E003", "source": defect["id"], "target": entities["serial_unit"][0]["id"], "relationship_class": "business", "relationship": "detected_on"},
+        {"id": "E004", "source": entities["serial_unit"][0]["id"], "target": entities["station"][0]["id"], "relationship_class": "business", "relationship": "processed_at"},
+        {"id": "E005", "source": entities["station"][0]["id"], "target": entities["asset"][0]["id"], "relationship_class": "business", "relationship": "processed_at"},
+        {"id": "E006", "source": "KPIOBS_2101", "target": defect["id"], "relationship_class": "business", "relationship": "detected_on"},
+        {"id": "E007", "source": "KPIOBS_2101", "target": entities["serial_unit"][0]["id"], "relationship_class": "business", "relationship": "detected_on"},
+        {"id": "E008", "source": "KPIOBS_2101", "target": entities["production_order"][0]["id"], "relationship_class": "business", "relationship": "belongs_to_order"},
+        {"id": "E009", "source": "KPIOBS_2101", "target": "KPIOBS_2102", "relationship_class": "business", "relationship": "derived_from"},
+        {"id": "E010", "source": "KPIOBS_2101", "target": "KPIOBS_2103", "relationship_class": "business", "relationship": "belongs_to_order"},
+    ]
+
+    mapped_edge_n = 11
+    for rep in [r for r in source_representations if r["represents_canonical_id"] in derivation["input_refs"]]:
+        edges.append(
+            {
+                "id": f"E{mapped_edge_n:03d}",
+                "source": derivation["id"],
+                "target": rep["source_representation_id"],
+                "relationship_class": "technical_lineage",
+                "relationship": "mapped_from",
+            }
+        )
+        mapped_edge_n += 1
+
+    return {
+        "graph_id": "POC_V1_ISSUE_GRAPH",
+        "default_focus_node_id": "KPIOBS_2101",
+        "nodes": nodes,
+        "edges": edges,
+    }
 
 
 def main() -> None:
@@ -509,6 +593,7 @@ def main() -> None:
     kpis = stage_4_kpis(events, results, config)
     lineage = stage_5_lineage(normalized, source_representations, events, results, kpis)
     ui_pages = stage_6_ui_payload(kpis, events)
+    graph = stage_7_graph_payload(canonical_entities, source_representations, results, kpis, lineage)
 
     write_json(OUT_ROOT / "canonical/source_representations.json", source_representations)
     write_json(OUT_ROOT / "canonical/entities.json", canonical_entities)
@@ -517,6 +602,7 @@ def main() -> None:
     write_json(OUT_ROOT / "kpi/observations.json", kpis)
     write_json(OUT_ROOT / "lineage/artifacts.json", lineage)
     write_json(OUT_ROOT / "ui/pages.json", ui_pages)
+    write_json(OUT_ROOT / "ui/graph.json", graph)
 
     print("Generated deterministic PoC artifacts in data/generated/v1/")
 

@@ -1,0 +1,192 @@
+{
+  "default_focus_node_id": "KPIOBS_2101",
+  "edges": [
+    {
+      "id": "E001",
+      "relationship": "rendered_from",
+      "relationship_class": "technical_lineage",
+      "source": "UI_OVERVIEW_CARD_ISSUE_01",
+      "target": "KPIOBS_2101"
+    },
+    {
+      "id": "E002",
+      "relationship": "derived_from",
+      "relationship_class": "technical_lineage",
+      "source": "KPIOBS_2101",
+      "target": "LIN_0021"
+    },
+    {
+      "id": "E003",
+      "relationship": "detected_on",
+      "relationship_class": "business",
+      "source": "RES_0001",
+      "target": "SU_900001"
+    },
+    {
+      "id": "E004",
+      "relationship": "processed_at",
+      "relationship_class": "business",
+      "source": "SU_900001",
+      "target": "ST_PAINT_BOOTH_03"
+    },
+    {
+      "id": "E005",
+      "relationship": "processed_at",
+      "relationship_class": "business",
+      "source": "ST_PAINT_BOOTH_03",
+      "target": "ASSET_PAINT_ROBOT_07"
+    },
+    {
+      "id": "E006",
+      "relationship": "detected_on",
+      "relationship_class": "business",
+      "source": "KPIOBS_2101",
+      "target": "RES_0001"
+    },
+    {
+      "id": "E007",
+      "relationship": "detected_on",
+      "relationship_class": "business",
+      "source": "KPIOBS_2101",
+      "target": "SU_900001"
+    },
+    {
+      "id": "E008",
+      "relationship": "belongs_to_order",
+      "relationship_class": "business",
+      "source": "KPIOBS_2101",
+      "target": "ORD_10045"
+    },
+    {
+      "id": "E009",
+      "relationship": "derived_from",
+      "relationship_class": "business",
+      "source": "KPIOBS_2101",
+      "target": "KPIOBS_2102"
+    },
+    {
+      "id": "E010",
+      "relationship": "belongs_to_order",
+      "relationship_class": "business",
+      "source": "KPIOBS_2101",
+      "target": "KPIOBS_2103"
+    },
+    {
+      "id": "E011",
+      "relationship": "mapped_from",
+      "relationship_class": "technical_lineage",
+      "source": "LIN_0021",
+      "target": "SRCREP_0007"
+    },
+    {
+      "id": "E012",
+      "relationship": "mapped_from",
+      "relationship_class": "technical_lineage",
+      "source": "LIN_0021",
+      "target": "SRCREP_0008"
+    },
+    {
+      "id": "E013",
+      "relationship": "mapped_from",
+      "relationship_class": "technical_lineage",
+      "source": "LIN_0021",
+      "target": "SRCREP_0009"
+    }
+  ],
+  "graph_id": "POC_V1_ISSUE_GRAPH",
+  "nodes": [
+    {
+      "id": "UI_OVERVIEW_CARD_ISSUE_01",
+      "label": "Overview Issue Card",
+      "type": "OverviewIssueCard"
+    },
+    {
+      "id": "KPIOBS_2101",
+      "kpi": "defect_rate",
+      "label": "Defect Rate KPI",
+      "status": "violated",
+      "type": "KPIObservation",
+      "value": 0.667
+    },
+    {
+      "id": "KPIOBS_2102",
+      "kpi": "disturbance_duration_minutes",
+      "label": "Disturbance Duration KPI",
+      "status": "high",
+      "type": "KPIObservation",
+      "value": 75
+    },
+    {
+      "id": "KPIOBS_2103",
+      "kpi": "order_delay_risk",
+      "label": "Order Delay Risk KPI",
+      "status": "elevated",
+      "type": "KPIObservation",
+      "value": "high"
+    },
+    {
+      "id": "LIN_0021",
+      "label": "derive_defect_rate_kpi",
+      "type": "DerivationRule"
+    },
+    {
+      "id": "ASSET_PAINT_ROBOT_07",
+      "label": "ASSET_PAINT_ROBOT_07",
+      "type": "Asset"
+    },
+    {
+      "id": "ST_PAINT_BOOTH_03",
+      "label": "ST_PAINT_BOOTH_03",
+      "type": "Station"
+    },
+    {
+      "code": "DF_PAINT_ORANGE_PEEL",
+      "id": "RES_0001",
+      "label": "DF_PAINT_ORANGE_PEEL",
+      "type": "Defect"
+    },
+    {
+      "id": "SU_900001",
+      "label": "SU_900001",
+      "type": "SerialUnit"
+    },
+    {
+      "id": "SU_900002",
+      "label": "SU_900002",
+      "type": "SerialUnit"
+    },
+    {
+      "id": "SU_900101",
+      "label": "SU_900101",
+      "type": "SerialUnit"
+    },
+    {
+      "id": "ORD_10045",
+      "label": "ORD_10045",
+      "type": "ProductionOrder"
+    },
+    {
+      "id": "ORD_10046",
+      "label": "ORD_10046",
+      "type": "ProductionOrder"
+    },
+    {
+      "id": "SRCREP_0007",
+      "label": "QMS_INSP_3001",
+      "source_system": "QMS",
+      "type": "SourceRepresentation"
+    },
+    {
+      "id": "SRCREP_0008",
+      "label": "QMS_INSP_3002",
+      "source_system": "QMS",
+      "type": "SourceRepresentation"
+    },
+    {
+      "id": "SRCREP_0009",
+      "label": "QMS_INSP_3003",
+      "source_system": "QMS",
+      "type": "SourceRepresentation"
+    }
+  ]
+}
