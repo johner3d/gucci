@@ -17,7 +17,7 @@ export function ImpactSummary({ cards = [] }) {
             </p>
             <div className="button-row">
               <Link to={`/graph?focus=${card.deep_link.focus_node_id}&mode=downstream-impact`}>Open impact path</Link>
-              <Link to={`/objects/${card.deep_link.focus_node_id}?entry=overview_card`}>Entity detail</Link>
+              <Link to={`/object-explorer/${card.deep_link.focus_node_id}?entry=overview_card`}>Entity detail</Link>
             </div>
           </Card>
         ))}

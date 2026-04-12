@@ -5,7 +5,7 @@ function RefLink({ ref }) {
   if (ref.startsWith('LIN_')) return <Link to={`/lineage/${ref}`}>{ref}</Link>
   if (ref.startsWith('EVT_')) return <Link to={`/events?focus=${ref}`}>{ref}</Link>
   if (/^(STEP_|ACT_|SUBPROC_|PROC_)/.test(ref)) return <Link to={`/process?focus=${ref}`}>{ref}</Link>
-  if (/^(KPIOBS_|ORD_|SU_|ASSET_)/.test(ref)) return <Link to={`/objects/${ref}`}>{ref}</Link>
+  if (/^(KPIOBS_|ORD_|SU_|ASSET_)/.test(ref)) return <Link to={`/object-explorer/${ref}`}>{ref}</Link>
   return <span>{ref}</span>
 }
 

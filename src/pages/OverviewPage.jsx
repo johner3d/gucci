@@ -39,7 +39,7 @@ export function OverviewPage() {
         <h2>Object search quick-links</h2>
         <ul className="list-reset">
           {featuredObjects.map((id) => (
-            <li key={id}><Link to={`/objects/${id}?entry=overview`}>{id}</Link></li>
+            <li key={id}><Link to={`/object-explorer/${id}?entry=overview`}>{id}</Link></li>
           ))}
         </ul>
       </section>
