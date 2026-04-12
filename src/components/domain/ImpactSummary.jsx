@@ -1,0 +1,24 @@
+import { Link } from 'react-router-dom'
+import { Card } from '../primitives/Primitives'
+
+export function ImpactSummary({ cards = [] }) {
+  return (
+    <section className="stack">
+      <h2>Impact summary</h2>
+      <div className="page-grid">
+        {cards.map((card) => (
+          <Card key={card.card_id}>
+            <h3>{card.label}</h3>
+            <p><strong>Value:</strong> {card.value}</p>
+            <p><strong>Status:</strong> {card.status}</p>
+            <p>
+              <strong>Lineage:</strong>{' '}
+              <Link to={`/lineage/${card.lineage_artifact_id}`}>{card.lineage_artifact_id}</Link>
+            </p>
+            <Link to={`/graph?focus=${card.deep_link.focus_node_id}&mode=impact`}>Open impact path</Link>
+          </Card>
+        ))}
+      </div>
+    </section>
+  )
+}
