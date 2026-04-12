@@ -299,26 +299,102 @@ Hide advanced controls by default; reveal contextually to avoid clutter.
 
 ---
 
-## 15) Showcase storytelling flows (3–5)
+## 15) Scripted showcase journeys (3–5) with seeded deep links
 
-1. **Defect spike triage flow**
-   - Overview signal → graph root-cause candidates → event confirmation → lineage trust check → recommended decision.
+Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-off. All links are route-safe for the existing PoC shell and preserve context using query parameters.
 
-2. **Order risk impact flow**
-   - Elevated order risk → impacted unit set → process bottleneck context → mitigation options.
+### 15.1 Journey A — Defect spike triage (executive-to-analyst handoff)
+- **Seeded deep link:** `/executive?plant=PLANT_01&line=LINE_PAINT_1&incident=INC_DEFECT_SPIKE_001&severity=elevated`
+- **Script:**
+  1. Start on Executive Overview breach stack.
+  2. Jump to ranked causality graph path.
+  3. Confirm event chronology in Event View.
+  4. Validate trust in Lineage View.
+  5. Return with recommended mitigation and confidence.
+- **Expected outcomes:**
+  - Operator identifies top 1–2 root-cause candidates in < 3 minutes.
+  - Evidence chain includes at least one event cluster and one lineage artifact.
+  - Decision statement includes severity, trust level, and next action owner.
 
-3. **Asset disturbance causality flow**
-   - Disturbance KPI breach → maintenance overdue chain → defect propagation path → action prioritization.
+### 15.2 Journey B — Order risk to fulfillment impact
+- **Seeded deep link:** `/logistics?plant=PLANT_01&order=ORD_10045&incident=INC_ORDER_RISK_002&severity=watch`
+- **Script:**
+  1. Open affected order and unit scope in Logistics.
+  2. Pivot to Process View handoff latency points.
+  3. Open impacted object cards for bottleneck entities.
+  4. Validate downstream KPI impact in Executive Overview.
+- **Expected outcomes:**
+  - Team quantifies impacted orders/units and delay window.
+  - At least one cross-domain dependency is explicitly named.
+  - Mitigation option is prioritized by business impact.
 
-4. **Traceability assurance flow**
-   - Executive challenge (“why trust this?”) → lineage narrative → technical artifact DAG → source evidence.
+### 15.3 Journey C — Asset disturbance causal propagation
+- **Seeded deep link:** `/maintenance?plant=PLANT_01&asset=ASSET_PAINT_ROBOT_07&incident=INC_ASSET_DISTURBANCE_003&severity=critical`
+- **Script:**
+  1. Start from maintenance disturbance signal.
+  2. Traverse graph path to quality defect spike.
+  3. Open affected serial unit object card (`SU_900001`).
+  4. Inspect lineage for rule/version and upstream inputs.
+- **Expected outcomes:**
+  - Causal chain from maintenance overdue status to KPI breach is explainable end-to-end.
+  - Trust panel surfaces confidence rationale without raw-payload reading.
+  - Proposed action captures immediate containment and follow-up verification.
 
-5. **Cross-domain handoff stress flow**
-   - Process swimlane handoff anomaly → event clusters → graph dependencies → business impact summary.
+### 15.4 Journey D — Traceability assurance challenge
+- **Seeded deep link:** `/lineage/LIN_0039?incident=INC_TRACEABILITY_004&focus=kpi-card`
+- **Script:**
+  1. Start with “why should we trust this KPI insight?” challenge.
+  2. Read business narrative lineage layer.
+  3. Expand technical derivation DAG and source references.
+  4. Jump back to consuming UI artifact in context.
+- **Expected outcomes:**
+  - Executive can map decision claim to specific lineage evidence.
+  - Technical reviewer can verify rule/input provenance in < 2 clicks.
+  - Any confidence caveat is visible before action recommendation.
+
+### 15.5 Journey E — Cross-domain handoff stress test
+- **Seeded deep link:** `/process?plant=PLANT_01&incident=INC_HANDOFF_STRESS_005&domain=production,quality,logistics,maintenance`
+- **Script:**
+  1. Open swimlane flow and identify degraded handoffs.
+  2. Inspect correlated anomaly clusters in Events.
+  3. Validate upstream/downstream dependencies in Graph.
+  4. Summarize cross-domain impact and owner actions.
+- **Expected outcomes:**
+  - Handoff failure points are ranked by severity and business exposure.
+  - Each impacted domain has one concrete follow-up action.
+  - Walkthrough ends with a shared, evidence-backed decision.
 
 ---
 
-## 16) Phased implementation plan
+## 16) UX language, hierarchy, and latency enforcement standards
+
+These standards are release-gating; they are not optional style guidance.
+
+### 16.1 UX language standards (severity, trust, status)
+- **Severity vocabulary (only):** `normal`, `watch`, `elevated`, `violated`, `critical`.
+- **Trust vocabulary (only):** `unverified`, `provisional`, `supported`, `high-confidence`.
+- **Operational status vocabulary (only):** `on-track`, `at-risk`, `degraded`, `blocked`, `recovering`.
+- Every insight card must display all three signals (severity, trust, status) in that order.
+- No synonym drift in labels (e.g., “urgent”, “warning”, “okay”) outside the approved vocabulary.
+
+### 16.2 Visual hierarchy consistency rules
+- Primary row of every analytical card: incident/object identity + severity badge + business impact.
+- Secondary row: evidence summary and trust rationale.
+- Tertiary row: technical metadata (IDs, versions, source refs).
+- CTA ordering is fixed: `Investigate` → `Compare` → `Explain lineage` → `Export`.
+- Global context chips must remain visible above page fold on all core routes.
+
+### 16.3 Interaction latency targets (demo and QA SLA)
+- Context-preserving route transition: **p95 < 500 ms**.
+- Graph scoped re-render (same incident): **p95 < 900 ms**.
+- Object card hydration: **p95 < 700 ms**.
+- Lineage narrative + DAG load: **p95 < 1000 ms**.
+- Search first-result response: **p95 < 600 ms**.
+- Any breach beyond SLA requires release waiver and documented remediation owner/date.
+
+---
+
+## 17) Phased implementation plan
 
 ### Phase 1 — Product foundation
 - Introduce new IA, route model, app shell, global context, and design token scaffolding.
@@ -346,7 +422,7 @@ Hide advanced controls by default; reveal contextually to avoid clutter.
 
 ---
 
-## 17) Risks / anti-patterns
+## 18) Risks / anti-patterns
 
 - Fake sophistication (visual polish without reasoning integrity)
 - Graph as decorative widget
@@ -362,7 +438,7 @@ Hide advanced controls by default; reveal contextually to avoid clutter.
 
 ---
 
-## 18) Final recommendation
+## 19) Final recommendation
 
 Commit to a **product architecture-first overhaul**:
 1. Lock global reasoning model and cross-space interaction contracts.
@@ -378,3 +454,29 @@ If implementation starts with superficial styling, the core product failure will
 - Do not fork by persona as primary IA.
 - Keep graph and lineage as first-class analytical surfaces.
 - Enforce context persistence and cross-link behavior across all pages.
+
+---
+
+## 20) Final QA gates (release blockers)
+
+These four gates are mandatory for demo certification and implementation completion.
+
+### Gate A — Semantic integrity
+- Taxonomy, ontology classing, and entity semantics are internally consistent.
+- No unresolved alias collisions for surfaced terms.
+- User-visible semantic labels match canonical semantic references.
+
+### Gate B — Traversal completeness
+- Each scripted journey can be completed without dead-end navigation.
+- Required cross-links (overview/process/events/graph/object/lineage) are intact.
+- Back-navigation restores prior analytical context.
+
+### Gate C — Lineage explainability
+- Every major decision claim has narrative and technical lineage layers.
+- Trust label is justified by explicit upstream evidence.
+- Reviewers can identify rule/version/input lineage for showcased claims.
+
+### Gate D — Cross-domain decision usefulness
+- Journey output contains at least one decision/action per impacted domain.
+- Decision summary includes business impact, owner, and timing expectation.
+- Executive and shopfloor reviewers both rate outputs as operationally actionable.
