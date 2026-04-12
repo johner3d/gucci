@@ -12,6 +12,7 @@
           "route": "/graph"
         },
         "label": "Defect Rate",
+        "lineage_artifact_id": "LIN_0042",
         "source_kpi_observation_id": "KPIOBS_2101",
         "status": "violated",
         "value": 0.667

@@ -51,12 +51,23 @@
   },
   "lineage_entry_links": [
     {
-      "artifact_id": "LIN_0003",
+      "artifact_id": "LIN_0021",
       "name": "map_mes_unit_representation_to_serial_unit_entity",
-      "route": "/lineage/LIN_0003"
+      "route": "/lineage/LIN_0021"
+    },
+    {
+      "artifact_id": "LIN_0022",
+      "name": "derive_unit_processed_event_from_mes_unit_representation",
+      "route": "/lineage/LIN_0022"
+    },
+    {
+      "artifact_id": "LIN_0045",
+      "name": "bind_serial_unit_object_card",
+      "route": "/lineage/LIN_0045"
     }
   ],
   "object_id": "SU_900001",
+  "primary_lineage_artifact_id": "LIN_0045",
   "related_timeline": [
     {
       "id": "EVT_0005",
