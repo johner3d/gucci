@@ -22,3 +22,11 @@ Backbone chain represented in the seed:
 - `data/seed/v1/lineage`: explicit provenance and derivation artifacts
 - `data/seed/v1/config`: deterministic seed metadata
 
+
+## Build generated artifacts
+
+Run the deterministic generator:
+
+```bash
+python scripts/build_poc_v1.py
+```

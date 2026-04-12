@@ -1,0 +1,72 @@
+[
+  {
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "id": "EVT_0001",
+    "maintenance_activity_id": "MA_7001",
+    "occurred_at_utc": "2026-01-15T07:30:00Z",
+    "type": "maintenance_overdue_threshold_crossed"
+  },
+  {
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "id": "EVT_0002",
+    "occurred_at_utc": "2026-01-15T08:10:00Z",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "type": "asset_disturbance_started"
+  },
+  {
+    "id": "EVT_0005",
+    "occurred_at_utc": "2026-01-15T08:20:00Z",
+    "serial_unit_id": "SU_900001",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "type": "unit_processed"
+  },
+  {
+    "id": "EVT_0006",
+    "occurred_at_utc": "2026-01-15T08:22:00Z",
+    "serial_unit_id": "SU_900002",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "type": "unit_processed"
+  },
+  {
+    "id": "EVT_0008",
+    "inspection_id": "INSP_81001",
+    "occurred_at_utc": "2026-01-15T08:45:00Z",
+    "serial_unit_id": "SU_900001",
+    "type": "inspection_executed"
+  },
+  {
+    "id": "EVT_0009",
+    "inspection_id": "INSP_81002",
+    "occurred_at_utc": "2026-01-15T08:48:00Z",
+    "serial_unit_id": "SU_900002",
+    "type": "inspection_executed"
+  },
+  {
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "id": "EVT_0003",
+    "maintenance_activity_id": "MA_7001",
+    "occurred_at_utc": "2026-01-15T09:10:00Z",
+    "type": "maintenance_performed"
+  },
+  {
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "id": "EVT_0004",
+    "occurred_at_utc": "2026-01-15T09:25:00Z",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "type": "asset_disturbance_cleared"
+  },
+  {
+    "id": "EVT_0007",
+    "occurred_at_utc": "2026-01-15T10:05:00Z",
+    "serial_unit_id": "SU_900101",
+    "station_id": "ST_PAINT_BOOTH_03",
+    "type": "unit_processed"
+  },
+  {
+    "id": "EVT_0010",
+    "inspection_id": "INSP_81003",
+    "occurred_at_utc": "2026-01-15T10:25:00Z",
+    "serial_unit_id": "SU_900101",
+    "type": "inspection_executed"
+  }
+]
