@@ -130,6 +130,31 @@ export async function loadLineageArtifactsData() {
   }
 }
 
+
+export async function loadProcessData() {
+  const context = 'process'
+  try {
+    const [canvas, events, relationships, kpis, artifacts] = await Promise.all([
+      fetchJSON('/data/generated/v1/ui/process_canvas.json'),
+      fetchJSON('/data/generated/v1/canonical/events.json'),
+      fetchJSON('/data/generated/v1/canonical/relationships.json'),
+      fetchJSON('/data/generated/v1/kpi/observations.json'),
+      fetchJSON('/data/generated/v1/lineage/artifacts.json'),
+    ])
+
+    return {
+      canvas,
+      events,
+      relationships,
+      kpis,
+      artifacts,
+      diagnostics: [],
+    }
+  } catch (error) {
+    throw new DataValidationError('Could not load process data', asDiagnostics(error, context))
+  }
+}
+
 export function toUiDiagnostics(error, fallbackPath = 'data') {
   return asDiagnostics(error, fallbackPath)
 }

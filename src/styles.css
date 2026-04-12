@@ -176,3 +176,68 @@ a:hover {
 .diagnostics-list li + li {
   margin-top: var(--space-2);
 }
+
+.process-canvas {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.process-lane {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  background: #fafbff;
+}
+
+.process-lane-steps {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.process-step-card {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--color-border);
+  border-left-width: 5px;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.process-step-card.selected {
+  box-shadow: 0 0 0 2px var(--color-primary-soft);
+}
+
+.process-step-header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.process-step-overlays {
+  margin-top: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 0.78rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+}
+
+.risk-low {
+  border-left-color: #2f9e44;
+}
+
+.risk-medium {
+  border-left-color: #f59f00;
+}
+
+.risk-high {
+  border-left-color: #d9480f;
+}
