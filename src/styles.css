@@ -308,6 +308,11 @@ a:hover {
   background: #fff7f7;
 }
 
+.is-highlighted {
+  box-shadow: 0 0 0 2px #bfd0ff inset;
+  background: #eef3ff !important;
+}
+
 .timeline-event-head {
   display: flex;
   justify-content: space-between;
@@ -398,4 +403,11 @@ a:hover {
 .panel-next-actions {
   border-top: 1px dashed var(--color-border);
   padding-top: var(--space-2);
+}
+
+.lineage-dag {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
 }

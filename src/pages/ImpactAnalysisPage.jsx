@@ -35,7 +35,12 @@ export function ImpactAnalysisPage() {
   }, [])
 
   const focus = searchParams.get('focus') || globalContext.focus || globalContext.focusEntity
+  const highlightedId = searchParams.get('highlight') || ''
   const impactingEdges = useMemo(() => toScoredEdges(graph.filter((edge) => edge.source_id === focus || edge.target_id === focus)).slice(0, 8), [focus, graph])
+  const breachSignals = useMemo(
+    () => events.filter((event) => ['threshold', 'violation', 'disturbance', 'kpi'].some((token) => `${event.type}`.toLowerCase().includes(token))).slice(0, 6),
+    [events]
+  )
   const correlatedEvents = useMemo(
     () => events.filter((event) => Object.values(event).includes(focus) || event.type?.includes('kpi') || event.type?.includes('inspection')).slice(0, 10),
     [events, focus]
@@ -58,9 +63,29 @@ export function ImpactAnalysisPage() {
       <Panel title="Top scored impact edges">
         <ul className="row-list">
           {impactingEdges.map((edge) => (
-            <li key={edge.id}>
+            <li key={edge.id} className={highlightedId === edge.id ? 'is-highlighted' : ''}>
               <strong>{edge.id}</strong> — {edge.source_id} {edge.type} {edge.target_id}
               <div className="meta">impact score {edge.impactScore} | confidence {edge.qualifiers?.confidence ?? 'n/a'} | strength {edge.qualifiers?.strength ?? 'n/a'}</div>
+              <div className="button-row">
+                <Link to={toScopedPath('/graph', globalContext, { focus: edge.source_id, highlight: edge.id })}>Graph path</Link>
+                <Link to={toScopedPath('/process', globalContext, { highlight: edge.target_id })}>Process lane</Link>
+                <Link to={toScopedPath(`/object-explorer/${edge.target_id}`, globalContext, { highlight: edge.id })}>Entity hub</Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </Panel>
+
+      <Panel title="KPI breach communication">
+        <ul className="row-list">
+          {breachSignals.map((event) => (
+            <li key={event.id} className={highlightedId === event.id ? 'is-highlighted' : ''}>
+              <strong>{event.id}</strong> — {event.type}
+              <div className="meta">{event.occurred_at_utc}</div>
+              <div className="button-row">
+                <Link to={toScopedPath('/events', globalContext, { highlight: event.id, event: event.id })}>Open temporal track</Link>
+                <Link to={toScopedPath('/graph', globalContext, { focus: event.kpi_observation_id || focus, highlight: event.id })}>Open causality path</Link>
+              </div>
             </li>
           ))}
         </ul>

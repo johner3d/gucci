@@ -41,6 +41,7 @@ export function ProcessPage() {
   }, [])
 
   const selectedStepId = searchParams.get('step')
+  const highlightedId = searchParams.get('highlight') || ''
 
   const selectedStep = useMemo(() => {
     if (!processData?.canvas?.steps?.length) return null
@@ -67,6 +68,11 @@ export function ProcessPage() {
     return { events, causalLinks, kpis, lineageEvidence }
   }, [selectedStep, processData])
 
+  const breachedKpis = useMemo(() => {
+    if (!processData?.kpis?.length) return []
+    return processData.kpis.filter((kpi) => ['breach', 'violated', 'alert', 'critical'].some((token) => `${kpi.status}`.toLowerCase().includes(token)))
+  }, [processData])
+
   if (!processData && !diagnostics.length) return <p>Loading process…</p>
 
   return (
@@ -90,6 +96,7 @@ export function ProcessPage() {
           </Panel>
 
           <Panel title="Lane-based process canvas">
+            <p className="meta">Risk overlay legend: low (green), medium (amber), high (orange). Selected and highlighted steps stay synchronized with graph/events/lineage.</p>
             <div className="process-canvas">
               {lanes.map((lane) => (
                 <section key={lane.id} className="process-lane">
@@ -97,12 +104,13 @@ export function ProcessPage() {
                   <ul className="list-reset process-lane-steps">
                     {lane.steps.map((step) => {
                       const isSelected = selectedStep?.id === step.id
+                      const isHighlighted = highlightedId === step.id
                       return (
                         <li key={step.id}>
                           <button
                             type="button"
-                            className={`process-step-card risk-${step.risk} ${isSelected ? 'selected' : ''}`.trim()}
-                            onClick={() => setSearchParams({ ...context, step: step.id })}
+                            className={`process-step-card risk-${step.risk} ${isSelected ? 'selected' : ''} ${isHighlighted ? 'is-highlighted' : ''}`.trim()}
+                            onClick={() => setSearchParams({ ...context, step: step.id, highlight: step.id })}
                           >
                             <div className="process-step-header">
                               <strong>
@@ -123,6 +131,22 @@ export function ProcessPage() {
                 </section>
               ))}
             </div>
+          </Panel>
+          <Panel title="KPI breach communication">
+            {!breachedKpis.length ? <p className="meta">No breached KPI observations in the active context.</p> : null}
+            <ul className="row-list">
+              {breachedKpis.map((kpi) => (
+                <li key={kpi.id} className={highlightedId === kpi.id ? 'is-highlighted' : ''}>
+                  <strong>{kpi.id}</strong> — {kpi.kpi}
+                  <div className="meta">status {kpi.status} | value {String(kpi.value)}</div>
+                  <div className="button-row">
+                    <Link to={toScopedPath('/graph', globalContext, { focus: kpi.id, highlight: kpi.id })}>Graph causality</Link>
+                    <Link to={toScopedPath('/events', globalContext, { correlatedOnly: true, highlight: kpi.id })}>Temporal events</Link>
+                    <Link to={toScopedPath(`/object-explorer/${kpi.id}`, globalContext, { highlight: kpi.id })}>Entity semantic hub</Link>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </Panel>
 
           {selectedStep && related ? (

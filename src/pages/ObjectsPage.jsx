@@ -93,6 +93,7 @@ export function ObjectsPage() {
 
   const pinned = asArrayParam(searchParams, 'pin')
   const compared = asArrayParam(searchParams, 'compare')
+  const highlightedId = searchParams.get('highlight') || ''
 
   const toggleEntityList = (key) => {
     if (!id) return
@@ -119,8 +120,26 @@ export function ObjectsPage() {
   return (
     <div className="stack">
       <h1>{entity.id}</h1>
-      <p className="meta">Entity Detail · {toTypeLabel(entity.entity_type)}</p>
+      <p className="meta">Semantic Hub · {toTypeLabel(entity.entity_type)}</p>
       <DataDiagnostics diagnostics={diagnostics} />
+
+      <Panel title="Executive summary">
+        <p>
+          <strong>Current posture:</strong> {entity.id} is a <strong>{toTypeLabel(entity.entity_type)}</strong> with{' '}
+          <strong>{relationships.length}</strong> graph links, <strong>{relatedEvents.length}</strong> related events, and{' '}
+          <strong>{lineageLinks.length}</strong> lineage artifacts in scope.
+        </p>
+        <p>
+          <strong>Operational risk signal:</strong> {entity.risk || entity.status || entity.state || 'normal'}.
+          Primary route for action is cross-workspace drilldown from this hub.
+        </p>
+        <div className="button-row">
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, highlight: entity.id })}>Graph causality path</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext, { highlight: entity.id })}>Process swimlanes</Link>
+          <Link className="btn" to={toScopedPath('/events', globalContext, { highlight: relatedEvents[0]?.id || entity.id })}>Temporal events</Link>
+          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext, { highlight: lineageLinks[0]?.id || '' })}>Lineage DAG</Link>
+        </div>
+      </Panel>
 
       <Panel title="Entity actions">
         <div className="button-row">
@@ -159,9 +178,13 @@ export function ObjectsPage() {
       <Panel title="Business graph relationships">
         <ul className="list-reset">
           {relationships.map((relationship) => (
-            <li key={relationship.id}>
+            <li key={relationship.id} className={highlightedId === relationship.id ? 'is-highlighted' : ''}>
               <strong>{relationship.id}</strong> — {relationship.source_id} {relationship.type} {relationship.target_id}
               <div className="meta">{relationship.category} | confidence {relationship.qualifiers?.confidence ?? 'n/a'} | polarity {relationship.qualifiers?.polarity ?? 'n/a'}</div>
+              <div className="button-row">
+                <Link to={toScopedPath('/graph', globalContext, { focus: relationship.source_id, highlight: relationship.id })}>Highlight in graph</Link>
+                <Link to={toScopedPath('/impact-analysis', globalContext, { focus: relationship.target_id, highlight: relationship.id })}>Impact map</Link>
+              </div>
             </li>
           ))}
         </ul>
@@ -175,56 +198,65 @@ export function ObjectsPage() {
         </ul>
       </Panel>
 
-      <Panel title="Meaning & ontology (canonical semantic store)">
-        <p><strong>Semantic tags:</strong> {(semantics?.semantic?.semantic_tags || []).join(', ') || 'none'}</p>
+      <Panel title="Technical depth (progressive disclosure)">
+        <details>
+          <summary>Meaning & ontology (canonical semantic store)</summary>
+          <p><strong>Semantic tags:</strong> {(semantics?.semantic?.semantic_tags || []).join(', ') || 'none'}</p>
 
-        <h3>Ontology classes</h3>
-        <ul className="list-reset">
-          {(semantics?.ontologyClasses || []).map((ontologyClass) => (
-            <li key={ontologyClass.id}><strong>{ontologyClass.label}</strong> ({ontologyClass.id}) — {ontologyClass.definition}</li>
-          ))}
-        </ul>
+          <h3>Ontology classes</h3>
+          <ul className="list-reset">
+            {(semantics?.ontologyClasses || []).map((ontologyClass) => (
+              <li key={ontologyClass.id}><strong>{ontologyClass.label}</strong> ({ontologyClass.id}) — {ontologyClass.definition}</li>
+            ))}
+          </ul>
 
-        <h3>Definitions & aliases</h3>
-        <ul className="list-reset">
-          {(semantics?.terms || []).map((term) => (
-            <li key={term.id}>
-              <strong>{term.term}</strong> — {term.definition}
-              <div className="meta">aliases: {(term.aliases || []).join(', ') || 'none'}</div>
-            </li>
-          ))}
-        </ul>
+          <h3>Definitions & aliases</h3>
+          <ul className="list-reset">
+            {(semantics?.terms || []).map((term) => (
+              <li key={term.id}>
+                <strong>{term.term}</strong> — {term.definition}
+                <div className="meta">aliases: {(term.aliases || []).join(', ') || 'none'}</div>
+              </li>
+            ))}
+          </ul>
 
-        <h3>Taxonomy nodes</h3>
-        <ul className="list-reset">
-          {(semantics?.taxonomyNodes || []).map((node) => (
-            <li key={node.id}><strong>{node.label}</strong> ({node.id})</li>
-          ))}
-        </ul>
+          <h3>Taxonomy nodes</h3>
+          <ul className="list-reset">
+            {(semantics?.taxonomyNodes || []).map((node) => (
+              <li key={node.id}><strong>{node.label}</strong> ({node.id})</li>
+            ))}
+          </ul>
 
-        <h3>Linked rules</h3>
-        <ul className="list-reset">
-          {(semantics?.rules || []).map((rule) => (
-            <li key={rule.id}><strong>{rule.label}</strong> ({rule.id}) — {rule.definition}</li>
-          ))}
-        </ul>
+          <h3>Linked rules</h3>
+          <ul className="list-reset">
+            {(semantics?.rules || []).map((rule) => (
+              <li key={rule.id}><strong>{rule.label}</strong> ({rule.id}) — {rule.definition}</li>
+            ))}
+          </ul>
+        </details>
+
+        <details>
+          <summary>State snapshot (canonical entity)</summary>
+          <pre className="code-block">{JSON.stringify(entity, null, 2)}</pre>
+        </details>
+
+        <details>
+          <summary>Source provenance</summary>
+          <ul className="list-reset">
+            {sourceRepresentations.map((source) => (
+              <li key={source.source_representation_id}>
+                <strong>{source.source_system}</strong> — {source.source_record_id} ({source.representation_type})
+              </li>
+            ))}
+          </ul>
+        </details>
       </Panel>
 
-      <Panel title="State snapshot (canonical entity)">
-        <pre className="code-block">{JSON.stringify(entity, null, 2)}</pre>
-      </Panel>
-
-      <Panel title="Source provenance">
-        <ul className="list-reset">
-          {sourceRepresentations.map((source) => (
-            <li key={source.source_representation_id}>
-              <strong>{source.source_system}</strong> — {source.source_record_id} ({source.representation_type})
-            </li>
-          ))}
-        </ul>
-      </Panel>
-
-      <EventTimeline events={relatedEvents} />
+      <EventTimeline
+        events={relatedEvents}
+        highlightedId={highlightedId}
+        onHighlight={(eventId) => setSearchParams(toSearch(searchParams, { highlight: eventId }))}
+      />
     </div>
   )
 }
