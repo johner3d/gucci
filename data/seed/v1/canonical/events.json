@@ -4,28 +4,32 @@
     "type": "maintenance_overdue_threshold_crossed",
     "occurred_at_utc": "2026-01-15T07:30:00Z",
     "asset_id": "ASSET_PAINT_ROBOT_07",
-    "maintenance_activity_id": "MA_7001"
+    "maintenance_activity_id": "MA_7001",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1002",
     "type": "asset_disturbance_started",
     "occurred_at_utc": "2026-01-15T08:10:00Z",
     "asset_id": "ASSET_PAINT_ROBOT_07",
-    "station_id": "ST_PAINT_BOOTH_03"
+    "station_id": "ST_PAINT_BOOTH_03",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1003",
     "type": "unit_processed",
     "occurred_at_utc": "2026-01-15T08:20:00Z",
     "serial_unit_id": "SU_900001",
-    "station_id": "ST_PAINT_BOOTH_03"
+    "station_id": "ST_PAINT_BOOTH_03",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1004",
     "type": "inspection_executed",
     "occurred_at_utc": "2026-01-15T08:45:00Z",
     "inspection_id": "INSP_81001",
-    "serial_unit_id": "SU_900001"
+    "serial_unit_id": "SU_900001",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1005",
@@ -33,26 +37,30 @@
     "occurred_at_utc": "2026-01-15T08:45:20Z",
     "inspection_id": "INSP_81001",
     "defect_id": "DF_5001",
-    "serial_unit_id": "SU_900001"
+    "serial_unit_id": "SU_900001",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1006",
     "type": "kpi_threshold_violated",
     "occurred_at_utc": "2026-01-15T09:00:00Z",
-    "kpi_observation_id": "KPIOBS_2101"
+    "kpi_observation_id": "KPIOBS_2101",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1007",
     "type": "maintenance_performed",
     "occurred_at_utc": "2026-01-15T09:10:00Z",
     "asset_id": "ASSET_PAINT_ROBOT_07",
-    "maintenance_activity_id": "MA_7001"
+    "maintenance_activity_id": "MA_7001",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "id": "EVT_1008",
     "type": "asset_disturbance_cleared",
     "occurred_at_utc": "2026-01-15T09:25:00Z",
     "asset_id": "ASSET_PAINT_ROBOT_07",
-    "station_id": "ST_PAINT_BOOTH_03"
+    "station_id": "ST_PAINT_BOOTH_03",
+    "provenance_class": "synthetic source-realistic"
   }
 ]

@@ -3,28 +3,95 @@
     "id": "LIN_0001",
     "artifact_type": "mapping_rule",
     "name": "map_eam_work_order_to_maintenance_activity",
-    "input_refs": ["EAM_WO_12090"],
-    "output_refs": ["MA_7001"]
+    "input_refs": [
+      "EAM_WO_12090"
+    ],
+    "output_refs": [
+      "MA_7001"
+    ],
+    "provenance_class": "source-derivable",
+    "business_narrative": "",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "id": "LIN_0002",
     "artifact_type": "derivation_rule",
     "name": "derive_maintenance_overdue_event",
-    "input_refs": ["MA_7001"],
-    "output_refs": ["EVT_1001"]
+    "input_refs": [
+      "MA_7001"
+    ],
+    "output_refs": [
+      "EVT_1001"
+    ],
+    "provenance_class": "source-derivable",
+    "business_narrative": "",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [],
+      "events": [
+        "EVT_1001"
+      ]
+    }
   },
   {
     "id": "LIN_0003",
     "artifact_type": "derivation_rule",
     "name": "derive_defect_rate_observation",
-    "input_refs": ["INSP_81001", "INSP_81002", "INSP_81003", "EVT_1002"],
-    "output_refs": ["KPIOBS_2101"]
+    "input_refs": [
+      "INSP_81001",
+      "INSP_81002",
+      "INSP_81003",
+      "EVT_1002"
+    ],
+    "output_refs": [
+      "KPIOBS_2101"
+    ],
+    "provenance_class": "source-derivable",
+    "business_narrative": "",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101"
+      ],
+      "entities": [
+        "INSP_81001",
+        "INSP_81002",
+        "INSP_81003"
+      ],
+      "process_steps": [],
+      "events": [
+        "EVT_1002"
+      ]
+    }
   },
   {
     "id": "LIN_0004",
     "artifact_type": "ui_binding",
     "name": "overview_card_defect_rate_line_paint_a",
-    "input_refs": ["KPIOBS_2101"],
-    "output_refs": ["UI_OVERVIEW_CARD_ISSUE_01"]
+    "input_refs": [
+      "KPIOBS_2101"
+    ],
+    "output_refs": [
+      "UI_OVERVIEW_CARD_ISSUE_01"
+    ],
+    "provenance_class": "source-derivable",
+    "business_narrative": "",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101"
+      ],
+      "entities": [],
+      "process_steps": [],
+      "events": []
+    }
   }
 ]

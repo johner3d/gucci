@@ -14,7 +14,15 @@
     "rationale": "Ingested source record ERP_ORD_77821 from ERP to create a stable lineage entry point.",
     "rule_name": "capture_erp_orders_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record ERP_ORD_77821 from ERP to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -31,7 +39,15 @@
     "rationale": "Ingested source record ERP_ORD_77822 from ERP to create a stable lineage entry point.",
     "rule_name": "capture_erp_orders_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record ERP_ORD_77822 from ERP to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -48,7 +64,19 @@
     "rationale": "Ingested source record EAM_WO_12090 from EAM to create a stable lineage entry point.",
     "rule_name": "capture_maintenance_logs_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record EAM_WO_12090 from EAM to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -65,7 +93,19 @@
     "rationale": "Ingested source record MES_TRK_5001 from MES to create a stable lineage entry point.",
     "rule_name": "capture_mes_unit_tracking_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record MES_TRK_5001 from MES to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -82,7 +122,19 @@
     "rationale": "Ingested source record MES_TRK_5002 from MES to create a stable lineage entry point.",
     "rule_name": "capture_mes_unit_tracking_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record MES_TRK_5002 from MES to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -99,7 +151,19 @@
     "rationale": "Ingested source record MES_TRK_5003 from MES to create a stable lineage entry point.",
     "rule_name": "capture_mes_unit_tracking_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record MES_TRK_5003 from MES to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -116,7 +180,19 @@
     "rationale": "Ingested source record QMS_INSP_3001 from QMS to create a stable lineage entry point.",
     "rule_name": "capture_quality_inspections_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record QMS_INSP_3001 from QMS to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -133,7 +209,19 @@
     "rationale": "Ingested source record QMS_INSP_3002 from QMS to create a stable lineage entry point.",
     "rule_name": "capture_quality_inspections_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record QMS_INSP_3002 from QMS to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "source_input_record",
@@ -150,7 +238,19 @@
     "rationale": "Ingested source record QMS_INSP_3003 from QMS to create a stable lineage entry point.",
     "rule_name": "capture_quality_inspections_record",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-native",
+    "business_narrative": "Ingested source record QMS_INSP_3003 from QMS to create a stable lineage entry point.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -169,7 +269,15 @@
     "upstream_artifact_ids": [
       "LIN_0001"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized ERP source payload ERP_ORD_77821 into representation SRCREP_0001.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -188,7 +296,15 @@
     "upstream_artifact_ids": [
       "LIN_0002"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized ERP source payload ERP_ORD_77822 into representation SRCREP_0002.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -209,7 +325,19 @@
     "upstream_artifact_ids": [
       "LIN_0003"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized EAM source payload EAM_WO_12090 into representation SRCREP_0003.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -229,7 +357,19 @@
     "upstream_artifact_ids": [
       "LIN_0004"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized MES source payload MES_TRK_5001 into representation SRCREP_0004.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -249,7 +389,19 @@
     "upstream_artifact_ids": [
       "LIN_0005"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized MES source payload MES_TRK_5002 into representation SRCREP_0005.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -269,7 +421,19 @@
     "upstream_artifact_ids": [
       "LIN_0006"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized MES source payload MES_TRK_5003 into representation SRCREP_0006.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -290,7 +454,19 @@
     "upstream_artifact_ids": [
       "LIN_0007"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized QMS source payload QMS_INSP_3001 into representation SRCREP_0007.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -311,7 +487,19 @@
     "upstream_artifact_ids": [
       "LIN_0008"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized QMS source payload QMS_INSP_3002 into representation SRCREP_0008.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "source_representation",
@@ -331,7 +519,19 @@
     "upstream_artifact_ids": [
       "LIN_0009"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Normalized QMS source payload QMS_INSP_3003 into representation SRCREP_0009.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -351,7 +551,17 @@
     "upstream_artifact_ids": [
       "LIN_0010"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped normalized ERP order representation to canonical production order entity for cross-system joins.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "ORD_10045"
+      ],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -368,7 +578,17 @@
     "upstream_artifact_ids": [
       "LIN_0011"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped normalized ERP order representation to canonical production order entity for cross-system joins.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "ORD_10046"
+      ],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -388,7 +608,21 @@
     "upstream_artifact_ids": [
       "LIN_0013"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped MES unit representation to canonical serial unit identity.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900001"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -407,7 +641,21 @@
       "LIN_0013",
       "LIN_0021"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900001"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -426,7 +674,21 @@
     "upstream_artifact_ids": [
       "LIN_0014"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped MES unit representation to canonical serial unit identity.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900002"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -445,7 +707,22 @@
       "LIN_0014",
       "LIN_0023"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900002"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005",
+        "EVT_0006"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -464,7 +741,21 @@
     "upstream_artifact_ids": [
       "LIN_0015"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped MES unit representation to canonical serial unit identity.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900101"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -483,7 +774,22 @@
       "LIN_0015",
       "LIN_0025"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived unit processed event from MES timestamps attached to the mapped serial unit.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "SU_900101"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005",
+        "EVT_0007"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -504,7 +810,21 @@
     "upstream_artifact_ids": [
       "LIN_0012"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped EAM maintenance representation to canonical maintenance activity.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -525,7 +845,22 @@
       "LIN_0012",
       "LIN_0027"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived maintenance_overdue_threshold_crossed event from maintenance activity timing and state transitions.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0001",
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -544,7 +879,21 @@
       "LIN_0012",
       "LIN_0027"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived maintenance_performed event from maintenance activity timing and state transitions.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -565,7 +914,21 @@
     "upstream_artifact_ids": [
       "LIN_0016"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped QMS inspection representation to canonical inspection object.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81001"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -584,7 +947,21 @@
       "LIN_0016",
       "LIN_0030"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived inspection executed event from inspection execution timestamp.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81001"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -606,7 +983,21 @@
       "LIN_0016",
       "LIN_0030"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived defect result when inspection outcome is NOK and includes a defect code.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81001"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -627,7 +1018,21 @@
     "upstream_artifact_ids": [
       "LIN_0017"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped QMS inspection representation to canonical inspection object.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81002"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -646,7 +1051,22 @@
       "LIN_0017",
       "LIN_0033"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived inspection executed event from inspection execution timestamp.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81002"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008",
+        "EVT_0009"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -667,7 +1087,21 @@
       "LIN_0017",
       "LIN_0033"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived defect result when inspection outcome is NOK and includes a defect code.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81002"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "canonical_mapping",
@@ -687,7 +1121,21 @@
     "upstream_artifact_ids": [
       "LIN_0018"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Mapped QMS inspection representation to canonical inspection object.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81003"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -706,7 +1154,22 @@
       "LIN_0018",
       "LIN_0036"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived inspection executed event from inspection execution timestamp.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "INSP_81003"
+      ],
+      "process_steps": [
+        "STEP_EXECUTE_INSPECTION"
+      ],
+      "events": [
+        "EVT_0008",
+        "EVT_0010"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -725,7 +1188,22 @@
     "upstream_artifact_ids": [
       "LIN_0027"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived maintenance overdue threshold crossing from due-by and performed timestamps.",
+    "backlinks": {
+      "kpis": [],
+      "entities": [
+        "MA_7001"
+      ],
+      "process_steps": [
+        "STEP_PERFORM_MAINTENANCE"
+      ],
+      "events": [
+        "EVT_0001",
+        "EVT_0003"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -756,7 +1234,23 @@
       "LIN_0035",
       "LIN_0036"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Calculated defect-rate KPI by dividing NOK defect results by executed inspections in the active window.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101"
+      ],
+      "entities": [
+        "INSP_81001",
+        "INSP_81002",
+        "INSP_81003"
+      ],
+      "process_steps": [
+        "STEP_MONITOR_ALERTS"
+      ],
+      "events": []
+    }
   },
   {
     "artifact_type": "derivation",
@@ -776,7 +1270,22 @@
     "rationale": "Calculated disturbance-duration KPI from disturbance start and clear event timestamps.",
     "rule_name": "derive_disturbance_duration_kpi",
     "upstream_artifact_ids": [],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Calculated disturbance-duration KPI from disturbance start and clear event timestamps.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2102"
+      ],
+      "entities": [],
+      "process_steps": [
+        "STEP_MONITOR_ALERTS"
+      ],
+      "events": [
+        "EVT_0002",
+        "EVT_0004"
+      ]
+    }
   },
   {
     "artifact_type": "derivation",
@@ -800,7 +1309,23 @@
       "LIN_0039",
       "LIN_0040"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Derived order-delay risk KPI from elevated quality and disturbance signals for the impacted order.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101",
+        "KPIOBS_2102",
+        "KPIOBS_2103"
+      ],
+      "entities": [
+        "ORD_10045"
+      ],
+      "process_steps": [
+        "STEP_MONITOR_ALERTS"
+      ],
+      "events": []
+    }
   },
   {
     "artifact_type": "ui_binding",
@@ -817,7 +1342,19 @@
     "upstream_artifact_ids": [
       "LIN_0039"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Bound the violated defect-rate KPI to the overview issue card so operators can quickly triage.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101"
+      ],
+      "entities": [],
+      "process_steps": [
+        "STEP_MONITOR_ALERTS"
+      ],
+      "events": []
+    }
   },
   {
     "artifact_type": "ui_binding",
@@ -838,7 +1375,21 @@
       "LIN_0038",
       "LIN_0040"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Rendered asset object card using canonical asset context and disturbance/maintenance signals.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2102"
+      ],
+      "entities": [
+        "ASSET_PAINT_ROBOT_07"
+      ],
+      "process_steps": [],
+      "events": [
+        "EVT_0001"
+      ]
+    }
   },
   {
     "artifact_type": "ui_binding",
@@ -859,7 +1410,20 @@
       "LIN_0039",
       "LIN_0041"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Rendered order object card to explain downstream risk from defect-rate and delay indicators.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101",
+        "KPIOBS_2103"
+      ],
+      "entities": [
+        "ORD_10045"
+      ],
+      "process_steps": [],
+      "events": []
+    }
   },
   {
     "artifact_type": "ui_binding",
@@ -880,7 +1444,23 @@
       "LIN_0032",
       "LIN_0039"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Rendered serial-unit card with defect evidence and KPI impact context.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101"
+      ],
+      "entities": [
+        "SU_900001"
+      ],
+      "process_steps": [
+        "STEP_RUN_UNITS"
+      ],
+      "events": [
+        "EVT_0005"
+      ]
+    }
   },
   {
     "artifact_type": "ui_binding",
@@ -901,6 +1481,20 @@
       "LIN_0040",
       "LIN_0041"
     ],
-    "version": "v1"
+    "version": "v1",
+    "provenance_class": "source-derivable",
+    "business_narrative": "Rendered KPI object card showing why this KPI is violated and how it connects to nearby indicators.",
+    "backlinks": {
+      "kpis": [
+        "KPIOBS_2101",
+        "KPIOBS_2102",
+        "KPIOBS_2103"
+      ],
+      "entities": [],
+      "process_steps": [
+        "STEP_MONITOR_ALERTS"
+      ],
+      "events": []
+    }
   }
 ]

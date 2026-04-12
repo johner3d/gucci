@@ -16,7 +16,8 @@
     },
     "source_id": "UI_OVERVIEW_CARD_ISSUE_01",
     "target_id": "KPIOBS_2101",
-    "type": "rendered_from"
+    "type": "rendered_from",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "lineage",
@@ -35,7 +36,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "LIN_0039",
-    "type": "derived_from"
+    "type": "derived_from",
+    "provenance_class": "source-derivable"
   },
   {
     "category": "operational",
@@ -54,7 +56,8 @@
     },
     "source_id": "RES_0001",
     "target_id": "SU_900001",
-    "type": "detected_on"
+    "type": "detected_on",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "category": "processual",
@@ -73,7 +76,8 @@
     },
     "source_id": "SU_900001",
     "target_id": "ST_PAINT_BOOTH_03",
-    "type": "processed_at"
+    "type": "processed_at",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "category": "structural",
@@ -93,7 +97,8 @@
     },
     "source_id": "ST_PAINT_BOOTH_03",
     "target_id": "ASSET_PAINT_ROBOT_07",
-    "type": "processed_at"
+    "type": "processed_at",
+    "provenance_class": "synthetic source-realistic"
   },
   {
     "category": "analytical",
@@ -113,7 +118,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "RES_0001",
-    "type": "detected_on"
+    "type": "detected_on",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "analytical",
@@ -133,7 +139,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "SU_900001",
-    "type": "observed_on"
+    "type": "observed_on",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "causal",
@@ -153,7 +160,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "ORD_10045",
-    "type": "impacts"
+    "type": "impacts",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "analytical",
@@ -173,7 +181,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "KPIOBS_2102",
-    "type": "correlates_with"
+    "type": "correlates_with",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "causal",
@@ -193,7 +202,8 @@
     },
     "source_id": "KPIOBS_2101",
     "target_id": "KPIOBS_2103",
-    "type": "influences"
+    "type": "influences",
+    "provenance_class": "synthetic target-state"
   },
   {
     "category": "lineage",
@@ -213,7 +223,8 @@
     },
     "source_id": "LIN_0039",
     "target_id": "SRCREP_0007",
-    "type": "mapped_from"
+    "type": "mapped_from",
+    "provenance_class": "source-derivable"
   },
   {
     "category": "lineage",
@@ -233,7 +244,8 @@
     },
     "source_id": "LIN_0039",
     "target_id": "SRCREP_0008",
-    "type": "mapped_from"
+    "type": "mapped_from",
+    "provenance_class": "source-derivable"
   },
   {
     "category": "lineage",
@@ -253,6 +265,7 @@
     },
     "source_id": "LIN_0039",
     "target_id": "SRCREP_0009",
-    "type": "mapped_from"
+    "type": "mapped_from",
+    "provenance_class": "source-derivable"
   }
 ]

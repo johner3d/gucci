@@ -2,7 +2,8 @@
   "asset": [
     {
       "id": "ASSET_PAINT_ROBOT_07",
-      "station_id": "ST_PAINT_BOOTH_03"
+      "station_id": "ST_PAINT_BOOTH_03",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "inspection": [
@@ -10,43 +11,50 @@
       "defect_code": "DF_PAINT_ORANGE_PEEL",
       "id": "INSP_81001",
       "result": "NOK",
-      "serial_unit_id": "SU_900001"
+      "serial_unit_id": "SU_900001",
+      "provenance_class": "synthetic source-realistic"
     },
     {
       "defect_code": "DF_PAINT_ORANGE_PEEL",
       "id": "INSP_81002",
       "result": "NOK",
-      "serial_unit_id": "SU_900002"
+      "serial_unit_id": "SU_900002",
+      "provenance_class": "synthetic source-realistic"
     },
     {
       "defect_code": null,
       "id": "INSP_81003",
       "result": "OK",
-      "serial_unit_id": "SU_900101"
+      "serial_unit_id": "SU_900101",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "line": [
     {
       "id": "LINE_PAINT_A",
-      "plant_id": "PLANT_DE_01"
+      "plant_id": "PLANT_DE_01",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "maintenance_activity": [
     {
       "asset_id": "ASSET_PAINT_ROBOT_07",
       "id": "MA_7001",
-      "status": "completed_late"
+      "status": "completed_late",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "plant": [
     {
-      "id": "PLANT_DE_01"
+      "id": "PLANT_DE_01",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "product": [
     {
       "id": "PROD_SEDAN_X",
-      "source_product_code": "SEDAN_X"
+      "source_product_code": "SEDAN_X",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "production_order": [
@@ -54,13 +62,15 @@
       "id": "ORD_10045",
       "planned_end_utc": "2026-01-15T10:30:00Z",
       "planned_start_utc": "2026-01-15T06:00:00Z",
-      "variant_id": "VAR_SEDAN_RED_PREM"
+      "variant_id": "VAR_SEDAN_RED_PREM",
+      "provenance_class": "synthetic source-realistic"
     },
     {
       "id": "ORD_10046",
       "planned_end_utc": "2026-01-15T13:30:00Z",
       "planned_start_utc": "2026-01-15T09:00:00Z",
-      "variant_id": "VAR_SEDAN_RED_PREM"
+      "variant_id": "VAR_SEDAN_RED_PREM",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "serial_unit": [
@@ -68,31 +78,36 @@
       "batch_lot_id": "LOT_PAINT_20260115_A",
       "id": "SU_900001",
       "order_id": "ORD_10045",
-      "station_id": "ST_PAINT_BOOTH_03"
+      "station_id": "ST_PAINT_BOOTH_03",
+      "provenance_class": "synthetic source-realistic"
     },
     {
       "batch_lot_id": "LOT_PAINT_20260115_A",
       "id": "SU_900002",
       "order_id": "ORD_10045",
-      "station_id": "ST_PAINT_BOOTH_03"
+      "station_id": "ST_PAINT_BOOTH_03",
+      "provenance_class": "synthetic source-realistic"
     },
     {
       "batch_lot_id": "LOT_PAINT_20260115_B",
       "id": "SU_900101",
       "order_id": "ORD_10046",
-      "station_id": "ST_PAINT_BOOTH_03"
+      "station_id": "ST_PAINT_BOOTH_03",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "station": [
     {
       "id": "ST_PAINT_BOOTH_03",
-      "line_id": "LINE_PAINT_A"
+      "line_id": "LINE_PAINT_A",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "variant": [
     {
       "id": "VAR_SEDAN_RED_PREM",
-      "product_id": "PROD_SEDAN_X"
+      "product_id": "PROD_SEDAN_X",
+      "provenance_class": "synthetic source-realistic"
     }
   ],
   "process": [
@@ -103,31 +118,36 @@
       "line_id": "LINE_PAINT_A",
       "window_start_utc": "2026-01-15T06:00:00Z",
       "window_end_utc": "2026-01-15T14:00:00Z",
-      "severity": "high"
+      "severity": "high",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "subprocess": [
     {
       "id": "SUBPROC_DETECT_CONTAIN",
       "process_id": "PROC_PAINT_INCIDENT_RESPONSE",
-      "label": "Detect & Contain"
+      "label": "Detect & Contain",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "SUBPROC_RECOVER_VERIFY",
       "process_id": "PROC_PAINT_INCIDENT_RESPONSE",
-      "label": "Recover & Verify"
+      "label": "Recover & Verify",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "activity": [
     {
       "id": "ACT_MONITOR_PAINT_HEALTH",
       "subprocess_id": "SUBPROC_DETECT_CONTAIN",
-      "label": "Monitor paint-cell health"
+      "label": "Monitor paint-cell health",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "ACT_RESTORE_AND_CONFIRM",
       "subprocess_id": "SUBPROC_RECOVER_VERIFY",
-      "label": "Restore equipment and verify quality"
+      "label": "Restore equipment and verify quality",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "work_step": [
@@ -137,7 +157,8 @@
       "label": "Monitor alerts and disturbance feed",
       "lane": "Production Control",
       "state": "completed",
-      "risk": "medium"
+      "risk": "medium",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "STEP_RUN_UNITS",
@@ -145,7 +166,8 @@
       "label": "Run units through paint booth",
       "lane": "Paint Booth",
       "state": "completed",
-      "risk": "high"
+      "risk": "high",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "STEP_EXECUTE_INSPECTION",
@@ -153,7 +175,8 @@
       "label": "Execute inspection checks",
       "lane": "Quality",
       "state": "completed",
-      "risk": "high"
+      "risk": "high",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "STEP_PERFORM_MAINTENANCE",
@@ -161,7 +184,8 @@
       "label": "Perform corrective maintenance",
       "lane": "Maintenance",
       "state": "completed",
-      "risk": "medium"
+      "risk": "medium",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "STEP_RESUME_NORMAL_FLOW",
@@ -169,19 +193,22 @@
       "label": "Resume normal production flow",
       "lane": "Production Control",
       "state": "in_progress",
-      "risk": "low"
+      "risk": "low",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "decision_point": [
     {
       "id": "DEC_DEFECT_SPIKE_CONFIRMED",
       "activity_id": "ACT_MONITOR_PAINT_HEALTH",
-      "label": "Defect spike confirmed?"
+      "label": "Defect spike confirmed?",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "DEC_DISTURBANCE_CLEARED",
       "activity_id": "ACT_RESTORE_AND_CONFIRM",
-      "label": "Disturbance fully cleared?"
+      "label": "Disturbance fully cleared?",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "handoff": [
@@ -189,13 +216,15 @@
       "id": "HANDOFF_CONTROL_TO_MAINT",
       "from_lane": "Production Control",
       "to_lane": "Maintenance",
-      "reason": "escalate corrective action"
+      "reason": "escalate corrective action",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "HANDOFF_MAINT_TO_QUALITY",
       "from_lane": "Maintenance",
       "to_lane": "Quality",
-      "reason": "post-maintenance quality confirmation"
+      "reason": "post-maintenance quality confirmation",
+      "provenance_class": "synthetic target-state"
     }
   ],
   "state_transition": [
@@ -203,13 +232,15 @@
       "id": "TRANS_ALERT_TO_RESPONSE",
       "from_state": "monitoring",
       "to_state": "incident_response",
-      "trigger_event_id": "EVT_0002"
+      "trigger_event_id": "EVT_0002",
+      "provenance_class": "synthetic target-state"
     },
     {
       "id": "TRANS_RESPONSE_TO_STABLE",
       "from_state": "incident_response",
       "to_state": "stabilized",
-      "trigger_event_id": "EVT_0004"
+      "trigger_event_id": "EVT_0004",
+      "provenance_class": "synthetic target-state"
     }
   ]
 }

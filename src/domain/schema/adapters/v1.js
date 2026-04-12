@@ -14,6 +14,7 @@ export function adaptV1Event(event) {
       sourceSystem: 'poc_v1',
       sourceRecordId: event.id,
       ingestionVersion: 'v1',
+      provenanceClass: event.provenance_class || 'synthetic source-realistic',
     },
     legacy: event,
   }
@@ -31,6 +32,7 @@ export function adaptV1LineageArtifact(artifact) {
       sourceSystem: 'poc_v1',
       sourceRecordId: artifact.id,
       ingestionVersion: artifact.version || 'v1',
+      provenanceClass: artifact.provenance_class || 'source-derivable',
     },
     legacy: artifact,
   }
@@ -49,6 +51,12 @@ export function adaptV1GraphEdge(edge) {
       (edge.category && ['lineage', 'semantic'].includes(edge.category) ? 'technical_lineage' : 'business'),
     relationshipCategory: edge.category || edge.relationship_category,
     qualifiers: edge.qualifiers || {},
+    provenance: {
+      sourceSystem: edge.provenance?.source_system || 'poc_v1',
+      sourceRecordId: edge.id,
+      ingestionVersion: edge.provenance?.ingestion_version || 'v1',
+      provenanceClass: edge.provenance_class || 'source-derivable',
+    },
     legacy: edge,
   }
 
@@ -60,6 +68,12 @@ export function adaptV1Entity(id, entityType, attributes = {}) {
     id,
     entityType,
     attributes,
+    provenance: {
+      sourceSystem: attributes.provenance?.source_system || 'poc_v1',
+      sourceRecordId: id,
+      ingestionVersion: attributes.provenance?.ingestion_version || 'v1',
+      provenanceClass: attributes.provenance_class || 'synthetic source-realistic',
+    },
     legacy: attributes,
   }
 }

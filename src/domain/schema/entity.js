@@ -1,4 +1,5 @@
 import { ensureRecord, issue, requireString } from './validation'
+import { validateProvenance } from './provenance'
 
 /**
  * @typedef {Object} EntityContractV2
@@ -7,6 +8,7 @@ import { ensureRecord, issue, requireString } from './validation'
  * @property {string} id
  * @property {string} entityType
  * @property {Object.<string, unknown>} attributes
+ * @property {import('./provenance').ProvenanceContractV2=} provenance
  */
 
 export const entityContract = {
@@ -24,6 +26,7 @@ export function validateEntity(entity, path = 'entity') {
   if (!ensureRecord(entity.attributes, `${path}.attributes`, diagnostics)) {
     diagnostics.push(issue(`${path}.attributes`, 'invalid_type', 'Entity attributes must be object'))
   }
+  if (entity.provenance) diagnostics.push(...validateProvenance(entity.provenance, `${path}.provenance`))
 
   return diagnostics
 }
