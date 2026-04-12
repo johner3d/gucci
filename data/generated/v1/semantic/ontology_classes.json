@@ -1,0 +1,96 @@
+[
+  {
+    "definition": "A plant-level location where production operations are executed.",
+    "id": "ONT_CLASS_MANUFACTURING_SITE",
+    "label": "Manufacturing Site",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION"
+    ]
+  },
+  {
+    "definition": "A coordinated sequence of stations performing transformation steps.",
+    "id": "ONT_CLASS_PRODUCTION_LINE",
+    "label": "Production Line",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION"
+    ]
+  },
+  {
+    "definition": "A process location where units are processed by equipment and operators.",
+    "id": "ONT_CLASS_WORK_STATION",
+    "label": "Work Station",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION",
+      "TAX_UNIT_TRACKING"
+    ]
+  },
+  {
+    "definition": "A durable production resource that performs work in the manufacturing process.",
+    "id": "ONT_CLASS_PHYSICAL_ASSET",
+    "label": "Physical Asset",
+    "taxonomy_node_ids": [
+      "TAX_ASSETS",
+      "TAX_PAINT_LINE_ASSETS"
+    ]
+  },
+  {
+    "definition": "A planned work package that groups units and process steps for delivery.",
+    "id": "ONT_CLASS_PRODUCTION_ORDER",
+    "label": "Production Order",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION",
+      "TAX_ORDER_EXECUTION"
+    ]
+  },
+  {
+    "definition": "A uniquely identifiable produced item tracked through process and quality states.",
+    "id": "ONT_CLASS_SERIALIZED_UNIT",
+    "label": "Serialized Unit",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION",
+      "TAX_UNIT_TRACKING"
+    ]
+  },
+  {
+    "definition": "A measured indicator over a time window used to monitor operational performance.",
+    "id": "ONT_CLASS_KPI_OBSERVATION",
+    "label": "KPI Observation",
+    "taxonomy_node_ids": [
+      "TAX_ANALYTICS",
+      "TAX_QUALITY_METRICS"
+    ]
+  },
+  {
+    "definition": "Commercial product family represented in master and planning systems.",
+    "id": "ONT_CLASS_PRODUCT",
+    "label": "Product",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION"
+    ]
+  },
+  {
+    "definition": "Specific configurable variant of a base product.",
+    "id": "ONT_CLASS_PRODUCT_VARIANT",
+    "label": "Product Variant",
+    "taxonomy_node_ids": [
+      "TAX_PRODUCTION"
+    ]
+  },
+  {
+    "definition": "Quality control observation tied to a serialized unit.",
+    "id": "ONT_CLASS_QUALITY_INSPECTION",
+    "label": "Quality Inspection",
+    "taxonomy_node_ids": [
+      "TAX_QUALITY_METRICS",
+      "TAX_UNIT_TRACKING"
+    ]
+  },
+  {
+    "definition": "Planned or executed maintenance work item on an asset.",
+    "id": "ONT_CLASS_MAINTENANCE_ACTIVITY",
+    "label": "Maintenance Activity",
+    "taxonomy_node_ids": [
+      "TAX_ASSETS"
+    ]
+  }
+]

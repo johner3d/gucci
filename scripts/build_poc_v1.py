@@ -934,6 +934,7 @@ def stage_8_object_cards(
     kpis: list[dict[str, Any]],
     lineage: list[dict[str, Any]],
     relationships: list[dict[str, Any]],
+    semantic_bundle: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
     """8) object-card payloads for object details UI."""
 
@@ -1013,6 +1014,73 @@ def stage_8_object_cards(
             )
         return rows
 
+    entity_semantics = semantic_bundle["entity_semantics"]
+    ontology_by_id = {item["id"]: item for item in semantic_bundle["ontology_classes"]}
+    taxonomy_by_id = {item["id"]: item for item in semantic_bundle["taxonomy_nodes"]}
+    term_by_id = {item["id"]: item for item in semantic_bundle["terms"]}
+    aliases_by_term: dict[str, list[str]] = {}
+    for alias in semantic_bundle["aliases"]:
+        aliases_by_term.setdefault(alias["term_id"], []).append(alias["alias"])
+    semantic_rule_by_id = {item["id"]: item for item in semantic_bundle["rules"]}
+
+    def meaning_ontology_section(object_id: str) -> dict[str, Any]:
+        mapped = entity_semantics.get(object_id, {"ontology_class_ids": [], "semantic_tags": []})
+        class_ids = mapped["ontology_class_ids"]
+        semantic_tags = mapped["semantic_tags"]
+        taxonomy_ids = sorted(
+            {
+                tax_id
+                for class_id in class_ids
+                for tax_id in ontology_by_id.get(class_id, {}).get("taxonomy_node_ids", [])
+            }
+        )
+        term_ids = sorted(
+            {
+                term["id"]
+                for term in semantic_bundle["terms"]
+                if term["class_id"] in class_ids
+                or any(tag in term.get("semantic_tags", []) for tag in semantic_tags)
+            }
+        )
+        rule_ids = sorted(
+            {
+                rule["id"]
+                for rule in semantic_bundle["rules"]
+                if object_id in rule.get("linked_entity_ids", [])
+            }
+        )
+        return {
+            "ontology_classes": [
+                {
+                    "id": class_id,
+                    "label": ontology_by_id[class_id]["label"],
+                    "definition": ontology_by_id[class_id]["definition"],
+                }
+                for class_id in class_ids
+                if class_id in ontology_by_id
+            ],
+            "semantic_tags": semantic_tags,
+            "taxonomy_nodes": [taxonomy_by_id[tax_id] for tax_id in taxonomy_ids if tax_id in taxonomy_by_id],
+            "terms": [
+                {
+                    **term_by_id[term_id],
+                    "aliases": aliases_by_term.get(term_id, []),
+                }
+                for term_id in term_ids
+                if term_id in term_by_id
+            ],
+            "linked_rules": [
+                {
+                    "id": rule_id,
+                    "label": semantic_rule_by_id[rule_id]["label"],
+                    "definition": semantic_rule_by_id[rule_id]["definition"],
+                    "lineage_rule_names": semantic_rule_by_id[rule_id]["lineage_rule_names"],
+                }
+                for rule_id in rule_ids
+                if rule_id in semantic_rule_by_id
+            ],
+        }
+
     cards = {
         "ASSET_PAINT_ROBOT_07": {
             "card_schema_version": "v1",
@@ -1026,6 +1094,7 @@ def stage_8_object_cards(
             "semantic_meaning": {
                 "summary": "Primary paint-line robot asset executing spray operations at ST_PAINT_BOOTH_03.",
             },
+            "meaning_ontology": meaning_ontology_section("ASSET_PAINT_ROBOT_07"),
             "current_state_snapshot": {
                 "status": "disturbance_resolved_after_overdue_maintenance",
                 "as_of_utc": "2026-01-15T09:25:00Z",
@@ -1057,6 +1126,7 @@ def stage_8_object_cards(
             "semantic_meaning": {
                 "summary": "Order grouping multiple serial units for VAR_SEDAN_RED_PREM through the paint line window.",
             },
+            "meaning_ontology": meaning_ontology_section("ORD_10045"),
             "current_state_snapshot": {
                 "status": "at_risk",
                 "as_of_utc": "2026-01-15T14:00:00Z",
@@ -1088,6 +1158,7 @@ def stage_8_object_cards(
             "semantic_meaning": {
                 "summary": "Single manufactured unit tracked through processing and inspection lifecycle.",
             },
+            "meaning_ontology": meaning_ontology_section("SU_900001"),
             "current_state_snapshot": {
                 "status": "defect_detected",
                 "as_of_utc": "2026-01-15T08:45:00Z",
@@ -1123,6 +1194,7 @@ def stage_8_object_cards(
             "semantic_meaning": {
                 "summary": "Aggregated defect-rate signal for LINE_PAINT_A over the active operational window.",
             },
+            "meaning_ontology": meaning_ontology_section("KPIOBS_2101"),
             "current_state_snapshot": {
                 "status": "violated",
                 "as_of_utc": "2026-01-15T14:00:00Z",
@@ -1151,6 +1223,187 @@ def stage_8_object_cards(
     return cards
 
 
+def stage_8b_semantic_artifacts(
+    entities: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    """8b) semantic artifacts used by object detail and graph exploration."""
+    ontology_classes = [
+        {
+            "id": "ONT_CLASS_MANUFACTURING_SITE",
+            "label": "Manufacturing Site",
+            "definition": "A plant-level location where production operations are executed.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION"],
+        },
+        {
+            "id": "ONT_CLASS_PRODUCTION_LINE",
+            "label": "Production Line",
+            "definition": "A coordinated sequence of stations performing transformation steps.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION"],
+        },
+        {
+            "id": "ONT_CLASS_WORK_STATION",
+            "label": "Work Station",
+            "definition": "A process location where units are processed by equipment and operators.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION", "TAX_UNIT_TRACKING"],
+        },
+        {
+            "id": "ONT_CLASS_PHYSICAL_ASSET",
+            "label": "Physical Asset",
+            "definition": "A durable production resource that performs work in the manufacturing process.",
+            "taxonomy_node_ids": ["TAX_ASSETS", "TAX_PAINT_LINE_ASSETS"],
+        },
+        {
+            "id": "ONT_CLASS_PRODUCTION_ORDER",
+            "label": "Production Order",
+            "definition": "A planned work package that groups units and process steps for delivery.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION", "TAX_ORDER_EXECUTION"],
+        },
+        {
+            "id": "ONT_CLASS_SERIALIZED_UNIT",
+            "label": "Serialized Unit",
+            "definition": "A uniquely identifiable produced item tracked through process and quality states.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION", "TAX_UNIT_TRACKING"],
+        },
+        {
+            "id": "ONT_CLASS_KPI_OBSERVATION",
+            "label": "KPI Observation",
+            "definition": "A measured indicator over a time window used to monitor operational performance.",
+            "taxonomy_node_ids": ["TAX_ANALYTICS", "TAX_QUALITY_METRICS"],
+        },
+        {
+            "id": "ONT_CLASS_PRODUCT",
+            "label": "Product",
+            "definition": "Commercial product family represented in master and planning systems.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION"],
+        },
+        {
+            "id": "ONT_CLASS_PRODUCT_VARIANT",
+            "label": "Product Variant",
+            "definition": "Specific configurable variant of a base product.",
+            "taxonomy_node_ids": ["TAX_PRODUCTION"],
+        },
+        {
+            "id": "ONT_CLASS_QUALITY_INSPECTION",
+            "label": "Quality Inspection",
+            "definition": "Quality control observation tied to a serialized unit.",
+            "taxonomy_node_ids": ["TAX_QUALITY_METRICS", "TAX_UNIT_TRACKING"],
+        },
+        {
+            "id": "ONT_CLASS_MAINTENANCE_ACTIVITY",
+            "label": "Maintenance Activity",
+            "definition": "Planned or executed maintenance work item on an asset.",
+            "taxonomy_node_ids": ["TAX_ASSETS"],
+        },
+    ]
+
+    taxonomy_nodes = [
+        {"id": "TAX_ASSETS", "label": "Assets", "parent_id": None, "cross_links": [{"surface": "object_explorer", "route": "/objects/ASSET_PAINT_ROBOT_07"}, {"surface": "graph", "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact"}]},
+        {"id": "TAX_PAINT_LINE_ASSETS", "label": "Paint Line Assets", "parent_id": "TAX_ASSETS", "cross_links": [{"surface": "object_explorer", "route": "/objects/ASSET_PAINT_ROBOT_07"}, {"surface": "graph", "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact"}]},
+        {"id": "TAX_PRODUCTION", "label": "Production", "parent_id": None, "cross_links": [{"surface": "object_explorer", "route": "/objects/ORD_10045"}, {"surface": "graph", "route": "/graph?focus=ORD_10045&mode=impact"}]},
+        {"id": "TAX_ORDER_EXECUTION", "label": "Order Execution", "parent_id": "TAX_PRODUCTION", "cross_links": [{"surface": "object_explorer", "route": "/objects/ORD_10045"}, {"surface": "graph", "route": "/graph?focus=ORD_10045&mode=impact"}]},
+        {"id": "TAX_UNIT_TRACKING", "label": "Unit Tracking", "parent_id": "TAX_PRODUCTION", "cross_links": [{"surface": "object_explorer", "route": "/objects/SU_900001"}, {"surface": "graph", "route": "/graph?focus=SU_900001&mode=impact"}]},
+        {"id": "TAX_ANALYTICS", "label": "Analytics", "parent_id": None, "cross_links": [{"surface": "object_explorer", "route": "/objects/KPIOBS_2101"}, {"surface": "graph", "route": "/graph?focus=KPIOBS_2101&mode=impact"}]},
+        {"id": "TAX_QUALITY_METRICS", "label": "Quality Metrics", "parent_id": "TAX_ANALYTICS", "cross_links": [{"surface": "object_explorer", "route": "/objects/KPIOBS_2101"}, {"surface": "graph", "route": "/graph?focus=KPIOBS_2101&mode=impact"}]},
+    ]
+
+    terms = [
+        {"id": "TERM_PAINT_ROBOT", "term": "Paint Robot", "class_id": "ONT_CLASS_PHYSICAL_ASSET", "definition": "Robotic applicator used in the paint booth process.", "semantic_tags": ["asset", "automation", "paint_line"], "cross_links": [{"surface": "object_explorer", "route": "/objects/ASSET_PAINT_ROBOT_07"}, {"surface": "graph", "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact"}]},
+        {"id": "TERM_PRODUCTION_ORDER", "term": "Production Order", "class_id": "ONT_CLASS_PRODUCTION_ORDER", "definition": "Execution container for planned manufacturing work.", "semantic_tags": ["production", "planning", "fulfillment"], "cross_links": [{"surface": "object_explorer", "route": "/objects/ORD_10045"}, {"surface": "graph", "route": "/graph?focus=ORD_10045&mode=impact"}]},
+        {"id": "TERM_SERIAL_UNIT", "term": "Serial Unit", "class_id": "ONT_CLASS_SERIALIZED_UNIT", "definition": "Uniquely tracked produced unit with lineage and quality results.", "semantic_tags": ["traceability", "quality", "manufacturing"], "cross_links": [{"surface": "object_explorer", "route": "/objects/SU_900001"}, {"surface": "graph", "route": "/graph?focus=SU_900001&mode=impact"}]},
+        {"id": "TERM_DEFECT_RATE", "term": "Defect Rate", "class_id": "ONT_CLASS_KPI_OBSERVATION", "definition": "Share of inspected units marked non-conforming within a window.", "semantic_tags": ["kpi", "quality", "risk_signal"], "cross_links": [{"surface": "object_explorer", "route": "/objects/KPIOBS_2101"}, {"surface": "graph", "route": "/graph?focus=KPIOBS_2101&mode=impact"}]},
+    ]
+
+    aliases = [
+        {"id": "ALIAS_0001", "term_id": "TERM_PAINT_ROBOT", "alias": "Spray Robot"},
+        {"id": "ALIAS_0002", "term_id": "TERM_PAINT_ROBOT", "alias": "Paint Applicator"},
+        {"id": "ALIAS_0003", "term_id": "TERM_PRODUCTION_ORDER", "alias": "Work Order"},
+        {"id": "ALIAS_0004", "term_id": "TERM_SERIAL_UNIT", "alias": "Unit Instance"},
+        {"id": "ALIAS_0005", "term_id": "TERM_DEFECT_RATE", "alias": "NOK Ratio"},
+    ]
+
+    rules = [
+        {
+            "id": "SEM_RULE_ASSET_HEALTH",
+            "label": "Asset Disturbance Semantics",
+            "definition": "Asset disturbance and maintenance overdue events classify the asset as incident-relevant.",
+            "lineage_rule_names": [
+                "derive_maintenance_overdue_event",
+                "derive_maintenance_overdue_threshold_crossed_event_from_maintenance_activity",
+            ],
+            "linked_entity_ids": ["ASSET_PAINT_ROBOT_07"],
+        },
+        {
+            "id": "SEM_RULE_ORDER_RISK",
+            "label": "Order Risk Propagation",
+            "definition": "Order risk is inferred when defect-rate and disturbance signals exceed policy thresholds.",
+            "lineage_rule_names": ["derive_order_delay_risk_kpi", "bind_order_risk_object_card"],
+            "linked_entity_ids": ["ORD_10045"],
+        },
+        {
+            "id": "SEM_RULE_UNIT_DEFECT",
+            "label": "Unit Defect Classification",
+            "definition": "A serial unit is defect-bearing when inspection outcome is NOK with a defect code.",
+            "lineage_rule_names": [
+                "derive_defect_detected_result_from_inspection_representation",
+                "bind_serial_unit_object_card",
+            ],
+            "linked_entity_ids": ["SU_900001"],
+        },
+        {
+            "id": "SEM_RULE_KPI_VIOLATION",
+            "label": "KPI Violation Interpretation",
+            "definition": "Defect-rate KPI is interpreted as violated when value breaches configured threshold.",
+            "lineage_rule_names": ["derive_defect_rate_kpi", "bind_kpi_to_overview_issue_card"],
+            "linked_entity_ids": ["KPIOBS_2101"],
+        },
+    ]
+
+    class_by_entity_type = {
+        "plant": ["ONT_CLASS_MANUFACTURING_SITE"],
+        "line": ["ONT_CLASS_PRODUCTION_LINE"],
+        "station": ["ONT_CLASS_WORK_STATION"],
+        "asset": ["ONT_CLASS_PHYSICAL_ASSET"],
+        "product": ["ONT_CLASS_PRODUCT"],
+        "variant": ["ONT_CLASS_PRODUCT_VARIANT"],
+        "production_order": ["ONT_CLASS_PRODUCTION_ORDER"],
+        "serial_unit": ["ONT_CLASS_SERIALIZED_UNIT"],
+        "inspection": ["ONT_CLASS_QUALITY_INSPECTION"],
+        "maintenance_activity": ["ONT_CLASS_MAINTENANCE_ACTIVITY"],
+    }
+    tags_by_entity_type = {
+        "asset": ["asset", "operational", "maintenance_sensitive"],
+        "production_order": ["production", "fulfillment", "risk_bearing"],
+        "serial_unit": ["traceability", "quality", "defect_exposed"],
+        "line": ["production_context", "line_scope"],
+        "plant": ["production_context", "site_scope"],
+        "station": ["process_node", "manufacturing_station"],
+        "variant": ["product_model", "configuration"],
+        "product": ["product_master", "catalog"],
+        "inspection": ["quality_record", "inspection_event"],
+        "maintenance_activity": ["maintenance", "asset_health"],
+    }
+    entity_semantics: dict[str, dict[str, list[str]]] = {}
+    for entity_type, rows in entities.items():
+        for row in rows:
+            entity_semantics[row["id"]] = {
+                "ontology_class_ids": class_by_entity_type.get(entity_type, ["ONT_CLASS_PRODUCT"]),
+                "semantic_tags": tags_by_entity_type.get(entity_type, ["canonical_entity"]),
+            }
+    entity_semantics["KPIOBS_2101"] = {
+        "ontology_class_ids": ["ONT_CLASS_KPI_OBSERVATION"],
+        "semantic_tags": ["kpi", "quality", "incident_trigger"],
+    }
+
+    return {
+        "ontology_classes": ontology_classes,
+        "taxonomy_nodes": taxonomy_nodes,
+        "terms": terms,
+        "aliases": aliases,
+        "rules": rules,
+        "entity_semantics": entity_semantics,
+    }
+
+
 def main() -> None:
     normalized, config = stage_1_normalize_sources()
     source_representations = stage_1b_source_representations(normalized)
@@ -1165,8 +1418,16 @@ def main() -> None:
     graph = stage_7_graph_payload(
         canonical_entities, source_representations, results, kpis, lineage, relationships
     )
+    semantic_bundle = stage_8b_semantic_artifacts(canonical_entities)
     object_cards = stage_8_object_cards(
-        canonical_entities, source_representations, events, results, kpis, lineage, relationships
+        canonical_entities,
+        source_representations,
+        events,
+        results,
+        kpis,
+        lineage,
+        relationships,
+        semantic_bundle,
     )
 
     write_json(OUT_ROOT / "canonical/source_representations.json", source_representations)
@@ -1178,6 +1439,12 @@ def main() -> None:
     write_json(OUT_ROOT / "lineage/artifacts.json", lineage)
     write_json(OUT_ROOT / "ui/pages.json", ui_pages)
     write_json(OUT_ROOT / "ui/graph.json", graph)
+    write_json(OUT_ROOT / "semantic/ontology_classes.json", semantic_bundle["ontology_classes"])
+    write_json(OUT_ROOT / "semantic/taxonomy_nodes.json", semantic_bundle["taxonomy_nodes"])
+    write_json(OUT_ROOT / "semantic/terms.json", semantic_bundle["terms"])
+    write_json(OUT_ROOT / "semantic/aliases.json", semantic_bundle["aliases"])
+    write_json(OUT_ROOT / "semantic/rules.json", semantic_bundle["rules"])
+    write_json(OUT_ROOT / "semantic/entity_semantics.json", semantic_bundle["entity_semantics"])
     for object_id, object_card in object_cards.items():
         write_json(OUT_ROOT / f"ui/object_cards/{object_id}.json", object_card)
 

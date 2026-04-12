@@ -1,0 +1,153 @@
+{
+  "ASSET_PAINT_ROBOT_07": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PHYSICAL_ASSET"
+    ],
+    "semantic_tags": [
+      "asset",
+      "operational",
+      "maintenance_sensitive"
+    ]
+  },
+  "INSP_81001": {
+    "ontology_class_ids": [
+      "ONT_CLASS_QUALITY_INSPECTION"
+    ],
+    "semantic_tags": [
+      "quality_record",
+      "inspection_event"
+    ]
+  },
+  "INSP_81002": {
+    "ontology_class_ids": [
+      "ONT_CLASS_QUALITY_INSPECTION"
+    ],
+    "semantic_tags": [
+      "quality_record",
+      "inspection_event"
+    ]
+  },
+  "INSP_81003": {
+    "ontology_class_ids": [
+      "ONT_CLASS_QUALITY_INSPECTION"
+    ],
+    "semantic_tags": [
+      "quality_record",
+      "inspection_event"
+    ]
+  },
+  "KPIOBS_2101": {
+    "ontology_class_ids": [
+      "ONT_CLASS_KPI_OBSERVATION"
+    ],
+    "semantic_tags": [
+      "kpi",
+      "quality",
+      "incident_trigger"
+    ]
+  },
+  "LINE_PAINT_A": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PRODUCTION_LINE"
+    ],
+    "semantic_tags": [
+      "production_context",
+      "line_scope"
+    ]
+  },
+  "MA_7001": {
+    "ontology_class_ids": [
+      "ONT_CLASS_MAINTENANCE_ACTIVITY"
+    ],
+    "semantic_tags": [
+      "maintenance",
+      "asset_health"
+    ]
+  },
+  "ORD_10045": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PRODUCTION_ORDER"
+    ],
+    "semantic_tags": [
+      "production",
+      "fulfillment",
+      "risk_bearing"
+    ]
+  },
+  "ORD_10046": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PRODUCTION_ORDER"
+    ],
+    "semantic_tags": [
+      "production",
+      "fulfillment",
+      "risk_bearing"
+    ]
+  },
+  "PLANT_DE_01": {
+    "ontology_class_ids": [
+      "ONT_CLASS_MANUFACTURING_SITE"
+    ],
+    "semantic_tags": [
+      "production_context",
+      "site_scope"
+    ]
+  },
+  "PROD_SEDAN_X": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PRODUCT"
+    ],
+    "semantic_tags": [
+      "product_master",
+      "catalog"
+    ]
+  },
+  "ST_PAINT_BOOTH_03": {
+    "ontology_class_ids": [
+      "ONT_CLASS_WORK_STATION"
+    ],
+    "semantic_tags": [
+      "process_node",
+      "manufacturing_station"
+    ]
+  },
+  "SU_900001": {
+    "ontology_class_ids": [
+      "ONT_CLASS_SERIALIZED_UNIT"
+    ],
+    "semantic_tags": [
+      "traceability",
+      "quality",
+      "defect_exposed"
+    ]
+  },
+  "SU_900002": {
+    "ontology_class_ids": [
+      "ONT_CLASS_SERIALIZED_UNIT"
+    ],
+    "semantic_tags": [
+      "traceability",
+      "quality",
+      "defect_exposed"
+    ]
+  },
+  "SU_900101": {
+    "ontology_class_ids": [
+      "ONT_CLASS_SERIALIZED_UNIT"
+    ],
+    "semantic_tags": [
+      "traceability",
+      "quality",
+      "defect_exposed"
+    ]
+  },
+  "VAR_SEDAN_RED_PREM": {
+    "ontology_class_ids": [
+      "ONT_CLASS_PRODUCT_VARIANT"
+    ],
+    "semantic_tags": [
+      "product_model",
+      "configuration"
+    ]
+  }
+}

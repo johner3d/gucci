@@ -1,0 +1,27 @@
+[
+  {
+    "alias": "Spray Robot",
+    "id": "ALIAS_0001",
+    "term_id": "TERM_PAINT_ROBOT"
+  },
+  {
+    "alias": "Paint Applicator",
+    "id": "ALIAS_0002",
+    "term_id": "TERM_PAINT_ROBOT"
+  },
+  {
+    "alias": "Work Order",
+    "id": "ALIAS_0003",
+    "term_id": "TERM_PRODUCTION_ORDER"
+  },
+  {
+    "alias": "Unit Instance",
+    "id": "ALIAS_0004",
+    "term_id": "TERM_SERIAL_UNIT"
+  },
+  {
+    "alias": "NOK Ratio",
+    "id": "ALIAS_0005",
+    "term_id": "TERM_DEFECT_RATE"
+  }
+]
