@@ -57,6 +57,41 @@ def stage_1_normalize_sources() -> tuple[dict[str, list[dict[str, Any]]], dict[s
     return normalized, config
 
 
+def stage_1b_source_representations(
+    normalized: dict[str, list[dict[str, Any]]]
+) -> list[dict[str, Any]]:
+    """1b) source representation registry (one row per source row)."""
+    representation_type_by_source = {
+        "erp_orders": "order",
+        "maintenance_logs": "maintenance",
+        "mes_unit_tracking": "unit",
+        "quality_inspections": "inspection",
+    }
+    canonical_id_key_by_source = {
+        "erp_orders": "order_id",
+        "maintenance_logs": "activity_id",
+        "mes_unit_tracking": "serial_unit_id",
+        "quality_inspections": "inspection_id",
+    }
+
+    representations: list[dict[str, Any]] = []
+    n = 1
+    for source_name in sorted(normalized.keys()):
+        for row in normalized[source_name]:
+            payload = row["payload"]
+            representations.append(
+                {
+                    "source_representation_id": deterministic_id("SRCREP", n),
+                    "source_system": row["source_system"],
+                    "source_record_id": row["source_record_id"],
+                    "represents_canonical_id": payload[canonical_id_key_by_source[source_name]],
+                    "representation_type": representation_type_by_source[source_name],
+                }
+            )
+            n += 1
+    return representations
+
+
 def stage_2_canonical_mapping(
     normalized: dict[str, list[dict[str, Any]]], config: dict[str, Any]
 ) -> dict[str, list[dict[str, Any]]]:
@@ -281,24 +316,136 @@ def stage_4_kpis(
 
 def stage_5_lineage(
     normalized: dict[str, list[dict[str, Any]]],
+    source_representations: list[dict[str, Any]],
     events: list[dict[str, Any]],
+    results: list[dict[str, Any]],
     kpis: list[dict[str, Any]],
 ) -> list[dict[str, Any]]:
     """5) lineage emission."""
+    source_rep_by_record = {
+        rep["source_record_id"]: rep["source_representation_id"] for rep in source_representations
+    }
     lineage: list[dict[str, Any]] = []
     n = 1
 
-    for row in normalized["maintenance_logs"]:
+    for row in normalized["erp_orders"]:
+        payload = row["payload"]
         lineage.append(
             {
                 "id": deterministic_id("LIN", n),
                 "artifact_type": "mapping_rule",
-                "name": "map_eam_work_order_to_maintenance_activity",
-                "input_refs": [row["source_record_id"]],
-                "output_refs": [row["payload"]["activity_id"]],
+                "name": "map_erp_order_representation_to_order_entity",
+                "input_refs": [source_rep_by_record[row["source_record_id"]]],
+                "output_refs": [payload["order_id"]],
             }
         )
         n += 1
+
+    for row in normalized["mes_unit_tracking"]:
+        payload = row["payload"]
+        source_rep = source_rep_by_record[row["source_record_id"]]
+        unit_processed_event = next(
+            event
+            for event in events
+            if event["type"] == "unit_processed"
+            and event["serial_unit_id"] == payload["serial_unit_id"]
+            and event["occurred_at_utc"] == payload["processed_at_utc"]
+        )
+        lineage.extend(
+            [
+                {
+                    "id": deterministic_id("LIN", n),
+                    "artifact_type": "mapping_rule",
+                    "name": "map_mes_unit_representation_to_serial_unit_entity",
+                    "input_refs": [source_rep],
+                    "output_refs": [payload["serial_unit_id"]],
+                },
+                {
+                    "id": deterministic_id("LIN", n + 1),
+                    "artifact_type": "mapping_rule",
+                    "name": "map_mes_unit_representation_to_unit_processed_event",
+                    "input_refs": [source_rep],
+                    "output_refs": [unit_processed_event["id"]],
+                },
+            ]
+        )
+        n += 2
+
+    for row in normalized["maintenance_logs"]:
+        payload = row["payload"]
+        source_rep = source_rep_by_record[row["source_record_id"]]
+        maintenance_events = [
+            event
+            for event in events
+            if event.get("maintenance_activity_id") == payload["activity_id"]
+            and event["type"]
+            in {"maintenance_overdue_threshold_crossed", "maintenance_performed"}
+        ]
+        lineage.append(
+            {
+                "id": deterministic_id("LIN", n),
+                "artifact_type": "mapping_rule",
+                "name": "map_eam_maintenance_representation_to_activity_entity",
+                "input_refs": [source_rep],
+                "output_refs": [payload["activity_id"]],
+            }
+        )
+        n += 1
+        for event in maintenance_events:
+            lineage.append(
+                {
+                    "id": deterministic_id("LIN", n),
+                    "artifact_type": "mapping_rule",
+                    "name": f"map_eam_maintenance_representation_to_{event['type']}_event",
+                    "input_refs": [source_rep],
+                    "output_refs": [event["id"]],
+                }
+            )
+            n += 1
+
+    for row in normalized["quality_inspections"]:
+        payload = row["payload"]
+        source_rep = source_rep_by_record[row["source_record_id"]]
+        inspection_event = next(
+            event
+            for event in events
+            if event["type"] == "inspection_executed"
+            and event["inspection_id"] == payload["inspection_id"]
+        )
+        lineage.extend(
+            [
+                {
+                    "id": deterministic_id("LIN", n),
+                    "artifact_type": "mapping_rule",
+                    "name": "map_qms_inspection_representation_to_inspection_entity",
+                    "input_refs": [source_rep],
+                    "output_refs": [payload["inspection_id"]],
+                },
+                {
+                    "id": deterministic_id("LIN", n + 1),
+                    "artifact_type": "mapping_rule",
+                    "name": "map_qms_inspection_representation_to_inspection_executed_event",
+                    "input_refs": [source_rep],
+                    "output_refs": [inspection_event["id"]],
+                },
+            ]
+        )
+        n += 2
+        defect_result = next(
+            (result for result in results if result["inspection_id"] == payload["inspection_id"]),
+            None,
+        )
+        if defect_result:
+            lineage.append(
+                {
+                    "id": deterministic_id("LIN", n),
+                    "artifact_type": "mapping_rule",
+                    "name": "map_qms_inspection_representation_to_defect_detected_result",
+                    "input_refs": [source_rep],
+                    "output_refs": [defect_result["id"]],
+                }
+            )
+            n += 1
 
     first_overdue = next(e for e in events if e["type"] == "maintenance_overdue_threshold_crossed")
     lineage.append(
@@ -356,12 +503,14 @@ def stage_6_ui_payload(kpis: list[dict[str, Any]], events: list[dict[str, Any]])
 
 def main() -> None:
     normalized, config = stage_1_normalize_sources()
+    source_representations = stage_1b_source_representations(normalized)
     canonical_entities = stage_2_canonical_mapping(normalized, config)
     events, results = stage_3_events_and_results(normalized, config)
     kpis = stage_4_kpis(events, results, config)
-    lineage = stage_5_lineage(normalized, events, kpis)
+    lineage = stage_5_lineage(normalized, source_representations, events, results, kpis)
     ui_pages = stage_6_ui_payload(kpis, events)
 
+    write_json(OUT_ROOT / "canonical/source_representations.json", source_representations)
     write_json(OUT_ROOT / "canonical/entities.json", canonical_entities)
     write_json(OUT_ROOT / "canonical/events.json", events)
     write_json(OUT_ROOT / "canonical/results.json", results)
