@@ -33,19 +33,22 @@
   "key_relationships": {
     "business_graph": [
       {
-        "relationship": "belongs_to_order",
-        "target_id": "ORD_10045",
-        "target_type": "ProductionOrder"
-      },
-      {
-        "relationship": "processed_at_station",
+        "qualifiers": {
+          "confidence": 0.98,
+          "evidence_refs": [
+            "EVT_0005"
+          ],
+          "polarity": "neutral",
+          "strength": 0.83,
+          "validity_interval": {
+            "end_utc": "2026-01-15T14:00:00Z",
+            "start_utc": "2026-01-15T06:00:00Z"
+          }
+        },
+        "relationship": "processed_at",
+        "relationship_category": "processual",
         "target_id": "ST_PAINT_BOOTH_03",
-        "target_type": "Station"
-      },
-      {
-        "relationship": "has_result",
-        "target_id": "RES_0001",
-        "target_type": "DefectResult"
+        "target_type": "station"
       }
     ]
   },

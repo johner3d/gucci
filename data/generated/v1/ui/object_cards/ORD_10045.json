@@ -31,23 +31,7 @@
     "why_this_object_matters_now": "Defects detected on units within this order raise delay and rework risk."
   },
   "key_relationships": {
-    "business_graph": [
-      {
-        "relationship": "contains_serial_unit",
-        "target_id": "SU_900001",
-        "target_type": "SerialUnit"
-      },
-      {
-        "relationship": "contains_serial_unit",
-        "target_id": "SU_900002",
-        "target_type": "SerialUnit"
-      },
-      {
-        "relationship": "has_kpi_signal",
-        "target_id": "KPIOBS_2103",
-        "target_type": "KPIObservation"
-      }
-    ]
+    "business_graph": []
   },
   "lineage_entry_links": [
     {

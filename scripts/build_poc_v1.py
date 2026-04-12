@@ -677,12 +677,193 @@ def stage_6_ui_payload(
     ]
 
 
+def stage_6b_canonical_relationships(
+    entities: dict[str, list[dict[str, Any]]],
+    source_representations: list[dict[str, Any]],
+    results: list[dict[str, Any]],
+    kpis: list[dict[str, Any]],
+    lineage: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """6b) canonical relationship store for graph/process/entity experiences."""
+    defect = results[0]
+    derivation = next(a for a in lineage if a["artifact_type"] == "derivation" and "defect_rate" in a["rule_name"])
+    active_start = min(kpi["window_start_utc"] for kpi in kpis if "window_start_utc" in kpi)
+    active_end = max(kpi["window_end_utc"] for kpi in kpis if "window_end_utc" in kpi)
+    mapped_reps = [r for r in source_representations if r["represents_canonical_id"] in derivation["input_refs"]]
+
+    relationships = [
+        {
+            "id": "REL_0001",
+            "source_id": "UI_OVERVIEW_CARD_ISSUE_01",
+            "target_id": "KPIOBS_2101",
+            "type": "rendered_from",
+            "category": "semantic",
+            "qualifiers": {
+                "confidence": 0.97,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": [derivation["id"]],
+                "polarity": "positive",
+                "strength": 0.92,
+            },
+        },
+        {
+            "id": "REL_0002",
+            "source_id": "KPIOBS_2101",
+            "target_id": derivation["id"],
+            "type": "derived_from",
+            "category": "lineage",
+            "qualifiers": {
+                "confidence": 0.99,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": [derivation["id"]],
+                "polarity": "positive",
+                "strength": 1.0,
+            },
+        },
+        {
+            "id": "REL_0003",
+            "source_id": defect["id"],
+            "target_id": entities["serial_unit"][0]["id"],
+            "type": "detected_on",
+            "category": "operational",
+            "qualifiers": {
+                "confidence": 0.95,
+                "validity_interval": {"start_utc": defect["recorded_at_utc"], "end_utc": defect["recorded_at_utc"]},
+                "evidence_refs": [defect["id"]],
+                "polarity": "negative",
+                "strength": 0.9,
+            },
+        },
+        {
+            "id": "REL_0004",
+            "source_id": entities["serial_unit"][0]["id"],
+            "target_id": entities["station"][0]["id"],
+            "type": "processed_at",
+            "category": "processual",
+            "qualifiers": {
+                "confidence": 0.98,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": ["EVT_0005"],
+                "polarity": "neutral",
+                "strength": 0.83,
+            },
+        },
+        {
+            "id": "REL_0005",
+            "source_id": entities["station"][0]["id"],
+            "target_id": entities["asset"][0]["id"],
+            "type": "processed_at",
+            "category": "structural",
+            "qualifiers": {
+                "confidence": 0.99,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": [entities["station"][0]["id"], entities["asset"][0]["id"]],
+                "polarity": "neutral",
+                "strength": 0.88,
+            },
+        },
+        {
+            "id": "REL_0006",
+            "source_id": "KPIOBS_2101",
+            "target_id": defect["id"],
+            "type": "detected_on",
+            "category": "analytical",
+            "qualifiers": {
+                "confidence": 0.9,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": [defect["id"], "KPIOBS_2101"],
+                "polarity": "negative",
+                "strength": 0.84,
+            },
+        },
+        {
+            "id": "REL_0007",
+            "source_id": "KPIOBS_2101",
+            "target_id": entities["serial_unit"][0]["id"],
+            "type": "observed_on",
+            "category": "analytical",
+            "qualifiers": {
+                "confidence": 0.87,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": [defect["id"], entities["serial_unit"][0]["id"]],
+                "polarity": "negative",
+                "strength": 0.8,
+            },
+        },
+        {
+            "id": "REL_0008",
+            "source_id": "KPIOBS_2101",
+            "target_id": entities["production_order"][0]["id"],
+            "type": "impacts",
+            "category": "causal",
+            "qualifiers": {
+                "confidence": 0.86,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": ["KPIOBS_2101", "KPIOBS_2103"],
+                "polarity": "negative",
+                "strength": 0.79,
+            },
+        },
+        {
+            "id": "REL_0009",
+            "source_id": "KPIOBS_2101",
+            "target_id": "KPIOBS_2102",
+            "type": "correlates_with",
+            "category": "analytical",
+            "qualifiers": {
+                "confidence": 0.82,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": ["KPIOBS_2101", "KPIOBS_2102"],
+                "polarity": "negative",
+                "strength": 0.74,
+            },
+        },
+        {
+            "id": "REL_0010",
+            "source_id": "KPIOBS_2101",
+            "target_id": "KPIOBS_2103",
+            "type": "influences",
+            "category": "causal",
+            "qualifiers": {
+                "confidence": 0.85,
+                "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                "evidence_refs": ["KPIOBS_2101", "KPIOBS_2103"],
+                "polarity": "negative",
+                "strength": 0.81,
+            },
+        },
+    ]
+
+    rel_n = 11
+    for rep in mapped_reps:
+        relationships.append(
+            {
+                "id": deterministic_id("REL", rel_n),
+                "source_id": derivation["id"],
+                "target_id": rep["source_representation_id"],
+                "type": "mapped_from",
+                "category": "lineage",
+                "qualifiers": {
+                    "confidence": 0.99,
+                    "validity_interval": {"start_utc": active_start, "end_utc": active_end},
+                    "evidence_refs": [rep["source_record_id"], rep["source_representation_id"]],
+                    "polarity": "positive",
+                    "strength": 0.96,
+                },
+            }
+        )
+        rel_n += 1
+
+    return relationships
+
+
 def stage_7_graph_payload(
     entities: dict[str, list[dict[str, Any]]],
     source_representations: list[dict[str, Any]],
     results: list[dict[str, Any]],
     kpis: list[dict[str, Any]],
     lineage: list[dict[str, Any]],
+    relationships: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """7) typed graph payload for graph exploration."""
     defect_kpi = next(k for k in kpis if k["id"] == "KPIOBS_2101")
@@ -723,30 +904,19 @@ def stage_7_graph_payload(
     )
 
     edges = [
-        {"id": "E001", "source": "UI_OVERVIEW_CARD_ISSUE_01", "target": "KPIOBS_2101", "relationship_class": "technical_lineage", "relationship": "rendered_from"},
-        {"id": "E002", "source": "KPIOBS_2101", "target": derivation["id"], "relationship_class": "technical_lineage", "relationship": "derived_from"},
-        {"id": "E003", "source": defect["id"], "target": entities["serial_unit"][0]["id"], "relationship_class": "business", "relationship": "detected_on"},
-        {"id": "E004", "source": entities["serial_unit"][0]["id"], "target": entities["station"][0]["id"], "relationship_class": "business", "relationship": "processed_at"},
-        {"id": "E005", "source": entities["station"][0]["id"], "target": entities["asset"][0]["id"], "relationship_class": "business", "relationship": "processed_at"},
-        {"id": "E006", "source": "KPIOBS_2101", "target": defect["id"], "relationship_class": "business", "relationship": "detected_on"},
-        {"id": "E007", "source": "KPIOBS_2101", "target": entities["serial_unit"][0]["id"], "relationship_class": "business", "relationship": "detected_on"},
-        {"id": "E008", "source": "KPIOBS_2101", "target": entities["production_order"][0]["id"], "relationship_class": "business", "relationship": "belongs_to_order"},
-        {"id": "E009", "source": "KPIOBS_2101", "target": "KPIOBS_2102", "relationship_class": "business", "relationship": "derived_from"},
-        {"id": "E010", "source": "KPIOBS_2101", "target": "KPIOBS_2103", "relationship_class": "business", "relationship": "belongs_to_order"},
+        {
+            "id": rel["id"].replace("REL", "E"),
+            "source": rel["source_id"],
+            "target": rel["target_id"],
+            "relationship": rel["type"],
+            "relationship_class": "technical_lineage"
+            if rel["category"] in {"lineage", "semantic"}
+            else "business",
+            "relationship_category": rel["category"],
+            "qualifiers": rel["qualifiers"],
+        }
+        for rel in relationships
     ]
-
-    mapped_edge_n = 11
-    for rep in [r for r in source_representations if r["represents_canonical_id"] in derivation["input_refs"]]:
-        edges.append(
-            {
-                "id": f"E{mapped_edge_n:03d}",
-                "source": derivation["id"],
-                "target": rep["source_representation_id"],
-                "relationship_class": "technical_lineage",
-                "relationship": "mapped_from",
-            }
-        )
-        mapped_edge_n += 1
 
     return {
         "graph_id": "POC_V1_ISSUE_GRAPH",
@@ -763,6 +933,7 @@ def stage_8_object_cards(
     results: list[dict[str, Any]],
     kpis: list[dict[str, Any]],
     lineage: list[dict[str, Any]],
+    relationships: list[dict[str, Any]],
 ) -> dict[str, dict[str, Any]]:
     """8) object-card payloads for object details UI."""
 
@@ -824,6 +995,24 @@ def stage_8_object_cards(
             seen_ids.add(kpi["id"])
         return unique_related
 
+    rels_by_source: dict[str, list[dict[str, Any]]] = {}
+    for relationship in relationships:
+        rels_by_source.setdefault(relationship["source_id"], []).append(relationship)
+
+    def business_relationship_rows(object_id: str) -> list[dict[str, Any]]:
+        rows = []
+        for relationship in rels_by_source.get(object_id, []):
+            rows.append(
+                {
+                    "relationship": relationship["type"],
+                    "target_id": relationship["target_id"],
+                    "target_type": entities_by_id.get(relationship["target_id"], {}).get("type", "Unknown"),
+                    "relationship_category": relationship["category"],
+                    "qualifiers": relationship["qualifiers"],
+                }
+            )
+        return rows
+
     cards = {
         "ASSET_PAINT_ROBOT_07": {
             "card_schema_version": "v1",
@@ -843,10 +1032,7 @@ def stage_8_object_cards(
                 "attributes": entities_by_id["ASSET_PAINT_ROBOT_07"]["payload"],
             },
             "key_relationships": {
-                "business_graph": [
-                    {"relationship": "located_at_station", "target_id": "ST_PAINT_BOOTH_03", "target_type": "Station"},
-                    {"relationship": "drives_disturbance_signal", "target_id": "KPIOBS_2102", "target_type": "KPIObservation"},
-                ]
+                "business_graph": business_relationship_rows("ASSET_PAINT_ROBOT_07")
             },
             "related_timeline": sorted(
                 [row for row in events if row.get("asset_id") == "ASSET_PAINT_ROBOT_07"],
@@ -877,11 +1063,7 @@ def stage_8_object_cards(
                 "attributes": entities_by_id["ORD_10045"]["payload"],
             },
             "key_relationships": {
-                "business_graph": [
-                    {"relationship": "contains_serial_unit", "target_id": "SU_900001", "target_type": "SerialUnit"},
-                    {"relationship": "contains_serial_unit", "target_id": "SU_900002", "target_type": "SerialUnit"},
-                    {"relationship": "has_kpi_signal", "target_id": "KPIOBS_2103", "target_type": "KPIObservation"},
-                ]
+                "business_graph": business_relationship_rows("ORD_10045")
             },
             "related_timeline": sorted(
                 [row for row in events if row.get("serial_unit_id") in {"SU_900001", "SU_900002"}],
@@ -912,11 +1094,7 @@ def stage_8_object_cards(
                 "attributes": entities_by_id["SU_900001"]["payload"],
             },
             "key_relationships": {
-                "business_graph": [
-                    {"relationship": "belongs_to_order", "target_id": "ORD_10045", "target_type": "ProductionOrder"},
-                    {"relationship": "processed_at_station", "target_id": "ST_PAINT_BOOTH_03", "target_type": "Station"},
-                    {"relationship": "has_result", "target_id": "RES_0001", "target_type": "DefectResult"},
-                ]
+                "business_graph": business_relationship_rows("SU_900001")
             },
             "related_timeline": sorted(
                 [row for row in [*events, *results] if row.get("serial_unit_id") == "SU_900001"],
@@ -951,11 +1129,7 @@ def stage_8_object_cards(
                 "attributes": next(kpi for kpi in kpis if kpi["id"] == "KPIOBS_2101"),
             },
             "key_relationships": {
-                "business_graph": [
-                    {"relationship": "correlates_with", "target_id": "KPIOBS_2102", "target_type": "KPIObservation"},
-                    {"relationship": "impacts", "target_id": "ORD_10045", "target_type": "ProductionOrder"},
-                    {"relationship": "observed_on", "target_id": "SU_900001", "target_type": "SerialUnit"},
-                ]
+                "business_graph": business_relationship_rows("KPIOBS_2101")
             },
             "related_timeline": sorted(
                 [row for row in [*events, *results] if row.get("serial_unit_id") == "SU_900001"] + [kpis[0]],
@@ -985,15 +1159,21 @@ def main() -> None:
     kpis = stage_4_kpis(events, results, config)
     lineage = stage_5_lineage(normalized, source_representations, canonical_entities, events, results, kpis)
     ui_pages = stage_6_ui_payload(kpis, events, lineage)
-    graph = stage_7_graph_payload(canonical_entities, source_representations, results, kpis, lineage)
+    relationships = stage_6b_canonical_relationships(
+        canonical_entities, source_representations, results, kpis, lineage
+    )
+    graph = stage_7_graph_payload(
+        canonical_entities, source_representations, results, kpis, lineage, relationships
+    )
     object_cards = stage_8_object_cards(
-        canonical_entities, source_representations, events, results, kpis, lineage
+        canonical_entities, source_representations, events, results, kpis, lineage, relationships
     )
 
     write_json(OUT_ROOT / "canonical/source_representations.json", source_representations)
     write_json(OUT_ROOT / "canonical/entities.json", canonical_entities)
     write_json(OUT_ROOT / "canonical/events.json", events)
     write_json(OUT_ROOT / "canonical/results.json", results)
+    write_json(OUT_ROOT / "canonical/relationships.json", relationships)
     write_json(OUT_ROOT / "kpi/observations.json", kpis)
     write_json(OUT_ROOT / "lineage/artifacts.json", lineage)
     write_json(OUT_ROOT / "ui/pages.json", ui_pages)

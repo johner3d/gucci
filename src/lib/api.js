@@ -55,8 +55,11 @@ export async function loadEventsData() {
 export async function loadGraphData() {
   const context = 'graph'
   try {
-    const graph = await fetchJSON('/data/generated/v1/ui/graph.json')
-    const edgeContracts = graph.edges.map(adaptV1GraphEdge)
+    const [graph, relationshipStore] = await Promise.all([
+      fetchJSON('/data/generated/v1/ui/graph.json'),
+      fetchJSON('/data/generated/v1/canonical/relationships.json'),
+    ])
+    const edgeContracts = relationshipStore.map(adaptV1GraphEdge)
     const edgeDiagnostics = edgeContracts.flatMap((entry) => entry.diagnostics)
 
     const nodeDiagnostics = []
@@ -75,6 +78,7 @@ export async function loadGraphData() {
 
     return {
       graph,
+      relationships: relationshipStore,
       contracts: {
         entities: nodeContracts,
         relationships: edgeContracts.map((entry) => entry.adapted),

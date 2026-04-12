@@ -41,10 +41,14 @@ export function adaptV1LineageArtifact(artifact) {
 export function adaptV1GraphEdge(edge) {
   const adapted = {
     id: edge.id,
-    sourceEntityId: edge.source,
-    targetEntityId: edge.target,
-    relationshipType: edge.relationship,
-    relationshipClass: edge.relationship_class,
+    sourceEntityId: edge.source_id || edge.source,
+    targetEntityId: edge.target_id || edge.target,
+    relationshipType: edge.type || edge.relationship,
+    relationshipClass:
+      edge.relationship_class ||
+      (edge.category && ['lineage', 'semantic'].includes(edge.category) ? 'technical_lineage' : 'business'),
+    relationshipCategory: edge.category || edge.relationship_category,
+    qualifiers: edge.qualifiers || {},
     legacy: edge,
   }
 

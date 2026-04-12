@@ -4,21 +4,28 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { ObjectRelationships } from '../components/domain/ObjectRelationships'
 import { Panel } from '../components/primitives/Primitives'
-import { loadObjectCardData, toUiDiagnostics } from '../lib/api'
+import { loadGraphData, loadObjectCardData, toUiDiagnostics } from '../lib/api'
 
 export function ObjectsPage() {
   const { id } = useParams()
   const [card, setCard] = useState(null)
+  const [relationships, setRelationships] = useState([])
   const [diagnostics, setDiagnostics] = useState([])
 
   useEffect(() => {
     if (!id) return
     setCard(null)
+    setRelationships([])
     setDiagnostics([])
-    loadObjectCardData(id)
-      .then((payload) => {
-        setCard(payload.card)
-        setDiagnostics(payload.diagnostics)
+    Promise.all([loadObjectCardData(id), loadGraphData()])
+      .then(([cardPayload, graphPayload]) => {
+        setCard(cardPayload.card)
+        setRelationships(
+          graphPayload.relationships.filter(
+            (relationship) => relationship.source_id === id || relationship.target_id === id
+          )
+        )
+        setDiagnostics([...cardPayload.diagnostics, ...graphPayload.diagnostics])
       })
       .catch((error) => setDiagnostics(toUiDiagnostics(error, `object_card.${id}`)))
   }, [id])
@@ -42,7 +49,7 @@ export function ObjectsPage() {
     <div className="stack">
       <h1>{card.canonical_identity.label}</h1>
       <DataDiagnostics diagnostics={diagnostics} />
-      <ObjectRelationships card={card} />
+      <ObjectRelationships card={card} relationships={relationships} />
 
       <Panel title="State snapshot">
         <p><strong>Status:</strong> {card.current_state_snapshot.status}</p>
