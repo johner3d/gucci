@@ -15,7 +15,10 @@ export function ImpactSummary({ cards = [] }) {
               <strong>Lineage:</strong>{' '}
               <Link to={`/lineage/${card.lineage_artifact_id}`}>{card.lineage_artifact_id}</Link>
             </p>
-            <Link to={`/graph?focus=${card.deep_link.focus_node_id}&mode=impact`}>Open impact path</Link>
+            <div className="button-row">
+              <Link to={`/graph?focus=${card.deep_link.focus_node_id}&mode=downstream-impact`}>Open impact path</Link>
+              <Link to={`/objects/${card.deep_link.focus_node_id}?entry=overview_card`}>Entity detail</Link>
+            </div>
           </Card>
         ))}
       </div>

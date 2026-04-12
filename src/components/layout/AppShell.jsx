@@ -5,7 +5,7 @@ const routes = [
   { to: '/process', label: 'Process' },
   { to: '/events', label: 'Events' },
   { to: '/graph', label: 'Graph' },
-  { to: '/objects/KPIOBS_2101', label: 'Objects' },
+  { to: '/objects/search', label: 'Objects' },
   { to: '/lineage/LIN_0039', label: 'Lineage' },
 ]
 
