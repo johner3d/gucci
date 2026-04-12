@@ -32,12 +32,19 @@ export function AppShell() {
   const [searchParams] = useSearchParams()
   const crumbs = toCrumbs(location.pathname)
 
+  const scopedParams = Object.fromEntries(searchParams.entries())
+
   const globalContext = {
     plant: searchParams.get('plant') || defaultGlobalContext.plant,
     line: searchParams.get('line') || defaultGlobalContext.line,
     time: searchParams.get('time') || defaultGlobalContext.time,
     severity: searchParams.get('severity') || defaultGlobalContext.severity,
+    focus: searchParams.get('focus') || 'KPIOBS_2101',
+    selectedNode: searchParams.get('selectedNode') || searchParams.get('focus') || 'KPIOBS_2101',
+    selectedPath: searchParams.get('selectedPath') || '',
   }
+
+  const scopedQuery = new URLSearchParams({ ...globalContext, ...scopedParams }).toString()
 
   return (
     <div className="app-shell">
@@ -46,7 +53,7 @@ export function AppShell() {
         <ul className="nav-list">
           {routes.map((route) => (
             <li key={route.to}>
-              <NavLink to={route.to} end={route.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <NavLink to={`${route.to}?${scopedQuery}`} end={route.end} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
                 {route.label}
               </NavLink>
             </li>
