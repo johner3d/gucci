@@ -1,48 +1,184 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
-import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
-import { loadGraphData, toUiDiagnostics } from '../lib/api'
+import { loadProcessData, toUiDiagnostics } from '../lib/api'
+
+const defaultContext = {
+  plant: 'PLANT_DE_01',
+  line: 'LINE_PAINT_A',
+  time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
+  severity: 'high',
+}
+
+function toQueryString(params) {
+  const next = new URLSearchParams(params)
+  return `?${next.toString()}`
+}
 
 export function ProcessPage() {
-  const [graph, setGraph] = useState(null)
+  const [processData, setProcessData] = useState(null)
   const [diagnostics, setDiagnostics] = useState([])
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const context = {
+    plant: searchParams.get('plant') || defaultContext.plant,
+    line: searchParams.get('line') || defaultContext.line,
+    time: searchParams.get('time') || defaultContext.time,
+    severity: searchParams.get('severity') || defaultContext.severity,
+  }
 
   useEffect(() => {
-    loadGraphData()
+    loadProcessData()
       .then((payload) => {
-        setGraph({ ...payload.graph, edges: payload.relationships })
+        setProcessData(payload)
         setDiagnostics(payload.diagnostics)
       })
-      .catch((error) => setDiagnostics(toUiDiagnostics(error, 'process.graph')))
+      .catch((error) => setDiagnostics(toUiDiagnostics(error, 'process')))
   }, [])
 
-  const processEdges = useMemo(() => {
-    if (!graph) return []
-    return graph.edges.filter((edge) => ['operational', 'processual', 'causal'].includes(edge.category))
-  }, [graph])
+  const selectedStepId = searchParams.get('step')
 
-  if (!graph && !diagnostics.length) return <p>Loading process…</p>
+  const selectedStep = useMemo(() => {
+    if (!processData?.canvas?.steps?.length) return null
+    return processData.canvas.steps.find((step) => step.id === selectedStepId) || processData.canvas.steps[0]
+  }, [processData, selectedStepId])
+
+  const lanes = useMemo(() => {
+    if (!processData?.canvas) return []
+    return processData.canvas.lanes.map((lane) => ({
+      ...lane,
+      steps: processData.canvas.steps
+        .filter((step) => step.lane_id === lane.id)
+        .sort((a, b) => a.sequence - b.sequence),
+    }))
+  }, [processData])
+
+  const related = useMemo(() => {
+    if (!selectedStep || !processData) return null
+    const events = processData.events.filter((event) => selectedStep.related.events.includes(event.id))
+    const causalLinks = processData.relationships.filter((edge) => selectedStep.related.causal_links.includes(edge.id))
+    const kpis = processData.kpis.filter((kpi) => selectedStep.related.kpis.includes(kpi.id))
+    const lineageEvidence = processData.artifacts.filter((artifact) => selectedStep.related.lineage_evidence.includes(artifact.id))
+
+    return { events, causalLinks, kpis, lineageEvidence }
+  }, [selectedStep, processData])
+
+  if (!processData && !diagnostics.length) return <p>Loading process…</p>
 
   return (
     <div className="stack">
       <h1>Process</h1>
       <DataDiagnostics diagnostics={diagnostics} />
-      {graph ? (
+      {processData ? (
         <>
-          <Panel title="Process relationship map">
-            <ul className="row-list">
-              {processEdges.map((edge) => (
-                <li key={edge.id}>
-                  {edge.source_id} — {edge.type} → {edge.target_id}
-                  <div className="meta">
-                    {edge.category} | confidence {edge.qualifiers?.confidence ?? 'n/a'} | strength {edge.qualifiers?.strength ?? 'n/a'}
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <Panel title="Global context">
+            <div className="meta">
+              Plant <strong>{context.plant}</strong> | Line <strong>{context.line}</strong> | Time window <strong>{context.time}</strong> | Severity{' '}
+              <strong>{context.severity}</strong>
+            </div>
           </Panel>
-          <EventTimeline events={processEdges.map((edge, index) => ({ id: edge.id, type: edge.type, occurred_at_utc: `step-${index + 1}` }))} />
+
+          <Panel title="Lane-based process canvas">
+            <div className="process-canvas">
+              {lanes.map((lane) => (
+                <section key={lane.id} className="process-lane">
+                  <h3>{lane.name}</h3>
+                  <ul className="list-reset process-lane-steps">
+                    {lane.steps.map((step) => {
+                      const isSelected = selectedStep?.id === step.id
+                      return (
+                        <li key={step.id}>
+                          <button
+                            type="button"
+                            className={`process-step-card risk-${step.risk} ${isSelected ? 'selected' : ''}`.trim()}
+                            onClick={() => setSearchParams({ ...context, step: step.id })}
+                          >
+                            <div className="process-step-header">
+                              <strong>
+                                {step.sequence}. {step.name}
+                              </strong>
+                              <span className="meta">{step.type}</span>
+                            </div>
+                            <div className="process-step-overlays">
+                              <span className="chip">state: {step.state}</span>
+                              <span className="chip">risk: {step.risk}</span>
+                            </div>
+                            <div className="meta">Transition: {step.state_transition}</div>
+                          </button>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </Panel>
+
+          {selectedStep && related ? (
+            <Panel title={`Step interactions — ${selectedStep.name}`}>
+              <p className="meta">
+                Interactions preserve context: plant={context.plant}, line={context.line}, time={context.time}, severity={context.severity}
+              </p>
+
+              <h3>Related events</h3>
+              <ul className="row-list">
+                {related.events.map((event) => (
+                  <li key={event.id}>
+                    <Link to={`/events${toQueryString({ ...context, event: event.id, step: selectedStep.id })}`}>
+                      {event.id} — {event.type}
+                    </Link>
+                    <div className="meta">{event.occurred_at_utc}</div>
+                  </li>
+                ))}
+              </ul>
+
+              <h3>Impacted entities</h3>
+              <ul className="row-list">
+                {selectedStep.related.impacted_entities.map((entityId) => (
+                  <li key={entityId}>
+                    <Link to={`/objects/${entityId}${toQueryString({ ...context, step: selectedStep.id })}`}>{entityId}</Link>
+                  </li>
+                ))}
+              </ul>
+
+              <h3>Causal links</h3>
+              <ul className="row-list">
+                {related.causalLinks.map((link) => (
+                  <li key={link.id}>
+                    <Link to={`/graph${toQueryString({ ...context, focus: link.source_id, mode: 'impact', step: selectedStep.id })}`}>
+                      {link.id} — {link.source_id} {link.type} {link.target_id}
+                    </Link>
+                    <div className="meta">category {link.category} | confidence {link.qualifiers?.confidence ?? 'n/a'}</div>
+                  </li>
+                ))}
+              </ul>
+
+              <h3>KPIs</h3>
+              <ul className="row-list">
+                {related.kpis.map((kpi) => (
+                  <li key={kpi.id}>
+                    <Link to={`/objects/${kpi.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
+                      {kpi.id} — {kpi.kpi}
+                    </Link>
+                    <div className="meta">status {kpi.status} | value {String(kpi.value)}</div>
+                  </li>
+                ))}
+              </ul>
+
+              <h3>Lineage evidence</h3>
+              <ul className="row-list">
+                {related.lineageEvidence.map((artifact) => (
+                  <li key={artifact.id}>
+                    <Link to={`/lineage/${artifact.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
+                      {artifact.id} — {artifact.rule_name}
+                    </Link>
+                    <div className="meta">{artifact.artifact_type}</div>
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+          ) : null}
         </>
       ) : (
         <p>Process content unavailable.</p>

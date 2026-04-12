@@ -1,0 +1,151 @@
+{
+  "process": {
+    "id": "PROC_PAINT_INCIDENT_RESPONSE",
+    "name": "Paint Incident Response",
+    "global_context": {
+      "plant": "PLANT_DE_01",
+      "line": "LINE_PAINT_A",
+      "time_window": "2026-01-15T06:00:00Z/2026-01-15T14:00:00Z",
+      "severity": "high"
+    }
+  },
+  "lanes": [
+    {
+      "id": "LANE_CONTROL",
+      "name": "Production Control"
+    },
+    {
+      "id": "LANE_PAINT",
+      "name": "Paint Booth"
+    },
+    {
+      "id": "LANE_MAINT",
+      "name": "Maintenance"
+    },
+    {
+      "id": "LANE_QUALITY",
+      "name": "Quality"
+    }
+  ],
+  "steps": [
+    {
+      "id": "STEP_001",
+      "type": "process",
+      "name": "Paint Incident Response",
+      "lane_id": "LANE_CONTROL",
+      "sequence": 1,
+      "state": "active",
+      "risk": "high",
+      "state_transition": "monitoring -> incident_response",
+      "related": {
+        "events": ["EVT_0001", "EVT_0002"],
+        "impacted_entities": ["ASSET_PAINT_ROBOT_07", "LINE_PAINT_A", "ORD_10045"],
+        "causal_links": ["REL_0008", "REL_0010"],
+        "kpis": ["KPIOBS_2101", "KPIOBS_2102"],
+        "lineage_evidence": ["LIN_0039"]
+      }
+    },
+    {
+      "id": "STEP_002",
+      "type": "subprocess",
+      "name": "Detect & Contain",
+      "lane_id": "LANE_CONTROL",
+      "sequence": 2,
+      "state": "complete",
+      "risk": "high",
+      "state_transition": "incident_detected -> containment_initiated",
+      "related": {
+        "events": ["EVT_0002"],
+        "impacted_entities": ["ASSET_PAINT_ROBOT_07", "ST_PAINT_BOOTH_03"],
+        "causal_links": ["REL_0010"],
+        "kpis": ["KPIOBS_2102"],
+        "lineage_evidence": ["LIN_0012"]
+      }
+    },
+    {
+      "id": "STEP_003",
+      "type": "activity",
+      "name": "Run units through paint booth",
+      "lane_id": "LANE_PAINT",
+      "sequence": 3,
+      "state": "complete",
+      "risk": "high",
+      "state_transition": "contained -> quality_screening",
+      "related": {
+        "events": ["EVT_0005", "EVT_0006", "EVT_0007"],
+        "impacted_entities": ["SU_900001", "SU_900002", "SU_900101"],
+        "causal_links": ["REL_0004"],
+        "kpis": ["KPIOBS_2101"],
+        "lineage_evidence": ["LIN_0030", "LIN_0031", "LIN_0032"]
+      }
+    },
+    {
+      "id": "STEP_004",
+      "type": "work_step",
+      "name": "Execute inspection checks",
+      "lane_id": "LANE_QUALITY",
+      "sequence": 4,
+      "state": "complete",
+      "risk": "high",
+      "state_transition": "quality_screening -> defect_validated",
+      "related": {
+        "events": ["EVT_0008", "EVT_0009", "EVT_0010"],
+        "impacted_entities": ["INSP_81001", "INSP_81002", "INSP_81003", "SU_900001", "SU_900002"],
+        "causal_links": ["REL_0003", "REL_0006", "REL_0007"],
+        "kpis": ["KPIOBS_2101"],
+        "lineage_evidence": ["LIN_0039"]
+      }
+    },
+    {
+      "id": "STEP_005",
+      "type": "decision_point",
+      "name": "Defect spike confirmed?",
+      "lane_id": "LANE_QUALITY",
+      "sequence": 5,
+      "state": "resolved_yes",
+      "risk": "high",
+      "state_transition": "defect_validated -> maintenance_required",
+      "related": {
+        "events": ["EVT_0008", "EVT_0009"],
+        "impacted_entities": ["ORD_10045", "ASSET_PAINT_ROBOT_07"],
+        "causal_links": ["REL_0008"],
+        "kpis": ["KPIOBS_2101", "KPIOBS_2103"],
+        "lineage_evidence": ["LIN_0039"]
+      }
+    },
+    {
+      "id": "STEP_006",
+      "type": "handoff",
+      "name": "Handoff to maintenance",
+      "lane_id": "LANE_MAINT",
+      "sequence": 6,
+      "state": "complete",
+      "risk": "medium",
+      "state_transition": "maintenance_required -> work_started",
+      "related": {
+        "events": ["EVT_0001", "EVT_0003"],
+        "impacted_entities": ["MA_7001", "ASSET_PAINT_ROBOT_07"],
+        "causal_links": ["REL_0010"],
+        "kpis": ["KPIOBS_2102"],
+        "lineage_evidence": ["LIN_0027", "LIN_0028"]
+      }
+    },
+    {
+      "id": "STEP_007",
+      "type": "state_transition",
+      "name": "Disturbance cleared",
+      "lane_id": "LANE_MAINT",
+      "sequence": 7,
+      "state": "complete",
+      "risk": "low",
+      "state_transition": "incident_response -> stabilized",
+      "related": {
+        "events": ["EVT_0004"],
+        "impacted_entities": ["ST_PAINT_BOOTH_03", "ASSET_PAINT_ROBOT_07"],
+        "causal_links": ["REL_0005"],
+        "kpis": ["KPIOBS_2102"],
+        "lineage_evidence": ["LIN_0012"]
+      }
+    }
+  ]
+}

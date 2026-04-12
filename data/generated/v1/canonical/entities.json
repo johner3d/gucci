@@ -94,5 +94,122 @@
       "id": "VAR_SEDAN_RED_PREM",
       "product_id": "PROD_SEDAN_X"
     }
+  ],
+  "process": [
+    {
+      "id": "PROC_PAINT_INCIDENT_RESPONSE",
+      "label": "Paint Incident Response",
+      "plant_id": "PLANT_DE_01",
+      "line_id": "LINE_PAINT_A",
+      "window_start_utc": "2026-01-15T06:00:00Z",
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "severity": "high"
+    }
+  ],
+  "subprocess": [
+    {
+      "id": "SUBPROC_DETECT_CONTAIN",
+      "process_id": "PROC_PAINT_INCIDENT_RESPONSE",
+      "label": "Detect & Contain"
+    },
+    {
+      "id": "SUBPROC_RECOVER_VERIFY",
+      "process_id": "PROC_PAINT_INCIDENT_RESPONSE",
+      "label": "Recover & Verify"
+    }
+  ],
+  "activity": [
+    {
+      "id": "ACT_MONITOR_PAINT_HEALTH",
+      "subprocess_id": "SUBPROC_DETECT_CONTAIN",
+      "label": "Monitor paint-cell health"
+    },
+    {
+      "id": "ACT_RESTORE_AND_CONFIRM",
+      "subprocess_id": "SUBPROC_RECOVER_VERIFY",
+      "label": "Restore equipment and verify quality"
+    }
+  ],
+  "work_step": [
+    {
+      "id": "STEP_MONITOR_ALERTS",
+      "activity_id": "ACT_MONITOR_PAINT_HEALTH",
+      "label": "Monitor alerts and disturbance feed",
+      "lane": "Production Control",
+      "state": "completed",
+      "risk": "medium"
+    },
+    {
+      "id": "STEP_RUN_UNITS",
+      "activity_id": "ACT_MONITOR_PAINT_HEALTH",
+      "label": "Run units through paint booth",
+      "lane": "Paint Booth",
+      "state": "completed",
+      "risk": "high"
+    },
+    {
+      "id": "STEP_EXECUTE_INSPECTION",
+      "activity_id": "ACT_RESTORE_AND_CONFIRM",
+      "label": "Execute inspection checks",
+      "lane": "Quality",
+      "state": "completed",
+      "risk": "high"
+    },
+    {
+      "id": "STEP_PERFORM_MAINTENANCE",
+      "activity_id": "ACT_RESTORE_AND_CONFIRM",
+      "label": "Perform corrective maintenance",
+      "lane": "Maintenance",
+      "state": "completed",
+      "risk": "medium"
+    },
+    {
+      "id": "STEP_RESUME_NORMAL_FLOW",
+      "activity_id": "ACT_RESTORE_AND_CONFIRM",
+      "label": "Resume normal production flow",
+      "lane": "Production Control",
+      "state": "in_progress",
+      "risk": "low"
+    }
+  ],
+  "decision_point": [
+    {
+      "id": "DEC_DEFECT_SPIKE_CONFIRMED",
+      "activity_id": "ACT_MONITOR_PAINT_HEALTH",
+      "label": "Defect spike confirmed?"
+    },
+    {
+      "id": "DEC_DISTURBANCE_CLEARED",
+      "activity_id": "ACT_RESTORE_AND_CONFIRM",
+      "label": "Disturbance fully cleared?"
+    }
+  ],
+  "handoff": [
+    {
+      "id": "HANDOFF_CONTROL_TO_MAINT",
+      "from_lane": "Production Control",
+      "to_lane": "Maintenance",
+      "reason": "escalate corrective action"
+    },
+    {
+      "id": "HANDOFF_MAINT_TO_QUALITY",
+      "from_lane": "Maintenance",
+      "to_lane": "Quality",
+      "reason": "post-maintenance quality confirmation"
+    }
+  ],
+  "state_transition": [
+    {
+      "id": "TRANS_ALERT_TO_RESPONSE",
+      "from_state": "monitoring",
+      "to_state": "incident_response",
+      "trigger_event_id": "EVT_0002"
+    },
+    {
+      "id": "TRANS_RESPONSE_TO_STABLE",
+      "from_state": "incident_response",
+      "to_state": "stabilized",
+      "trigger_event_id": "EVT_0004"
+    }
   ]
 }
