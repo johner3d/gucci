@@ -1,0 +1,28 @@
+{
+  "plant": [{ "id": "PLANT_DE_01", "name": "Stuttgart Main Plant" }],
+  "line": [{ "id": "LINE_PAINT_A", "plant_id": "PLANT_DE_01", "name": "Paint Line A" }],
+  "station": [{ "id": "ST_PAINT_BOOTH_03", "line_id": "LINE_PAINT_A", "name": "Paint Booth 03" }],
+  "asset": [{ "id": "ASSET_PAINT_ROBOT_07", "station_id": "ST_PAINT_BOOTH_03", "name": "Paint Robot 07" }],
+  "product": [{ "id": "PROD_SEDAN_X", "name": "Sedan X" }],
+  "variant": [{ "id": "VAR_SEDAN_RED_PREM", "product_id": "PROD_SEDAN_X", "name": "Sedan X Red Premium" }],
+  "production_order": [
+    { "id": "ORD_10045", "variant_id": "VAR_SEDAN_RED_PREM" },
+    { "id": "ORD_10046", "variant_id": "VAR_SEDAN_RED_PREM" }
+  ],
+  "serial_unit": [
+    { "id": "SU_900001", "order_id": "ORD_10045", "batch_lot_id": "LOT_PAINT_20260115_A" },
+    { "id": "SU_900002", "order_id": "ORD_10045", "batch_lot_id": "LOT_PAINT_20260115_A" },
+    { "id": "SU_900101", "order_id": "ORD_10046", "batch_lot_id": "LOT_PAINT_20260115_B" }
+  ],
+  "batch_lot": [
+    { "id": "LOT_PAINT_20260115_A" },
+    { "id": "LOT_PAINT_20260115_B" }
+  ],
+  "inspection": [
+    { "id": "INSP_81001", "unit_id": "SU_900001" },
+    { "id": "INSP_81002", "unit_id": "SU_900002" },
+    { "id": "INSP_81003", "unit_id": "SU_900101" }
+  ],
+  "defect": [{ "id": "DF_5001", "defect_type": "orange_peel", "station_id": "ST_PAINT_BOOTH_03", "asset_id": "ASSET_PAINT_ROBOT_07" }],
+  "maintenance_activity": [{ "id": "MA_7001", "asset_id": "ASSET_PAINT_ROBOT_07", "status": "completed_late" }]
+}

@@ -1,0 +1,58 @@
+{
+  "definitions": [
+    {
+      "id": "KPI_DEF_DEFECT_RATE",
+      "name": "Defect Rate",
+      "scope": "line_per_2h_window",
+      "formula": "defective_units / inspected_units"
+    },
+    {
+      "id": "KPI_DEF_FPY",
+      "name": "First Pass Yield",
+      "scope": "line_per_2h_window",
+      "formula": "first_pass_ok_units / total_units"
+    },
+    {
+      "id": "KPI_DEF_DISTURBANCE_DURATION",
+      "name": "Disturbance Duration",
+      "scope": "asset_per_window",
+      "formula": "sum(disturbance_end - disturbance_start)"
+    },
+    {
+      "id": "KPI_DEF_ORDER_DELAY_RISK",
+      "name": "Order Delay Risk",
+      "scope": "order_current",
+      "formula": "rule_based(disturbance + defect_trend + remaining_buffer)"
+    }
+  ],
+  "observations": [
+    {
+      "id": "KPIOBS_2101",
+      "kpi_definition_id": "KPI_DEF_DEFECT_RATE",
+      "line_id": "LINE_PAINT_A",
+      "window_start_utc": "2026-01-15T08:00:00Z",
+      "window_end_utc": "2026-01-15T10:00:00Z",
+      "value": 0.667,
+      "threshold": 0.05,
+      "status": "violated"
+    },
+    {
+      "id": "KPIOBS_2102",
+      "kpi_definition_id": "KPI_DEF_DISTURBANCE_DURATION",
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "window_start_utc": "2026-01-15T08:00:00Z",
+      "window_end_utc": "2026-01-15T10:00:00Z",
+      "value_minutes": 75,
+      "status": "high"
+    },
+    {
+      "id": "KPIOBS_2103",
+      "kpi_definition_id": "KPI_DEF_ORDER_DELAY_RISK",
+      "order_id": "ORD_10045",
+      "window_start_utc": "2026-01-15T08:00:00Z",
+      "window_end_utc": "2026-01-15T10:00:00Z",
+      "risk_level": "high",
+      "status": "elevated"
+    }
+  ]
+}

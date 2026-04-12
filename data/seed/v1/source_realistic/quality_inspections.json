@@ -1,0 +1,29 @@
+[
+  {
+    "source_system": "QMS",
+    "source_record_id": "QMS_INSP_3001",
+    "inspection_id": "INSP_81001",
+    "serial_unit_id": "SU_900001",
+    "executed_at_utc": "2026-01-15T08:45:00Z",
+    "result": "NOK",
+    "defect_code": "DF_PAINT_ORANGE_PEEL"
+  },
+  {
+    "source_system": "QMS",
+    "source_record_id": "QMS_INSP_3002",
+    "inspection_id": "INSP_81002",
+    "serial_unit_id": "SU_900002",
+    "executed_at_utc": "2026-01-15T08:48:00Z",
+    "result": "NOK",
+    "defect_code": "DF_PAINT_ORANGE_PEEL"
+  },
+  {
+    "source_system": "QMS",
+    "source_record_id": "QMS_INSP_3003",
+    "inspection_id": "INSP_81003",
+    "serial_unit_id": "SU_900101",
+    "executed_at_utc": "2026-01-15T10:25:00Z",
+    "result": "OK",
+    "defect_code": null
+  }
+]
