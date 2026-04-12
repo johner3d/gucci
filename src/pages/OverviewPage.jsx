@@ -36,10 +36,10 @@ export function OverviewPage() {
       )}
 
       <section className="panel stack">
-        <h2>Object registry quick-links</h2>
+        <h2>Object search quick-links</h2>
         <ul className="list-reset">
           {featuredObjects.map((id) => (
-            <li key={id}><Link to={`/objects/${id}`}>{id}</Link></li>
+            <li key={id}><Link to={`/objects/${id}?entry=overview`}>{id}</Link></li>
           ))}
         </ul>
       </section>

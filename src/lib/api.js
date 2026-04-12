@@ -22,6 +22,12 @@ function asDiagnostics(error, context) {
   return [{ path: context, code: 'load_error', message: error.message, level: 'error' }]
 }
 
+function flattenEntityStore(entities) {
+  return Object.entries(entities || {}).flatMap(([entityType, records]) =>
+    (records || []).map((record) => ({ ...record, entity_type: entityType }))
+  )
+}
+
 export async function loadOverviewPageData() {
   const context = 'overview.pages'
   try {
@@ -130,6 +136,43 @@ export async function loadLineageArtifactsData() {
   }
 }
 
+export async function loadEntityWorkspaceData() {
+  const context = 'entity.workspace'
+  try {
+    const [entities, relationships, events, sourceRepresentations, results, artifacts, semantics, ontologyClasses, terms, taxonomyNodes, rules, aliases] = await Promise.all([
+      fetchJSON('/data/generated/v1/canonical/entities.json'),
+      fetchJSON('/data/generated/v1/canonical/relationships.json'),
+      fetchJSON('/data/generated/v1/canonical/events.json'),
+      fetchJSON('/data/generated/v1/canonical/source_representations.json'),
+      fetchJSON('/data/generated/v1/canonical/results.json'),
+      fetchJSON('/data/generated/v1/lineage/artifacts.json'),
+      fetchJSON('/data/generated/v1/semantic/entity_semantics.json'),
+      fetchJSON('/data/generated/v1/semantic/ontology_classes.json'),
+      fetchJSON('/data/generated/v1/semantic/terms.json'),
+      fetchJSON('/data/generated/v1/semantic/taxonomy_nodes.json'),
+      fetchJSON('/data/generated/v1/semantic/rules.json'),
+      fetchJSON('/data/generated/v1/semantic/aliases.json'),
+    ])
+
+    return {
+      entities: flattenEntityStore(entities),
+      relationships,
+      events,
+      sourceRepresentations,
+      results,
+      artifacts,
+      semantics,
+      ontologyClasses,
+      terms,
+      taxonomyNodes,
+      rules,
+      aliases,
+      diagnostics: [],
+    }
+  } catch (error) {
+    throw new DataValidationError('Could not load entity workspace data', asDiagnostics(error, context))
+  }
+}
 
 export async function loadProcessData() {
   const context = 'process'
