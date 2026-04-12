@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, Route, Routes, useSearchParams } from 'react-router-dom'
+import { Link, Route, Routes, useParams, useSearchParams } from 'react-router-dom'
 
 const jsonHeaders = { Accept: 'application/json' }
 
@@ -32,6 +32,12 @@ function OverviewPage() {
           </Link>
         </article>
       ))}
+      <h2 style={{ marginTop: 24 }}>Object cards</h2>
+      <ul>
+        {['ASSET_PAINT_ROBOT_07', 'ORD_10045', 'SU_900001', 'KPIOBS_2101'].map((id) => (
+          <li key={id}><Link to={`/objects/${id}`}>{id}</Link></li>
+        ))}
+      </ul>
     </main>
   )
 }
@@ -95,11 +101,113 @@ function GraphPage() {
   )
 }
 
+function ObjectCardPage() {
+  const { id } = useParams()
+  const [card, setCard] = useState(null)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!id) return
+    setError('')
+    setCard(null)
+    loadJSON(`/data/generated/v1/ui/object_cards/${id}.json`)
+      .then(setCard)
+      .catch(() => setError(`Object card not found for ${id}`))
+  }, [id])
+
+  if (error) {
+    return (
+      <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
+        <p><Link to="/">← Back to overview</Link></p>
+        <h1>Object Card</h1>
+        <p>{error}</p>
+      </main>
+    )
+  }
+
+  if (!card) return <p>Loading object card…</p>
+
+  return (
+    <main style={{ fontFamily: 'sans-serif', padding: 24 }}>
+      <p><Link to="/">← Back to overview</Link></p>
+      <h1>{card.canonical_identity.label}</h1>
+      <p><strong>Object ID:</strong> {card.object_id}</p>
+      <p><strong>Type:</strong> {card.canonical_identity.type}</p>
+      <p><strong>Issue context:</strong> {card.issue_context.why_this_object_matters_now}</p>
+
+      <h2>Source representations</h2>
+      <ul>
+        {(card.source_representations || []).map((rep) => (
+          <li key={rep.source_representation_id}>
+            {rep.source_representation_id} — {rep.source_system}:{rep.source_record_id} ({rep.representation_type})
+          </li>
+        ))}
+      </ul>
+
+      <h2>Semantic meaning</h2>
+      <p>{card.semantic_meaning.summary}</p>
+
+      <h2>Current state/status snapshot</h2>
+      <p><strong>Status:</strong> {card.current_state_snapshot.status}</p>
+      <p><strong>As of:</strong> {card.current_state_snapshot.as_of_utc}</p>
+      <pre style={{ background: '#f7f7f7', padding: 12, borderRadius: 8 }}>
+        {JSON.stringify(card.current_state_snapshot.attributes, null, 2)}
+      </pre>
+
+      <h2>Key relationships (business graph)</h2>
+      <ul>
+        {(card.key_relationships?.business_graph || []).map((relationship) => (
+          <li key={`${relationship.relationship}-${relationship.target_id}`}>
+            {relationship.relationship} → <Link to={`/objects/${relationship.target_id}`}>{relationship.target_id}</Link> ({relationship.target_type})
+          </li>
+        ))}
+      </ul>
+
+      <h2>Related events/results timeline</h2>
+      <ul>
+        {(card.related_timeline || []).map((item) => (
+          <li key={item.id}>
+            {item.occurred_at_utc || item.recorded_at_utc || item.window_end_utc} — {item.type || item.kpi || 'snapshot'} ({item.id})
+          </li>
+        ))}
+      </ul>
+
+      <h2>Relevant KPI signals</h2>
+      <ul>
+        {(card.relevant_kpi_signals || []).map((kpi) => (
+          <li key={kpi.id}>
+            <Link to={`/objects/${kpi.id}`}>{kpi.id}</Link> — {kpi.kpi}: {String(kpi.value)} ({kpi.status})
+          </li>
+        ))}
+      </ul>
+
+      <h2>Impacted objects</h2>
+      <ul>
+        {(card.impacted_objects || []).map((obj) => (
+          <li key={obj.id}>
+            <Link to={`/objects/${obj.id}`}>{obj.id}</Link> ({obj.type}) — {obj.reason}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Lineage entries</h2>
+      <ul>
+        {(card.lineage_entry_links || []).map((link) => (
+          <li key={link.artifact_id}>
+            <a href={link.route}>{link.artifact_id}</a> — {link.name}
+          </li>
+        ))}
+      </ul>
+    </main>
+  )
+}
+
 export function App() {
   return (
     <Routes>
       <Route path="/" element={<OverviewPage />} />
       <Route path="/graph" element={<GraphPage />} />
+      <Route path="/objects/:id" element={<ObjectCardPage />} />
     </Routes>
   )
 }

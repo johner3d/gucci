@@ -585,6 +585,208 @@ def stage_7_graph_payload(
     }
 
 
+def stage_8_object_cards(
+    entities: dict[str, list[dict[str, Any]]],
+    source_representations: list[dict[str, Any]],
+    events: list[dict[str, Any]],
+    results: list[dict[str, Any]],
+    kpis: list[dict[str, Any]],
+    lineage: list[dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """8) object-card payloads for object details UI."""
+
+    event_or_result_time = lambda row: row.get("occurred_at_utc", row.get("recorded_at_utc", ""))
+    entities_by_id = {
+        obj["id"]: {"type": entity_type, "payload": obj}
+        for entity_type, rows in entities.items()
+        for obj in rows
+    }
+    source_reps_by_object = {
+        object_id: [rep for rep in source_representations if rep["represents_canonical_id"] == object_id]
+        for object_id in {"ASSET_PAINT_ROBOT_07", "ORD_10045", "SU_900001", "KPIOBS_2101"}
+    }
+
+    def lineage_links(object_id: str) -> list[dict[str, str]]:
+        links = []
+        for artifact in lineage:
+            if object_id in artifact["input_refs"] or object_id in artifact["output_refs"]:
+                links.append(
+                    {
+                        "artifact_id": artifact["id"],
+                        "name": artifact["name"],
+                        "route": f"/lineage/{artifact['id']}",
+                    }
+                )
+        return links
+
+    def kpi_signal_rows(object_id: str) -> list[dict[str, Any]]:
+        related: list[dict[str, Any]] = []
+        for kpi in kpis:
+            if (
+                kpi.get("asset_id") == object_id
+                or kpi.get("order_id") == object_id
+                or kpi.get("line_id") == object_id
+                or object_id == "KPIOBS_2101"
+            ):
+                related.append(kpi)
+        seen_ids = set()
+        unique_related = []
+        for kpi in related:
+            if kpi["id"] in seen_ids:
+                continue
+            unique_related.append(kpi)
+            seen_ids.add(kpi["id"])
+        return unique_related
+
+    cards = {
+        "ASSET_PAINT_ROBOT_07": {
+            "card_schema_version": "v1",
+            "object_id": "ASSET_PAINT_ROBOT_07",
+            "canonical_identity": {
+                "id": "ASSET_PAINT_ROBOT_07",
+                "type": "Asset",
+                "label": "Paint Robot 07",
+            },
+            "source_representations": source_reps_by_object["ASSET_PAINT_ROBOT_07"],
+            "semantic_meaning": {
+                "summary": "Primary paint-line robot asset executing spray operations at ST_PAINT_BOOTH_03.",
+            },
+            "current_state_snapshot": {
+                "status": "disturbance_resolved_after_overdue_maintenance",
+                "as_of_utc": "2026-01-15T09:25:00Z",
+                "attributes": entities_by_id["ASSET_PAINT_ROBOT_07"]["payload"],
+            },
+            "key_relationships": {
+                "business_graph": [
+                    {"relationship": "located_at_station", "target_id": "ST_PAINT_BOOTH_03", "target_type": "Station"},
+                    {"relationship": "drives_disturbance_signal", "target_id": "KPIOBS_2102", "target_type": "KPIObservation"},
+                ]
+            },
+            "related_timeline": sorted(
+                [row for row in events if row.get("asset_id") == "ASSET_PAINT_ROBOT_07"],
+                key=event_or_result_time,
+            ),
+            "relevant_kpi_signals": kpi_signal_rows("ASSET_PAINT_ROBOT_07"),
+            "impacted_objects": [
+                {"id": "SU_900001", "type": "SerialUnit", "reason": "processed while disturbance was active"},
+                {"id": "ORD_10045", "type": "ProductionOrder", "reason": "contains disrupted units tied to defect risk"},
+            ],
+            "lineage_entry_links": lineage_links("ASSET_PAINT_ROBOT_07"),
+            "issue_context": {
+                "why_this_object_matters_now": "Maintenance overdue and disturbance around this asset precede the defect-rate violation.",
+            },
+        },
+        "ORD_10045": {
+            "card_schema_version": "v1",
+            "object_id": "ORD_10045",
+            "canonical_identity": {"id": "ORD_10045", "type": "ProductionOrder", "label": "Production Order 10045"},
+            "source_representations": source_reps_by_object["ORD_10045"],
+            "semantic_meaning": {
+                "summary": "Order grouping multiple serial units for VAR_SEDAN_RED_PREM through the paint line window.",
+            },
+            "current_state_snapshot": {
+                "status": "at_risk",
+                "as_of_utc": "2026-01-15T14:00:00Z",
+                "attributes": entities_by_id["ORD_10045"]["payload"],
+            },
+            "key_relationships": {
+                "business_graph": [
+                    {"relationship": "contains_serial_unit", "target_id": "SU_900001", "target_type": "SerialUnit"},
+                    {"relationship": "contains_serial_unit", "target_id": "SU_900002", "target_type": "SerialUnit"},
+                    {"relationship": "has_kpi_signal", "target_id": "KPIOBS_2103", "target_type": "KPIObservation"},
+                ]
+            },
+            "related_timeline": sorted(
+                [row for row in events if row.get("serial_unit_id") in {"SU_900001", "SU_900002"}],
+                key=event_or_result_time,
+            ),
+            "relevant_kpi_signals": kpi_signal_rows("ORD_10045"),
+            "impacted_objects": [
+                {"id": "KPIOBS_2103", "type": "KPIObservation", "reason": "order delay risk elevated"},
+                {"id": "KPIOBS_2101", "type": "KPIObservation", "reason": "defect spike concentrated on one unit in this order"},
+            ],
+            "lineage_entry_links": lineage_links("ORD_10045"),
+            "issue_context": {
+                "why_this_object_matters_now": "Defects detected on units within this order raise delay and rework risk.",
+            },
+        },
+        "SU_900001": {
+            "card_schema_version": "v1",
+            "object_id": "SU_900001",
+            "canonical_identity": {"id": "SU_900001", "type": "SerialUnit", "label": "Serial Unit 900001"},
+            "source_representations": source_reps_by_object["SU_900001"],
+            "semantic_meaning": {
+                "summary": "Single manufactured unit tracked through processing and inspection lifecycle.",
+            },
+            "current_state_snapshot": {
+                "status": "defect_detected",
+                "as_of_utc": "2026-01-15T08:45:00Z",
+                "attributes": entities_by_id["SU_900001"]["payload"],
+            },
+            "key_relationships": {
+                "business_graph": [
+                    {"relationship": "belongs_to_order", "target_id": "ORD_10045", "target_type": "ProductionOrder"},
+                    {"relationship": "processed_at_station", "target_id": "ST_PAINT_BOOTH_03", "target_type": "Station"},
+                    {"relationship": "has_result", "target_id": "RES_0001", "target_type": "DefectResult"},
+                ]
+            },
+            "related_timeline": sorted(
+                [row for row in [*events, *results] if row.get("serial_unit_id") == "SU_900001"],
+                key=event_or_result_time,
+            ),
+            "relevant_kpi_signals": [kpi for kpi in kpis if kpi["id"] in {"KPIOBS_2101", "KPIOBS_2103"}],
+            "impacted_objects": [
+                {"id": "ORD_10045", "type": "ProductionOrder", "reason": "unit defect adds order delay risk"},
+                {"id": "KPIOBS_2101", "type": "KPIObservation", "reason": "defect contributes to violated defect rate"},
+            ],
+            "lineage_entry_links": lineage_links("SU_900001"),
+            "issue_context": {
+                "why_this_object_matters_now": "This unit carries the defect result feeding the active defect-rate issue.",
+            },
+        },
+        "KPIOBS_2101": {
+            "card_schema_version": "v1",
+            "object_id": "KPIOBS_2101",
+            "canonical_identity": {"id": "KPIOBS_2101", "type": "KPIObservation", "label": "Defect Rate Observation"},
+            "source_representations": [
+                rep
+                for rep in source_representations
+                if rep["represents_canonical_id"] in {"INSP_81001", "INSP_81002", "INSP_81003"}
+            ],
+            "semantic_meaning": {
+                "summary": "Aggregated defect-rate signal for LINE_PAINT_A over the active operational window.",
+            },
+            "current_state_snapshot": {
+                "status": "violated",
+                "as_of_utc": "2026-01-15T14:00:00Z",
+                "attributes": next(kpi for kpi in kpis if kpi["id"] == "KPIOBS_2101"),
+            },
+            "key_relationships": {
+                "business_graph": [
+                    {"relationship": "correlates_with", "target_id": "KPIOBS_2102", "target_type": "KPIObservation"},
+                    {"relationship": "impacts", "target_id": "ORD_10045", "target_type": "ProductionOrder"},
+                    {"relationship": "observed_on", "target_id": "SU_900001", "target_type": "SerialUnit"},
+                ]
+            },
+            "related_timeline": sorted(
+                [row for row in [*events, *results] if row.get("serial_unit_id") == "SU_900001"] + [kpis[0]],
+                key=event_or_result_time,
+            ),
+            "relevant_kpi_signals": [kpi for kpi in kpis if kpi["id"] in {"KPIOBS_2101", "KPIOBS_2102", "KPIOBS_2103"}],
+            "impacted_objects": [
+                {"id": "SU_900001", "type": "SerialUnit", "reason": "defect contribution in window"},
+                {"id": "ORD_10045", "type": "ProductionOrder", "reason": "quality signal drives delay risk"},
+                {"id": "ASSET_PAINT_ROBOT_07", "type": "Asset", "reason": "possible root cause from disturbance pattern"},
+            ],
+            "lineage_entry_links": lineage_links("KPIOBS_2101"),
+            "issue_context": {
+                "why_this_object_matters_now": "This violated KPI is the top-level trigger for the current incident workflow.",
+            },
+        },
+    }
+    return cards
+
+
 def main() -> None:
     normalized, config = stage_1_normalize_sources()
     source_representations = stage_1b_source_representations(normalized)
@@ -594,6 +796,9 @@ def main() -> None:
     lineage = stage_5_lineage(normalized, source_representations, events, results, kpis)
     ui_pages = stage_6_ui_payload(kpis, events)
     graph = stage_7_graph_payload(canonical_entities, source_representations, results, kpis, lineage)
+    object_cards = stage_8_object_cards(
+        canonical_entities, source_representations, events, results, kpis, lineage
+    )
 
     write_json(OUT_ROOT / "canonical/source_representations.json", source_representations)
     write_json(OUT_ROOT / "canonical/entities.json", canonical_entities)
@@ -603,6 +808,8 @@ def main() -> None:
     write_json(OUT_ROOT / "lineage/artifacts.json", lineage)
     write_json(OUT_ROOT / "ui/pages.json", ui_pages)
     write_json(OUT_ROOT / "ui/graph.json", graph)
+    for object_id, object_card in object_cards.items():
+        write_json(OUT_ROOT / f"ui/object_cards/{object_id}.json", object_card)
 
     print("Generated deterministic PoC artifacts in data/generated/v1/")
 

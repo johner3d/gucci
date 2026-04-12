@@ -1,0 +1,117 @@
+{
+  "canonical_identity": {
+    "id": "SU_900001",
+    "label": "Serial Unit 900001",
+    "type": "SerialUnit"
+  },
+  "card_schema_version": "v1",
+  "current_state_snapshot": {
+    "as_of_utc": "2026-01-15T08:45:00Z",
+    "attributes": {
+      "batch_lot_id": "LOT_PAINT_20260115_A",
+      "id": "SU_900001",
+      "order_id": "ORD_10045",
+      "station_id": "ST_PAINT_BOOTH_03"
+    },
+    "status": "defect_detected"
+  },
+  "impacted_objects": [
+    {
+      "id": "ORD_10045",
+      "reason": "unit defect adds order delay risk",
+      "type": "ProductionOrder"
+    },
+    {
+      "id": "KPIOBS_2101",
+      "reason": "defect contributes to violated defect rate",
+      "type": "KPIObservation"
+    }
+  ],
+  "issue_context": {
+    "why_this_object_matters_now": "This unit carries the defect result feeding the active defect-rate issue."
+  },
+  "key_relationships": {
+    "business_graph": [
+      {
+        "relationship": "belongs_to_order",
+        "target_id": "ORD_10045",
+        "target_type": "ProductionOrder"
+      },
+      {
+        "relationship": "processed_at_station",
+        "target_id": "ST_PAINT_BOOTH_03",
+        "target_type": "Station"
+      },
+      {
+        "relationship": "has_result",
+        "target_id": "RES_0001",
+        "target_type": "DefectResult"
+      }
+    ]
+  },
+  "lineage_entry_links": [
+    {
+      "artifact_id": "LIN_0003",
+      "name": "map_mes_unit_representation_to_serial_unit_entity",
+      "route": "/lineage/LIN_0003"
+    }
+  ],
+  "object_id": "SU_900001",
+  "related_timeline": [
+    {
+      "id": "EVT_0005",
+      "occurred_at_utc": "2026-01-15T08:20:00Z",
+      "serial_unit_id": "SU_900001",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "unit_processed"
+    },
+    {
+      "id": "EVT_0008",
+      "inspection_id": "INSP_81001",
+      "occurred_at_utc": "2026-01-15T08:45:00Z",
+      "serial_unit_id": "SU_900001",
+      "type": "inspection_executed"
+    },
+    {
+      "defect_code": "DF_PAINT_ORANGE_PEEL",
+      "id": "RES_0001",
+      "inspection_id": "INSP_81001",
+      "recorded_at_utc": "2026-01-15T08:45:00Z",
+      "serial_unit_id": "SU_900001",
+      "type": "defect_detected"
+    }
+  ],
+  "relevant_kpi_signals": [
+    {
+      "id": "KPIOBS_2101",
+      "kpi": "defect_rate",
+      "line_id": "LINE_PAINT_A",
+      "status": "violated",
+      "threshold": 0.05,
+      "value": 0.667,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    },
+    {
+      "id": "KPIOBS_2103",
+      "kpi": "order_delay_risk",
+      "order_id": "ORD_10045",
+      "status": "elevated",
+      "value": "high",
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    }
+  ],
+  "semantic_meaning": {
+    "summary": "Single manufactured unit tracked through processing and inspection lifecycle."
+  },
+  "source_representations": [
+    {
+      "representation_type": "unit",
+      "represents_canonical_id": "SU_900001",
+      "source_record_id": "MES_TRK_5001",
+      "source_representation_id": "SRCREP_0004",
+      "source_system": "MES"
+    }
+  ]
+}

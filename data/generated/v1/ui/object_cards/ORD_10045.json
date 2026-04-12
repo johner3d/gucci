@@ -1,0 +1,113 @@
+{
+  "canonical_identity": {
+    "id": "ORD_10045",
+    "label": "Production Order 10045",
+    "type": "ProductionOrder"
+  },
+  "card_schema_version": "v1",
+  "current_state_snapshot": {
+    "as_of_utc": "2026-01-15T14:00:00Z",
+    "attributes": {
+      "id": "ORD_10045",
+      "planned_end_utc": "2026-01-15T10:30:00Z",
+      "planned_start_utc": "2026-01-15T06:00:00Z",
+      "variant_id": "VAR_SEDAN_RED_PREM"
+    },
+    "status": "at_risk"
+  },
+  "impacted_objects": [
+    {
+      "id": "KPIOBS_2103",
+      "reason": "order delay risk elevated",
+      "type": "KPIObservation"
+    },
+    {
+      "id": "KPIOBS_2101",
+      "reason": "defect spike concentrated on one unit in this order",
+      "type": "KPIObservation"
+    }
+  ],
+  "issue_context": {
+    "why_this_object_matters_now": "Defects detected on units within this order raise delay and rework risk."
+  },
+  "key_relationships": {
+    "business_graph": [
+      {
+        "relationship": "contains_serial_unit",
+        "target_id": "SU_900001",
+        "target_type": "SerialUnit"
+      },
+      {
+        "relationship": "contains_serial_unit",
+        "target_id": "SU_900002",
+        "target_type": "SerialUnit"
+      },
+      {
+        "relationship": "has_kpi_signal",
+        "target_id": "KPIOBS_2103",
+        "target_type": "KPIObservation"
+      }
+    ]
+  },
+  "lineage_entry_links": [
+    {
+      "artifact_id": "LIN_0001",
+      "name": "map_erp_order_representation_to_order_entity",
+      "route": "/lineage/LIN_0001"
+    }
+  ],
+  "object_id": "ORD_10045",
+  "related_timeline": [
+    {
+      "id": "EVT_0005",
+      "occurred_at_utc": "2026-01-15T08:20:00Z",
+      "serial_unit_id": "SU_900001",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "unit_processed"
+    },
+    {
+      "id": "EVT_0006",
+      "occurred_at_utc": "2026-01-15T08:22:00Z",
+      "serial_unit_id": "SU_900002",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "unit_processed"
+    },
+    {
+      "id": "EVT_0008",
+      "inspection_id": "INSP_81001",
+      "occurred_at_utc": "2026-01-15T08:45:00Z",
+      "serial_unit_id": "SU_900001",
+      "type": "inspection_executed"
+    },
+    {
+      "id": "EVT_0009",
+      "inspection_id": "INSP_81002",
+      "occurred_at_utc": "2026-01-15T08:48:00Z",
+      "serial_unit_id": "SU_900002",
+      "type": "inspection_executed"
+    }
+  ],
+  "relevant_kpi_signals": [
+    {
+      "id": "KPIOBS_2103",
+      "kpi": "order_delay_risk",
+      "order_id": "ORD_10045",
+      "status": "elevated",
+      "value": "high",
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    }
+  ],
+  "semantic_meaning": {
+    "summary": "Order grouping multiple serial units for VAR_SEDAN_RED_PREM through the paint line window."
+  },
+  "source_representations": [
+    {
+      "representation_type": "order",
+      "represents_canonical_id": "ORD_10045",
+      "source_record_id": "ERP_ORD_77821",
+      "source_representation_id": "SRCREP_0001",
+      "source_system": "ERP"
+    }
+  ]
+}

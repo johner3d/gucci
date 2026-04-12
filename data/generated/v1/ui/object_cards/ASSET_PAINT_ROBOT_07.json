@@ -1,0 +1,92 @@
+{
+  "canonical_identity": {
+    "id": "ASSET_PAINT_ROBOT_07",
+    "label": "Paint Robot 07",
+    "type": "Asset"
+  },
+  "card_schema_version": "v1",
+  "current_state_snapshot": {
+    "as_of_utc": "2026-01-15T09:25:00Z",
+    "attributes": {
+      "id": "ASSET_PAINT_ROBOT_07",
+      "station_id": "ST_PAINT_BOOTH_03"
+    },
+    "status": "disturbance_resolved_after_overdue_maintenance"
+  },
+  "impacted_objects": [
+    {
+      "id": "SU_900001",
+      "reason": "processed while disturbance was active",
+      "type": "SerialUnit"
+    },
+    {
+      "id": "ORD_10045",
+      "reason": "contains disrupted units tied to defect risk",
+      "type": "ProductionOrder"
+    }
+  ],
+  "issue_context": {
+    "why_this_object_matters_now": "Maintenance overdue and disturbance around this asset precede the defect-rate violation."
+  },
+  "key_relationships": {
+    "business_graph": [
+      {
+        "relationship": "located_at_station",
+        "target_id": "ST_PAINT_BOOTH_03",
+        "target_type": "Station"
+      },
+      {
+        "relationship": "drives_disturbance_signal",
+        "target_id": "KPIOBS_2102",
+        "target_type": "KPIObservation"
+      }
+    ]
+  },
+  "lineage_entry_links": [],
+  "object_id": "ASSET_PAINT_ROBOT_07",
+  "related_timeline": [
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "EVT_0001",
+      "maintenance_activity_id": "MA_7001",
+      "occurred_at_utc": "2026-01-15T07:30:00Z",
+      "type": "maintenance_overdue_threshold_crossed"
+    },
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "EVT_0002",
+      "occurred_at_utc": "2026-01-15T08:10:00Z",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "asset_disturbance_started"
+    },
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "EVT_0003",
+      "maintenance_activity_id": "MA_7001",
+      "occurred_at_utc": "2026-01-15T09:10:00Z",
+      "type": "maintenance_performed"
+    },
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "EVT_0004",
+      "occurred_at_utc": "2026-01-15T09:25:00Z",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "asset_disturbance_cleared"
+    }
+  ],
+  "relevant_kpi_signals": [
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "KPIOBS_2102",
+      "kpi": "disturbance_duration_minutes",
+      "status": "high",
+      "value": 75,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    }
+  ],
+  "semantic_meaning": {
+    "summary": "Primary paint-line robot asset executing spray operations at ST_PAINT_BOOTH_03."
+  },
+  "source_representations": []
+}

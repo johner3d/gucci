@@ -1,0 +1,159 @@
+{
+  "canonical_identity": {
+    "id": "KPIOBS_2101",
+    "label": "Defect Rate Observation",
+    "type": "KPIObservation"
+  },
+  "card_schema_version": "v1",
+  "current_state_snapshot": {
+    "as_of_utc": "2026-01-15T14:00:00Z",
+    "attributes": {
+      "id": "KPIOBS_2101",
+      "kpi": "defect_rate",
+      "line_id": "LINE_PAINT_A",
+      "status": "violated",
+      "threshold": 0.05,
+      "value": 0.667,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    },
+    "status": "violated"
+  },
+  "impacted_objects": [
+    {
+      "id": "SU_900001",
+      "reason": "defect contribution in window",
+      "type": "SerialUnit"
+    },
+    {
+      "id": "ORD_10045",
+      "reason": "quality signal drives delay risk",
+      "type": "ProductionOrder"
+    },
+    {
+      "id": "ASSET_PAINT_ROBOT_07",
+      "reason": "possible root cause from disturbance pattern",
+      "type": "Asset"
+    }
+  ],
+  "issue_context": {
+    "why_this_object_matters_now": "This violated KPI is the top-level trigger for the current incident workflow."
+  },
+  "key_relationships": {
+    "business_graph": [
+      {
+        "relationship": "correlates_with",
+        "target_id": "KPIOBS_2102",
+        "target_type": "KPIObservation"
+      },
+      {
+        "relationship": "impacts",
+        "target_id": "ORD_10045",
+        "target_type": "ProductionOrder"
+      },
+      {
+        "relationship": "observed_on",
+        "target_id": "SU_900001",
+        "target_type": "SerialUnit"
+      }
+    ]
+  },
+  "lineage_entry_links": [
+    {
+      "artifact_id": "LIN_0021",
+      "name": "derive_defect_rate_kpi",
+      "route": "/lineage/LIN_0021"
+    }
+  ],
+  "object_id": "KPIOBS_2101",
+  "related_timeline": [
+    {
+      "id": "KPIOBS_2101",
+      "kpi": "defect_rate",
+      "line_id": "LINE_PAINT_A",
+      "status": "violated",
+      "threshold": 0.05,
+      "value": 0.667,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    },
+    {
+      "id": "EVT_0005",
+      "occurred_at_utc": "2026-01-15T08:20:00Z",
+      "serial_unit_id": "SU_900001",
+      "station_id": "ST_PAINT_BOOTH_03",
+      "type": "unit_processed"
+    },
+    {
+      "id": "EVT_0008",
+      "inspection_id": "INSP_81001",
+      "occurred_at_utc": "2026-01-15T08:45:00Z",
+      "serial_unit_id": "SU_900001",
+      "type": "inspection_executed"
+    },
+    {
+      "defect_code": "DF_PAINT_ORANGE_PEEL",
+      "id": "RES_0001",
+      "inspection_id": "INSP_81001",
+      "recorded_at_utc": "2026-01-15T08:45:00Z",
+      "serial_unit_id": "SU_900001",
+      "type": "defect_detected"
+    }
+  ],
+  "relevant_kpi_signals": [
+    {
+      "id": "KPIOBS_2101",
+      "kpi": "defect_rate",
+      "line_id": "LINE_PAINT_A",
+      "status": "violated",
+      "threshold": 0.05,
+      "value": 0.667,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    },
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "KPIOBS_2102",
+      "kpi": "disturbance_duration_minutes",
+      "status": "high",
+      "value": 75,
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    },
+    {
+      "id": "KPIOBS_2103",
+      "kpi": "order_delay_risk",
+      "order_id": "ORD_10045",
+      "status": "elevated",
+      "value": "high",
+      "window_end_utc": "2026-01-15T14:00:00Z",
+      "window_start_utc": "2026-01-15T06:00:00Z"
+    }
+  ],
+  "semantic_meaning": {
+    "summary": "Aggregated defect-rate signal for LINE_PAINT_A over the active operational window."
+  },
+  "source_representations": [
+    {
+      "representation_type": "inspection",
+      "represents_canonical_id": "INSP_81001",
+      "source_record_id": "QMS_INSP_3001",
+      "source_representation_id": "SRCREP_0007",
+      "source_system": "QMS"
+    },
+    {
+      "representation_type": "inspection",
+      "represents_canonical_id": "INSP_81002",
+      "source_record_id": "QMS_INSP_3002",
+      "source_representation_id": "SRCREP_0008",
+      "source_system": "QMS"
+    },
+    {
+      "representation_type": "inspection",
+      "represents_canonical_id": "INSP_81003",
+      "source_record_id": "QMS_INSP_3003",
+      "source_representation_id": "SRCREP_0009",
+      "source_system": "QMS"
+    }
+  ]
+}
