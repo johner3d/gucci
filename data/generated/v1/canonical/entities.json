@@ -1,0 +1,98 @@
+{
+  "asset": [
+    {
+      "id": "ASSET_PAINT_ROBOT_07",
+      "station_id": "ST_PAINT_BOOTH_03"
+    }
+  ],
+  "inspection": [
+    {
+      "defect_code": "DF_PAINT_ORANGE_PEEL",
+      "id": "INSP_81001",
+      "result": "NOK",
+      "serial_unit_id": "SU_900001"
+    },
+    {
+      "defect_code": "DF_PAINT_ORANGE_PEEL",
+      "id": "INSP_81002",
+      "result": "NOK",
+      "serial_unit_id": "SU_900002"
+    },
+    {
+      "defect_code": null,
+      "id": "INSP_81003",
+      "result": "OK",
+      "serial_unit_id": "SU_900101"
+    }
+  ],
+  "line": [
+    {
+      "id": "LINE_PAINT_A",
+      "plant_id": "PLANT_DE_01"
+    }
+  ],
+  "maintenance_activity": [
+    {
+      "asset_id": "ASSET_PAINT_ROBOT_07",
+      "id": "MA_7001",
+      "status": "completed_late"
+    }
+  ],
+  "plant": [
+    {
+      "id": "PLANT_DE_01"
+    }
+  ],
+  "product": [
+    {
+      "id": "PROD_SEDAN_X",
+      "source_product_code": "SEDAN_X"
+    }
+  ],
+  "production_order": [
+    {
+      "id": "ORD_10045",
+      "planned_end_utc": "2026-01-15T10:30:00Z",
+      "planned_start_utc": "2026-01-15T06:00:00Z",
+      "variant_id": "VAR_SEDAN_RED_PREM"
+    },
+    {
+      "id": "ORD_10046",
+      "planned_end_utc": "2026-01-15T13:30:00Z",
+      "planned_start_utc": "2026-01-15T09:00:00Z",
+      "variant_id": "VAR_SEDAN_RED_PREM"
+    }
+  ],
+  "serial_unit": [
+    {
+      "batch_lot_id": "LOT_PAINT_20260115_A",
+      "id": "SU_900001",
+      "order_id": "ORD_10045",
+      "station_id": "ST_PAINT_BOOTH_03"
+    },
+    {
+      "batch_lot_id": "LOT_PAINT_20260115_A",
+      "id": "SU_900002",
+      "order_id": "ORD_10045",
+      "station_id": "ST_PAINT_BOOTH_03"
+    },
+    {
+      "batch_lot_id": "LOT_PAINT_20260115_B",
+      "id": "SU_900101",
+      "order_id": "ORD_10046",
+      "station_id": "ST_PAINT_BOOTH_03"
+    }
+  ],
+  "station": [
+    {
+      "id": "ST_PAINT_BOOTH_03",
+      "line_id": "LINE_PAINT_A"
+    }
+  ],
+  "variant": [
+    {
+      "id": "VAR_SEDAN_RED_PREM",
+      "product_id": "PROD_SEDAN_X"
+    }
+  ]
+}

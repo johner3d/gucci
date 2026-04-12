@@ -1,0 +1,30 @@
+[
+  {
+    "id": "KPIOBS_0001",
+    "kpi": "defect_rate",
+    "line_id": "LINE_PAINT_A",
+    "status": "violated",
+    "threshold": 0.05,
+    "value": 0.667,
+    "window_end_utc": "2026-01-15T14:00:00Z",
+    "window_start_utc": "2026-01-15T06:00:00Z"
+  },
+  {
+    "asset_id": "ASSET_PAINT_ROBOT_07",
+    "id": "KPIOBS_0002",
+    "kpi": "disturbance_duration_minutes",
+    "status": "high",
+    "value": 75,
+    "window_end_utc": "2026-01-15T14:00:00Z",
+    "window_start_utc": "2026-01-15T06:00:00Z"
+  },
+  {
+    "id": "KPIOBS_0003",
+    "kpi": "order_delay_risk",
+    "order_id": "ORD_10045",
+    "status": "elevated",
+    "value": "high",
+    "window_end_utc": "2026-01-15T14:00:00Z",
+    "window_start_utc": "2026-01-15T06:00:00Z"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "cards": [
+      {
+        "card_id": "UI_CARD_DEFECT_RATE",
+        "label": "Defect Rate",
+        "source_kpi_observation_id": "KPIOBS_0001",
+        "status": "violated",
+        "value": 0.667
+      }
+    ],
+    "page_id": "UI_PAGE_OVERVIEW_V1",
+    "timeline": [
+      {
+        "id": "EVT_0001",
+        "occurred_at_utc": "2026-01-15T07:30:00Z",
+        "type": "maintenance_overdue_threshold_crossed"
+      },
+      {
+        "id": "EVT_0002",
+        "occurred_at_utc": "2026-01-15T08:10:00Z",
+        "type": "asset_disturbance_started"
+      },
+      {
+        "id": "EVT_0005",
+        "occurred_at_utc": "2026-01-15T08:20:00Z",
+        "type": "unit_processed"
+      },
+      {
+        "id": "EVT_0006",
+        "occurred_at_utc": "2026-01-15T08:22:00Z",
+        "type": "unit_processed"
+      },
+      {
+        "id": "EVT_0008",
+        "occurred_at_utc": "2026-01-15T08:45:00Z",
+        "type": "inspection_executed"
+      },
+      {
+        "id": "EVT_0009",
+        "occurred_at_utc": "2026-01-15T08:48:00Z",
+        "type": "inspection_executed"
+      }
+    ],
+    "title": "Paint Line A Incident Overview"
+  }
+]

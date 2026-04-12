@@ -1,0 +1,37 @@
+[
+  {
+    "artifact_type": "mapping_rule",
+    "id": "LIN_0001",
+    "input_refs": [
+      "EAM_WO_12090"
+    ],
+    "name": "map_eam_work_order_to_maintenance_activity",
+    "output_refs": [
+      "MA_7001"
+    ]
+  },
+  {
+    "artifact_type": "derivation_rule",
+    "id": "LIN_0002",
+    "input_refs": [
+      "MA_7001"
+    ],
+    "name": "derive_maintenance_overdue_event",
+    "output_refs": [
+      "EVT_0001"
+    ]
+  },
+  {
+    "artifact_type": "derivation_rule",
+    "id": "LIN_0003",
+    "input_refs": [
+      "INSP_81001",
+      "INSP_81002",
+      "INSP_81003"
+    ],
+    "name": "derive_defect_rate_kpi",
+    "output_refs": [
+      "KPIOBS_0001"
+    ]
+  }
+]
