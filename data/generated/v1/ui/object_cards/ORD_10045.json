@@ -50,6 +50,89 @@
       "route": "/lineage/LIN_0044"
     }
   ],
+  "meaning_ontology": {
+    "linked_rules": [
+      {
+        "definition": "Order risk is inferred when defect-rate and disturbance signals exceed policy thresholds.",
+        "id": "SEM_RULE_ORDER_RISK",
+        "label": "Order Risk Propagation",
+        "lineage_rule_names": [
+          "derive_order_delay_risk_kpi",
+          "bind_order_risk_object_card"
+        ]
+      }
+    ],
+    "ontology_classes": [
+      {
+        "definition": "A planned work package that groups units and process steps for delivery.",
+        "id": "ONT_CLASS_PRODUCTION_ORDER",
+        "label": "Production Order"
+      }
+    ],
+    "semantic_tags": [
+      "production",
+      "fulfillment",
+      "risk_bearing"
+    ],
+    "taxonomy_nodes": [
+      {
+        "cross_links": [
+          {
+            "route": "/objects/ORD_10045",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ORD_10045&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_ORDER_EXECUTION",
+        "label": "Order Execution",
+        "parent_id": "TAX_PRODUCTION"
+      },
+      {
+        "cross_links": [
+          {
+            "route": "/objects/ORD_10045",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ORD_10045&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_PRODUCTION",
+        "label": "Production",
+        "parent_id": null
+      }
+    ],
+    "terms": [
+      {
+        "aliases": [
+          "Work Order"
+        ],
+        "class_id": "ONT_CLASS_PRODUCTION_ORDER",
+        "cross_links": [
+          {
+            "route": "/objects/ORD_10045",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ORD_10045&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "definition": "Execution container for planned manufacturing work.",
+        "id": "TERM_PRODUCTION_ORDER",
+        "semantic_tags": [
+          "production",
+          "planning",
+          "fulfillment"
+        ],
+        "term": "Production Order"
+      }
+    ]
+  },
   "object_id": "ORD_10045",
   "primary_lineage_artifact_id": "LIN_0044",
   "related_timeline": [

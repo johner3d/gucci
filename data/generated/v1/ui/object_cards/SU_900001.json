@@ -69,6 +69,113 @@
       "route": "/lineage/LIN_0045"
     }
   ],
+  "meaning_ontology": {
+    "linked_rules": [
+      {
+        "definition": "A serial unit is defect-bearing when inspection outcome is NOK with a defect code.",
+        "id": "SEM_RULE_UNIT_DEFECT",
+        "label": "Unit Defect Classification",
+        "lineage_rule_names": [
+          "derive_defect_detected_result_from_inspection_representation",
+          "bind_serial_unit_object_card"
+        ]
+      }
+    ],
+    "ontology_classes": [
+      {
+        "definition": "A uniquely identifiable produced item tracked through process and quality states.",
+        "id": "ONT_CLASS_SERIALIZED_UNIT",
+        "label": "Serialized Unit"
+      }
+    ],
+    "semantic_tags": [
+      "traceability",
+      "quality",
+      "defect_exposed"
+    ],
+    "taxonomy_nodes": [
+      {
+        "cross_links": [
+          {
+            "route": "/objects/ORD_10045",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ORD_10045&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_PRODUCTION",
+        "label": "Production",
+        "parent_id": null
+      },
+      {
+        "cross_links": [
+          {
+            "route": "/objects/SU_900001",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=SU_900001&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_UNIT_TRACKING",
+        "label": "Unit Tracking",
+        "parent_id": "TAX_PRODUCTION"
+      }
+    ],
+    "terms": [
+      {
+        "aliases": [
+          "NOK Ratio"
+        ],
+        "class_id": "ONT_CLASS_KPI_OBSERVATION",
+        "cross_links": [
+          {
+            "route": "/objects/KPIOBS_2101",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=KPIOBS_2101&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "definition": "Share of inspected units marked non-conforming within a window.",
+        "id": "TERM_DEFECT_RATE",
+        "semantic_tags": [
+          "kpi",
+          "quality",
+          "risk_signal"
+        ],
+        "term": "Defect Rate"
+      },
+      {
+        "aliases": [
+          "Unit Instance"
+        ],
+        "class_id": "ONT_CLASS_SERIALIZED_UNIT",
+        "cross_links": [
+          {
+            "route": "/objects/SU_900001",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=SU_900001&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "definition": "Uniquely tracked produced unit with lineage and quality results.",
+        "id": "TERM_SERIAL_UNIT",
+        "semantic_tags": [
+          "traceability",
+          "quality",
+          "manufacturing"
+        ],
+        "term": "Serial Unit"
+      }
+    ]
+  },
   "object_id": "SU_900001",
   "primary_lineage_artifact_id": "LIN_0045",
   "related_timeline": [

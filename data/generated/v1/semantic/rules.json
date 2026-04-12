@@ -1,0 +1,50 @@
+[
+  {
+    "definition": "Asset disturbance and maintenance overdue events classify the asset as incident-relevant.",
+    "id": "SEM_RULE_ASSET_HEALTH",
+    "label": "Asset Disturbance Semantics",
+    "lineage_rule_names": [
+      "derive_maintenance_overdue_event",
+      "derive_maintenance_overdue_threshold_crossed_event_from_maintenance_activity"
+    ],
+    "linked_entity_ids": [
+      "ASSET_PAINT_ROBOT_07"
+    ]
+  },
+  {
+    "definition": "Order risk is inferred when defect-rate and disturbance signals exceed policy thresholds.",
+    "id": "SEM_RULE_ORDER_RISK",
+    "label": "Order Risk Propagation",
+    "lineage_rule_names": [
+      "derive_order_delay_risk_kpi",
+      "bind_order_risk_object_card"
+    ],
+    "linked_entity_ids": [
+      "ORD_10045"
+    ]
+  },
+  {
+    "definition": "A serial unit is defect-bearing when inspection outcome is NOK with a defect code.",
+    "id": "SEM_RULE_UNIT_DEFECT",
+    "label": "Unit Defect Classification",
+    "lineage_rule_names": [
+      "derive_defect_detected_result_from_inspection_representation",
+      "bind_serial_unit_object_card"
+    ],
+    "linked_entity_ids": [
+      "SU_900001"
+    ]
+  },
+  {
+    "definition": "Defect-rate KPI is interpreted as violated when value breaches configured threshold.",
+    "id": "SEM_RULE_KPI_VIOLATION",
+    "label": "KPI Violation Interpretation",
+    "lineage_rule_names": [
+      "derive_defect_rate_kpi",
+      "bind_kpi_to_overview_issue_card"
+    ],
+    "linked_entity_ids": [
+      "KPIOBS_2101"
+    ]
+  }
+]

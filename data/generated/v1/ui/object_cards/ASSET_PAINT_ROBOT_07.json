@@ -38,6 +38,90 @@
       "route": "/lineage/LIN_0043"
     }
   ],
+  "meaning_ontology": {
+    "linked_rules": [
+      {
+        "definition": "Asset disturbance and maintenance overdue events classify the asset as incident-relevant.",
+        "id": "SEM_RULE_ASSET_HEALTH",
+        "label": "Asset Disturbance Semantics",
+        "lineage_rule_names": [
+          "derive_maintenance_overdue_event",
+          "derive_maintenance_overdue_threshold_crossed_event_from_maintenance_activity"
+        ]
+      }
+    ],
+    "ontology_classes": [
+      {
+        "definition": "A durable production resource that performs work in the manufacturing process.",
+        "id": "ONT_CLASS_PHYSICAL_ASSET",
+        "label": "Physical Asset"
+      }
+    ],
+    "semantic_tags": [
+      "asset",
+      "operational",
+      "maintenance_sensitive"
+    ],
+    "taxonomy_nodes": [
+      {
+        "cross_links": [
+          {
+            "route": "/objects/ASSET_PAINT_ROBOT_07",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_ASSETS",
+        "label": "Assets",
+        "parent_id": null
+      },
+      {
+        "cross_links": [
+          {
+            "route": "/objects/ASSET_PAINT_ROBOT_07",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "id": "TAX_PAINT_LINE_ASSETS",
+        "label": "Paint Line Assets",
+        "parent_id": "TAX_ASSETS"
+      }
+    ],
+    "terms": [
+      {
+        "aliases": [
+          "Spray Robot",
+          "Paint Applicator"
+        ],
+        "class_id": "ONT_CLASS_PHYSICAL_ASSET",
+        "cross_links": [
+          {
+            "route": "/objects/ASSET_PAINT_ROBOT_07",
+            "surface": "object_explorer"
+          },
+          {
+            "route": "/graph?focus=ASSET_PAINT_ROBOT_07&mode=impact",
+            "surface": "graph"
+          }
+        ],
+        "definition": "Robotic applicator used in the paint booth process.",
+        "id": "TERM_PAINT_ROBOT",
+        "semantic_tags": [
+          "asset",
+          "automation",
+          "paint_line"
+        ],
+        "term": "Paint Robot"
+      }
+    ]
+  },
   "object_id": "ASSET_PAINT_ROBOT_07",
   "primary_lineage_artifact_id": "LIN_0043",
   "related_timeline": [
