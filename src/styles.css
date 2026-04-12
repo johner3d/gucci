@@ -172,3 +172,7 @@ a:hover {
   color: #cbd5e1;
   overflow: auto;
 }
+
+.diagnostics-list li + li {
+  margin-top: var(--space-2);
+}

@@ -1,16 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { CausalPath } from '../components/domain/CausalPath'
-import { loadJSON } from '../lib/api'
+import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { loadGraphData, toUiDiagnostics } from '../lib/api'
 
 export function GraphPage() {
   const [graph, setGraph] = useState(null)
+  const [diagnostics, setDiagnostics] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
   const focus = searchParams.get('focus') || 'KPIOBS_2101'
   const traversal = searchParams.get('mode') || 'impact'
 
   useEffect(() => {
-    loadJSON('/data/generated/v1/ui/graph.json').then(setGraph)
+    loadGraphData()
+      .then((payload) => {
+        setGraph(payload.graph)
+        setDiagnostics(payload.diagnostics)
+      })
+      .catch((error) => setDiagnostics(toUiDiagnostics(error, 'graph')))
   }, [])
 
   const details = useMemo(() => {
@@ -27,18 +34,23 @@ export function GraphPage() {
     return { node, edges, nodes }
   }, [focus, graph, traversal])
 
-  if (!graph) return <p>Loading graph…</p>
+  if (!graph && !diagnostics.length) return <p>Loading graph…</p>
 
   return (
     <div className="stack">
       <h1>Graph</h1>
-      <CausalPath
-        details={details}
-        focus={focus}
-        traversal={traversal}
-        onTraversalChange={(nextFocus, mode) => setSearchParams({ focus: nextFocus, mode })}
-        onFocusChange={(nextFocus, mode) => setSearchParams({ focus: nextFocus, mode })}
-      />
+      <DataDiagnostics diagnostics={diagnostics} />
+      {graph ? (
+        <CausalPath
+          details={details}
+          focus={focus}
+          traversal={traversal}
+          onTraversalChange={(nextFocus, mode) => setSearchParams({ focus: nextFocus, mode })}
+          onFocusChange={(nextFocus, mode) => setSearchParams({ focus: nextFocus, mode })}
+        />
+      ) : (
+        <p>Graph content unavailable.</p>
+      )}
     </div>
   )
 }

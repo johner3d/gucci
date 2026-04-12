@@ -1,29 +1,32 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { LineageTrustPanel } from '../components/domain/LineageTrustPanel'
-import { loadJSON } from '../lib/api'
+import { loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
 
 export function LineagePage() {
   const { artifactId } = useParams()
   const [artifacts, setArtifacts] = useState([])
-  const [error, setError] = useState('')
+  const [diagnostics, setDiagnostics] = useState([])
 
   useEffect(() => {
-    setError('')
-    loadJSON('/data/generated/v1/lineage/artifacts.json')
-      .then(setArtifacts)
-      .catch(() => setError('Could not load lineage artifacts'))
+    loadLineageArtifactsData()
+      .then((payload) => {
+        setArtifacts(payload.artifacts)
+        setDiagnostics(payload.diagnostics)
+      })
+      .catch((error) => setDiagnostics(toUiDiagnostics(error, 'lineage.artifacts')))
   }, [])
 
   const artifact = useMemo(() => artifacts.find((entry) => entry.id === artifactId), [artifactId, artifacts])
 
-  if (error) return <p>{error}</p>
-  if (!artifact) return <p>Loading lineage artifact…</p>
+  if (!artifact && !diagnostics.length) return <p>Loading lineage artifact…</p>
 
   return (
     <div className="stack">
       <h1>Lineage</h1>
-      <LineageTrustPanel artifact={artifact} />
+      <DataDiagnostics diagnostics={diagnostics} />
+      {artifact ? <LineageTrustPanel artifact={artifact} /> : <p>Lineage artifact unavailable.</p>}
     </div>
   )
 }
