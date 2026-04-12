@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useOutletContext, useParams, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
+import { toScopedPath } from '../lib/scopedLink'
 
 function toTypeLabel(type = '') {
   return type.split('_').map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(' ')
@@ -24,6 +25,8 @@ export function ObjectsPage() {
   const [workspace, setWorkspace] = useState(null)
   const [diagnostics, setDiagnostics] = useState([])
   const [searchParams, setSearchParams] = useSearchParams()
+  const outletContext = useOutletContext()
+  const globalContext = outletContext?.globalContext || {}
 
   useEffect(() => {
     loadEntityWorkspaceData()
@@ -123,9 +126,9 @@ export function ObjectsPage() {
         <div className="button-row">
           <button type="button" className="btn" onClick={() => toggleEntityList('pin')}>{pinned.includes(entity.id) ? 'Unpin entity' : 'Pin entity'}</button>
           <button type="button" className="btn" onClick={() => toggleEntityList('compare')}>{compared.includes(entity.id) ? 'Remove from compare' : 'Add to compare'}</button>
-          <Link className="btn" to={`/graph?focus=${entity.id}&mode=downstream-impact`}>Impact view</Link>
-          <Link className="btn" to={`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`}>Lineage view</Link>
-          <Link className="btn" to={`/object-explorer?${searchParams.toString()}`}>Back to object search</Link>
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, mode: 'downstream-impact' })}>Impact view</Link>
+          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext)}>Lineage view</Link>
+          <Link className="btn" to={toScopedPath('/object-explorer', globalContext, Object.fromEntries(searchParams.entries()))}>Back to object search</Link>
         </div>
         <p className="meta">Pinned: {pinned.join(', ') || 'none'} | Compare: {compared.join(', ') || 'none'}</p>
       </Panel>
@@ -134,7 +137,7 @@ export function ObjectsPage() {
         <Panel title="Quick entity transitions">
           <div className="button-row">
             {[...new Set([...pinned, ...compared])].filter((entityId) => entityId !== entity.id).map((entityId) => (
-              <Link key={entityId} className="btn" to={`/object-explorer/${entityId}?${searchParams.toString()}`}>{entityId}</Link>
+              <Link key={entityId} className="btn" to={toScopedPath(`/object-explorer/${entityId}`, globalContext, Object.fromEntries(searchParams.entries()))}>{entityId}</Link>
             ))}
           </div>
         </Panel>
@@ -149,7 +152,7 @@ export function ObjectsPage() {
         </p>
         <p>
           <strong>Primary lineage:</strong>{' '}
-          {lineageLinks[0] ? <Link to={`/lineage/${lineageLinks[0].id}`}>{lineageLinks[0].id}</Link> : 'none'}
+          {lineageLinks[0] ? <Link to={toScopedPath(`/lineage/${lineageLinks[0].id}`, globalContext)}>{lineageLinks[0].id}</Link> : 'none'}
         </p>
       </Panel>
 
@@ -167,7 +170,7 @@ export function ObjectsPage() {
       <Panel title="Impacted objects">
         <ul className="list-reset">
           {impactedObjects.map((obj) => (
-            <li key={obj.id}><Link to={`/object-explorer/${obj.id}?${searchParams.toString()}`}>{obj.id}</Link> ({obj.type}) — {obj.reason}</li>
+            <li key={obj.id}><Link to={toScopedPath(`/object-explorer/${obj.id}`, globalContext, Object.fromEntries(searchParams.entries()))}>{obj.id}</Link> ({obj.type}) — {obj.reason}</li>
           ))}
         </ul>
       </Panel>

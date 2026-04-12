@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate, useOutletContext } from 'react-router-dom'
+import { Link, useNavigate, useOutletContext } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
+import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, loadProcessData, toUiDiagnostics } from '../lib/api'
+import { toScopedPath } from '../lib/scopedLink'
 
 const eventToStepHints = [
   { match: 'maintenance', stepType: 'monitoring' },
@@ -67,7 +69,7 @@ export function EventsPage() {
 
   const jumpToGraph = (event) => {
     const focus = event.asset_id || event.station_id || event.serial_unit_id || event.inspection_id || event.id
-    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'impact', sourceEvent: event.id })}`)
+    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id })}`)
   }
 
   const jumpToProcess = (event) => {
@@ -102,6 +104,13 @@ export function EventsPage() {
     <div className="stack">
       <h1>Events</h1>
       <DataDiagnostics diagnostics={diagnostics} />
+      <Panel title="Events workspace interactions">
+        <div className="button-row">
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'downstream-impact' })}>Graph impact path</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext)}>Process lane context</Link>
+          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext)}>Impact scoring</Link>
+        </div>
+      </Panel>
       {events.length ? (
         <EventTimeline
           events={events}

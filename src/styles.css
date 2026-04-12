@@ -257,7 +257,10 @@ a:hover {
   color: var(--color-text-muted);
 }
 
-.timeline-filter-bar select {
+.timeline-filter-bar select,
+.timeline-filter-bar input,
+.context-bar input,
+.context-bar select {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-surface);
