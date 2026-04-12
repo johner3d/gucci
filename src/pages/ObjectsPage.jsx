@@ -1,41 +1,47 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { ObjectRelationships } from '../components/domain/ObjectRelationships'
 import { Panel } from '../components/primitives/Primitives'
-import { loadJSON } from '../lib/api'
+import { loadObjectCardData, toUiDiagnostics } from '../lib/api'
 
 export function ObjectsPage() {
   const { id } = useParams()
   const [card, setCard] = useState(null)
-  const [error, setError] = useState('')
+  const [diagnostics, setDiagnostics] = useState([])
 
   useEffect(() => {
     if (!id) return
-    setError('')
     setCard(null)
-    loadJSON(`/data/generated/v1/ui/object_cards/${id}.json`)
-      .then(setCard)
-      .catch(() => setError(`Object card not found for ${id}`))
+    setDiagnostics([])
+    loadObjectCardData(id)
+      .then((payload) => {
+        setCard(payload.card)
+        setDiagnostics(payload.diagnostics)
+      })
+      .catch((error) => setDiagnostics(toUiDiagnostics(error, `object_card.${id}`)))
   }, [id])
 
-  if (error) {
+  if (!card && !diagnostics.length) return <p>Loading object card…</p>
+
+  if (!card) {
     return (
       <div className="stack">
         <h1>Objects</h1>
+        <DataDiagnostics diagnostics={diagnostics} />
         <Panel title="Lookup error">
-          <p>{error}</p>
+          <p>Object card not available for {id}.</p>
           <Link to="/">Return to overview</Link>
         </Panel>
       </div>
     )
   }
 
-  if (!card) return <p>Loading object card…</p>
-
   return (
     <div className="stack">
       <h1>{card.canonical_identity.label}</h1>
+      <DataDiagnostics diagnostics={diagnostics} />
       <ObjectRelationships card={card} />
 
       <Panel title="State snapshot">
