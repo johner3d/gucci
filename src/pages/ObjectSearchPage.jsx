@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
-import { Panel } from '../components/primitives/Primitives'
+import { Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
 import { toScopedQuery } from '../lib/contextKernel'
 import { captureLatencyHook } from '../lib/qaTelemetry'
@@ -144,7 +144,7 @@ export function ObjectSearchPage() {
     updateFilter({ [key]: next.join(',') })
   }
 
-  if (!workspace && !diagnostics.length) return <p>Loading object search workspace…</p>
+  if (!workspace && !diagnostics.length) return <StatePanel state="loading" title="Loading object search workspace" />
 
   return (
     <div className="stack">

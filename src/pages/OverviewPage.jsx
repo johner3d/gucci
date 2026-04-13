@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { StatePanel } from '../components/primitives/Primitives'
 import { ImpactSummary } from '../components/domain/ImpactSummary'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { loadOverviewPageData, toUiDiagnostics } from '../lib/api'
@@ -20,7 +21,7 @@ export function OverviewPage() {
       .catch((error) => setDiagnostics(toUiDiagnostics(error, 'overview')))
   }, [])
 
-  if (!page && !diagnostics.length) return <p>Loading overview…</p>
+  if (!page && !diagnostics.length) return <StatePanel state="loading" title="Loading overview" />
 
   return (
     <div className="stack">
@@ -32,7 +33,7 @@ export function OverviewPage() {
           <EventTimeline events={page.timeline} />
         </>
       ) : (
-        <p>Overview content unavailable.</p>
+        <StatePanel state="empty" title="Overview content unavailable" />
       )}
 
       <section className="panel stack">

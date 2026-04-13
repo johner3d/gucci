@@ -3,7 +3,7 @@ import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { CausalPath } from '../components/domain/CausalPath'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
-import { Panel } from '../components/primitives/Primitives'
+import { Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadGraphData, toUiDiagnostics } from '../lib/api'
 import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
@@ -195,7 +195,7 @@ export function GraphPage() {
     setSearchParams({ ...current, ...globalContext, ...patch })
   }
 
-  if (!graph && !diagnostics.length) return <p>Loading graph…</p>
+  if (!graph && !diagnostics.length) return <StatePanel state="loading" title="Loading graph" />
 
   return (
     <div className="stack">
@@ -240,7 +240,7 @@ export function GraphPage() {
           objectPathForNode={(nodeId) => toScopedPath(`/object-explorer/${nodeId}`, globalContext, { anchor: nodeId })}
         />
       ) : (
-        <p>Graph content unavailable.</p>
+        <StatePanel state="empty" title="Graph content unavailable" />
       )}
     </div>
   )

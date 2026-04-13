@@ -547,3 +547,50 @@ a:hover {
     gap: var(--space-2);
   }
 }
+
+.card-row-hierarchy {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.card-row-primary {
+  font-weight: 600;
+}
+
+.card-row-secondary,
+.card-row-tertiary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.state-panel {
+  border-style: dashed;
+}
+
+.badge-severity-critical,
+.badge-severity-violated,
+.badge-status-violated,
+.badge-trust-disputed {
+  background: #fee4e2;
+  border-color: #fecdca;
+  color: #b42318;
+}
+
+.badge-severity-elevated,
+.badge-severity-watch,
+.badge-status-elevated,
+.badge-status-watch,
+.badge-trust-provisional {
+  background: #fffaeb;
+  border-color: #fedf89;
+  color: #b54708;
+}
+
+.badge-severity-normal,
+.badge-status-normal,
+.badge-trust-supported {
+  background: #ecfdf3;
+  border-color: #abefc6;
+  color: #067647;
+}

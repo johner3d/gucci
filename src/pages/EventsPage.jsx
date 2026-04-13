@@ -3,7 +3,7 @@ import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-rout
 import { EventSequenceBoard } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath, toScopedSearch } from '../lib/scopedLink'
 
@@ -118,18 +118,21 @@ export function EventsPage() {
     navigate(`/lineage/${artifactId}${toScopedSearch(globalContext, { event: event.id, highlight: artifactId, anchor: event.id })}`)
   }
 
-  if (!events.length && !diagnostics.length) return <p>Loading events…</p>
+  if (!events.length && !diagnostics.length) return <StatePanel state="loading" title="Loading events" />
 
   return (
     <div className="stack">
       <h1>Events</h1>
       <DataDiagnostics diagnostics={diagnostics} />
       <Panel title="Events workspace interactions">
-        <div className="button-row">
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'downstream-impact' })}>Graph impact path</Link>
-          <Link className="btn" to={toScopedPath('/process', globalContext)}>Process lane context</Link>
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext)}>Impact scoring</Link>
-        </div>
+        <CtaButtonRow
+          actions={[
+            { key: 'investigate', label: 'Investigate', to: toScopedPath('/events', globalContext) },
+            { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext) },
+            { key: 'lineage', label: 'Explain lineage', to: toScopedPath('/lineage/LIN_0039', globalContext) },
+            { key: 'export', label: 'Export', to: toScopedPath('/events', globalContext, { export: 'brief' }) },
+          ]}
+        />
       </Panel>
       <EventSequenceBoard rows={sequenceRows} />
       {events.length ? (
@@ -146,7 +149,7 @@ export function EventsPage() {
           onHighlight={(eventId) => navigate(`/events${toScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId, anchor: eventId })}`)}
         />
       ) : (
-        <p>No events available.</p>
+        <StatePanel state="empty" title="No events available" />
       )}
     </div>
   )

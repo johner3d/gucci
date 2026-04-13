@@ -1,5 +1,5 @@
 import { OperationalStatus, Severity, toApprovedOperationalStatus, toApprovedSeverity } from '../../domain/uiVocabulary'
-import { Panel } from '../primitives/Primitives'
+import { CardRow, Panel, VocabularyBadge } from '../primitives/Primitives'
 
 function toSeverityTone(value = '') {
   const severity = toApprovedSeverity(value, Severity.WATCH)
@@ -27,9 +27,11 @@ export function KpiCommandStrip({ title = 'KPI command strip', tiles = [] }) {
           const approvedStatus = toApprovedOperationalStatus(tile.status)
           return (
             <article key={tile.id} className={`kpi-tile tone-${toStatusTone(approvedStatus)}`.trim()}>
-              <div className="meta">{tile.label}</div>
-              <div className="kpi-value">{tile.value}</div>
-              <div className="chip">status: {approvedStatus}</div>
+              <CardRow
+                primary={<div className="kpi-value">{tile.value}</div>}
+                secondary={<div className="meta">{tile.label}</div>}
+                tertiary={<VocabularyBadge type="status" value={approvedStatus} />}
+              />
               <div className="kpi-progress">
                 <div className="kpi-progress-fill" style={{ width: percent(tile.score) }} />
               </div>
@@ -49,11 +51,11 @@ export function DomainImpactMatrix({ cells = [] }) {
           const approvedSeverity = toApprovedSeverity(cell.severity)
           return (
             <article key={cell.domain} className={`impact-cell tone-${toSeverityTone(approvedSeverity)}`.trim()}>
-              <header>
-                <strong>{cell.domain}</strong>
-                <span className="chip">{approvedSeverity}</span>
-              </header>
-              <p className="meta">{cell.summary}</p>
+              <CardRow
+                primary={<strong>{cell.domain}</strong>}
+                secondary={<p className="meta">{cell.summary}</p>}
+                tertiary={<VocabularyBadge type="severity" value={approvedSeverity} />}
+              />
               <div className="meta">Impacted entities: {cell.entityCount}</div>
               <div className="meta">Critical events: {cell.eventCount}</div>
             </article>
@@ -93,9 +95,11 @@ export function ProcessRiskBoard({ rows = [] }) {
           const approvedSeverity = toApprovedSeverity(row.severity)
           return (
             <li key={row.id} className={`tone-${toSeverityTone(approvedSeverity)}`.trim()}>
-              <strong>{row.label}</strong>
-              <div className="meta">Lane: {row.lane}</div>
-              <div className="chip">severity: {approvedSeverity}</div>
+              <CardRow
+                primary={<strong>{row.label}</strong>}
+                secondary={<div className="meta">Lane: {row.lane}</div>}
+                tertiary={<VocabularyBadge type="severity" value={approvedSeverity} />}
+              />
               <div className="meta">{row.rationale}</div>
             </li>
           )
@@ -113,11 +117,11 @@ export function EventSequenceBoard({ rows = [] }) {
           const approvedSeverity = toApprovedSeverity(row.severity)
           return (
             <li key={row.track} className={`tone-${toSeverityTone(approvedSeverity)}`.trim()}>
-              <strong>{row.track}</strong>
-              <div className="meta">Events: {row.count}</div>
-              <div className="meta">Anomalies: {row.anomalies}</div>
-              <div className="meta">Correlated signals: {row.correlated}</div>
-              <div className="chip">severity: {approvedSeverity}</div>
+              <CardRow
+                primary={<strong>{row.track}</strong>}
+                secondary={<div className="meta">Events: {row.count} · Anomalies: {row.anomalies} · Correlated signals: {row.correlated}</div>}
+                tertiary={<VocabularyBadge type="severity" value={approvedSeverity} />}
+              />
             </li>
           )
         })}

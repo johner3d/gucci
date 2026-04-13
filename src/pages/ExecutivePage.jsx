@@ -4,7 +4,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { DecisionActionCard, rankTrustLevel } from '../components/domain/DecisionActionCard'
 import { DomainImpactMatrix, KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { OverviewPage } from './OverviewPage'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
 import { OperationalStatus, Severity, toApprovedOperationalStatus } from '../domain/uiVocabulary'
@@ -110,12 +110,14 @@ export function ExecutivePage() {
       <TrendBand rows={trendRows} />
       <Panel title="Executive command actions">
         <p className="meta">Direct the investigation using cross-space pivots tied to one incident truth.</p>
-        <div className="button-row">
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { mode: 'downstream-impact' })}>Open impact analysis</Link>
-          <Link className="btn" to={toScopedPath('/production', globalContext)}>Open production workspace</Link>
-          <Link className="btn" to={toScopedPath('/quality', globalContext)}>Open quality workspace</Link>
-          <Link className="btn" to={toScopedPath('/maintenance', globalContext, { mode: 'upstream-cause' })}>Open maintenance root-cause</Link>
-        </div>
+        <CtaButtonRow
+          actions={[
+            { key: 'investigate', label: 'Investigate', to: toScopedPath('/production', globalContext) },
+            { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext, { mode: 'downstream-impact' }) },
+            { key: 'lineage', label: 'Explain lineage', to: toScopedPath('/lineage/LIN_0039', globalContext) },
+            { key: 'export', label: 'Export', to: toScopedPath('/executive', globalContext, { export: 'brief' }) },
+          ]}
+        />
       </Panel>
       <OverviewPage />
       <Panel title="Decision summary by impacted domain">
