@@ -189,7 +189,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.events.map((event) => (
                   <li key={event.id}>
-                    <Link to={`/events${toQueryString({ ...context, event: event.id, step: selectedStep.id })}`}>
+                    <Link to={`/events${toQueryString({ ...context, event: event.id, step: selectedStep.id, anchor: event.id })}`}>
                       {event.id} — {event.type}
                     </Link>
                     <div className="meta">{event.occurred_at_utc}</div>
@@ -201,7 +201,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {selectedStep.related.impacted_entities.map((entityId) => (
                   <li key={entityId}>
-                    <Link to={`/object-explorer/${entityId}${toQueryString({ ...context, step: selectedStep.id })}`}>{entityId}</Link>
+                    <Link to={`/object-explorer/${entityId}${toQueryString({ ...context, step: selectedStep.id, anchor: entityId })}`}>{entityId}</Link>
                   </li>
                 ))}
               </ul>
@@ -210,7 +210,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.causalLinks.map((link) => (
                   <li key={link.id}>
-                    <Link to={`/graph${toQueryString({ ...context, focus: link.source_id, mode: 'impact', step: selectedStep.id })}`}>
+                    <Link to={`/graph${toQueryString({ ...context, focus: link.source_id, mode: 'impact', step: selectedStep.id, anchor: link.id, highlight: link.id })}`}>
                       {link.id} — {link.source_id} {link.type} {link.target_id}
                     </Link>
                     <div className="meta">category {link.category} | confidence {link.qualifiers?.confidence ?? 'n/a'}</div>
@@ -222,7 +222,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.kpis.map((kpi) => (
                   <li key={kpi.id}>
-                    <Link to={`/object-explorer/${kpi.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
+                    <Link to={`/object-explorer/${kpi.id}${toQueryString({ ...context, step: selectedStep.id, anchor: kpi.id })}`}>
                       {kpi.id} — {kpi.kpi}
                     </Link>
                     <div className="meta">status {kpi.status} | value {String(kpi.value)}</div>
@@ -234,7 +234,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.lineageEvidence.map((artifact) => (
                   <li key={artifact.id}>
-                    <Link to={`/lineage/${artifact.id}${toQueryString({ ...context, step: selectedStep.id })}`}>
+                    <Link to={`/lineage/${artifact.id}${toQueryString({ ...context, step: selectedStep.id, anchor: artifact.id, highlight: artifact.id })}`}>
                       {artifact.id} — {artifact.rule_name}
                     </Link>
                     <div className="meta">{artifact.artifact_type}</div>

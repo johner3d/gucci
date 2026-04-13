@@ -8,11 +8,11 @@ import { loadEventsData, loadLineageArtifactsData, loadProcessData, toUiDiagnost
 import { toScopedPath } from '../lib/scopedLink'
 
 const eventToStepHints = [
-  { match: 'maintenance', stepType: 'monitoring' },
-  { match: 'disturbance', stepType: 'triage' },
-  { match: 'inspection', stepType: 'containment' },
-  { match: 'quality', stepType: 'verification' },
-  { match: 'kpi', stepType: 'recovery' },
+  { match: 'maintenance', stepType: 'handoff' },
+  { match: 'disturbance', stepType: 'state_transition' },
+  { match: 'inspection', stepType: 'work_step' },
+  { match: 'quality', stepType: 'decision_point' },
+  { match: 'kpi', stepType: 'process' },
 ]
 
 function asScopedSearch(globalContext, extra = {}) {
