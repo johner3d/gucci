@@ -11,7 +11,6 @@ export const DEFAULT_CONTEXT_KERNEL = {
   severity: 'high',
   confidence: 'supported',
   stage: 'issue-detection',
-  evidenceAnchor: '',
   focusEntity: 'KPIOBS_2101',
   hypothesis: 'Paint booth contamination increased rework and delayed outbound delivery.',
   incidentScope: DEFAULT_INCIDENT_SCOPE,
@@ -42,7 +41,6 @@ export function readContextKernel(searchParams) {
     severity: searchParams.get('severity') || DEFAULT_CONTEXT_KERNEL.severity,
     confidence: searchParams.get('confidence') || DEFAULT_CONTEXT_KERNEL.confidence,
     stage: searchParams.get('stage') || DEFAULT_CONTEXT_KERNEL.stage,
-    evidenceAnchor: searchParams.get('anchor') || DEFAULT_CONTEXT_KERNEL.evidenceAnchor,
     focusEntity,
     hypothesis,
     incidentScope,
@@ -59,7 +57,6 @@ export function toKernelQuery(kernel, patch = {}) {
   params.set('severity', merged.severity)
   params.set('confidence', merged.confidence || DEFAULT_CONTEXT_KERNEL.confidence)
   params.set('stage', merged.stage || DEFAULT_CONTEXT_KERNEL.stage)
-  params.set('anchor', merged.evidenceAnchor || patch.anchor || '')
   params.set('focusEntity', merged.focusEntity)
   params.set('focus', merged.focusEntity)
   params.set('hypothesis', merged.hypothesis)
