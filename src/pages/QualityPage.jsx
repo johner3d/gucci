@@ -5,6 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { OperationalStatus, Severity } from '../domain/uiVocabulary'
 
 export function QualityPage() {
   const outletContext = useOutletContext()
@@ -26,15 +27,15 @@ export function QualityPage() {
   const qualityEvents = useMemo(() => events.filter((event) => event.type?.includes('inspection') || event.type?.includes('quality')), [events])
   const qualityKpiTiles = useMemo(
     () => [
-      { id: 'quality-events', label: 'Inspection events', value: String(qualityEvents.length), status: qualityEvents.length > 2 ? 'elevated' : 'watch', score: qualityEvents.length > 2 ? 74 : 42 },
-      { id: 'lineage-evidence', label: 'Lineage artifacts', value: String(artifacts.length), status: artifacts.length > 20 ? 'supported' : 'provisional', score: artifacts.length > 20 ? 83 : 61 },
+      { id: 'quality-events', label: 'Inspection events', value: String(qualityEvents.length), status: qualityEvents.length > 2 ? OperationalStatus.ELEVATED : OperationalStatus.WATCH, score: qualityEvents.length > 2 ? 74 : 42 },
+      { id: 'lineage-evidence', label: 'Lineage artifacts', value: String(artifacts.length), status: artifacts.length > 20 ? OperationalStatus.NORMAL : OperationalStatus.WATCH, score: artifacts.length > 20 ? 83 : 61 },
     ],
     [artifacts.length, qualityEvents.length]
   )
   const qualityTrend = useMemo(
     () => [
-      { label: 'Defect containment pressure', value: qualityEvents.length > 2 ? 78 : 48, severity: qualityEvents.length > 2 ? 'high' : 'watch', annotation: `${qualityEvents.length} quality signals in active scope` },
-      { label: 'Evidence confidence', value: artifacts.length > 20 ? 82 : 58, severity: artifacts.length > 20 ? 'normal' : 'elevated', annotation: `${artifacts.length} lineage artifacts available` },
+      { label: 'Defect containment pressure', value: qualityEvents.length > 2 ? 78 : 48, severity: qualityEvents.length > 2 ? Severity.CRITICAL : Severity.WATCH, annotation: `${qualityEvents.length} quality signals in active scope` },
+      { label: 'Evidence confidence', value: artifacts.length > 20 ? 82 : 58, severity: artifacts.length > 20 ? Severity.NORMAL : Severity.ELEVATED, annotation: `${artifacts.length} lineage artifacts available` },
     ],
     [artifacts.length, qualityEvents.length]
   )

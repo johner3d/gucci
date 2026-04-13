@@ -6,6 +6,7 @@ import { OverviewPage } from './OverviewPage'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { OperationalStatus, Severity, toApprovedOperationalStatus } from '../domain/uiVocabulary'
 
 export function ExecutivePage() {
   const outletContext = useOutletContext()
@@ -28,13 +29,16 @@ export function ExecutivePage() {
 
   const kpiTiles = useMemo(() => {
     const kpis = processData?.kpis || []
-    return kpis.map((kpi) => ({
-      id: kpi.id,
-      label: kpi.kpi || kpi.id,
-      value: `${kpi.value ?? 'n/a'}`,
-      status: kpi.status || 'unknown',
-      score: kpi.status === 'violated' ? 92 : kpi.status === 'elevated' ? 75 : 48,
-    }))
+    return kpis.map((kpi) => {
+      const status = toApprovedOperationalStatus(kpi.status, OperationalStatus.WATCH)
+      return {
+        id: kpi.id,
+        label: kpi.kpi || kpi.id,
+        value: `${kpi.value ?? 'n/a'}`,
+        status,
+        score: status === OperationalStatus.VIOLATED ? 92 : status === OperationalStatus.ELEVATED ? 75 : 48,
+      }
+    })
   }, [processData])
 
   const domainCells = useMemo(() => {
@@ -46,7 +50,7 @@ export function ExecutivePage() {
     }
     return Object.entries(eventMatches).map(([domain, domainEvents]) => ({
       domain,
-      severity: domainEvents.length > 3 ? 'high' : domainEvents.length > 1 ? 'elevated' : 'watch',
+      severity: domainEvents.length > 3 ? Severity.CRITICAL : domainEvents.length > 1 ? Severity.ELEVATED : Severity.WATCH,
       summary: `Incident evidence currently surfaces ${domainEvents.length} relevant events in ${domain.toLowerCase()}.`,
       entityCount: new Set(domainEvents.flatMap((entry) => [entry.asset_id, entry.station_id, entry.serial_unit_id, entry.order_id].filter(Boolean))).size,
       eventCount: domainEvents.filter((entry) => entry.type?.includes('disturbance') || entry.type?.includes('threshold')).length,
@@ -54,12 +58,12 @@ export function ExecutivePage() {
   }, [events])
 
   const trendRows = useMemo(() => {
-    const breached = kpiTiles.filter((tile) => ['violated', 'critical', 'high'].some((entry) => `${tile.status}`.includes(entry))).length
+    const breached = kpiTiles.filter((tile) => [OperationalStatus.VIOLATED].includes(tile.status)).length
     const riskySteps = (processData?.canvas?.steps || []).filter((step) => step.risk === 'high').length
     return [
-      { label: 'KPI stress', value: breached ? 85 : 35, severity: breached ? 'critical' : 'watch', annotation: `${breached} breached KPI signals` },
-      { label: 'Process disruption', value: riskySteps ? 78 : 30, severity: riskySteps > 2 ? 'high' : 'watch', annotation: `${riskySteps} high-risk steps` },
-      { label: 'Event anomaly load', value: events.length > 8 ? 72 : 45, severity: events.length > 8 ? 'elevated' : 'normal', annotation: `${events.length} scoped events` },
+      { label: 'KPI stress', value: breached ? 85 : 35, severity: breached ? Severity.CRITICAL : Severity.WATCH, annotation: `${breached} breached KPI signals` },
+      { label: 'Process disruption', value: riskySteps ? 78 : 30, severity: riskySteps > 2 ? Severity.CRITICAL : Severity.WATCH, annotation: `${riskySteps} high-risk steps` },
+      { label: 'Event anomaly load', value: events.length > 8 ? 72 : 45, severity: events.length > 8 ? Severity.ELEVATED : Severity.NORMAL, annotation: `${events.length} scoped events` },
     ]
   }, [events.length, kpiTiles, processData])
 

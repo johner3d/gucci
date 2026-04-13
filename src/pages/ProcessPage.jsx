@@ -5,12 +5,13 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { Severity, toApprovedSeverity } from '../domain/uiVocabulary'
 
 const defaultContext = {
   plant: 'PLANT_DE_01',
   line: 'LINE_PAINT_A',
   time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
-  severity: 'high',
+  severity: Severity.CRITICAL,
 }
 
 function toQueryString(params) {
@@ -29,7 +30,7 @@ export function ProcessPage() {
     plant: searchParams.get('plant') || defaultContext.plant,
     line: searchParams.get('line') || defaultContext.line,
     time: searchParams.get('time') || defaultContext.time,
-    severity: searchParams.get('severity') || defaultContext.severity,
+    severity: toApprovedSeverity(searchParams.get('severity') || defaultContext.severity, defaultContext.severity),
   }
 
   useEffect(() => {
@@ -80,9 +81,9 @@ export function ProcessPage() {
     const highRisk = steps.filter((step) => step.risk === 'high').length
     const handoffs = steps.filter((step) => step.type === 'handoff' || step.type === 'state_transition').length
     return [
-      { label: 'Process disruption pressure', value: steps.length ? (highRisk / steps.length) * 100 : 0, severity: highRisk > 2 ? 'high' : 'watch', annotation: `${highRisk}/${steps.length} steps high risk` },
-      { label: 'Handoff vulnerability', value: handoffs ? Math.min(90, handoffs * 25) : 20, severity: handoffs > 1 ? 'elevated' : 'normal', annotation: `${handoffs} handoff/state transition steps` },
-      { label: 'KPI breach coupling', value: breachedKpis.length ? Math.min(95, breachedKpis.length * 30) : 25, severity: breachedKpis.length ? 'high' : 'normal', annotation: `${breachedKpis.length} breached KPI observations` },
+      { label: 'Process disruption pressure', value: steps.length ? (highRisk / steps.length) * 100 : 0, severity: highRisk > 2 ? Severity.CRITICAL : Severity.WATCH, annotation: `${highRisk}/${steps.length} steps high risk` },
+      { label: 'Handoff vulnerability', value: handoffs ? Math.min(90, handoffs * 25) : 20, severity: handoffs > 1 ? Severity.ELEVATED : Severity.NORMAL, annotation: `${handoffs} handoff/state transition steps` },
+      { label: 'KPI breach coupling', value: breachedKpis.length ? Math.min(95, breachedKpis.length * 30) : 25, severity: breachedKpis.length ? Severity.CRITICAL : Severity.NORMAL, annotation: `${breachedKpis.length} breached KPI observations` },
     ]
   }, [breachedKpis.length, processData])
 
@@ -95,7 +96,7 @@ export function ProcessPage() {
         id: step.id,
         label: `${step.sequence}. ${step.name}`,
         lane: step.lane_id,
-        severity: step.risk === 'high' ? 'high' : 'elevated',
+        severity: step.risk === 'high' ? Severity.CRITICAL : Severity.ELEVATED,
         rationale: step.state_transition || step.type,
       }))
   }, [processData])

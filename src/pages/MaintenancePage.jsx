@@ -5,6 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { OperationalStatus, Severity } from '../domain/uiVocabulary'
 
 export function MaintenancePage() {
   const outletContext = useOutletContext()
@@ -30,8 +31,8 @@ export function MaintenancePage() {
   const maintenanceEvents = useMemo(() => events.filter((event) => event.type?.includes('maintenance') || event.type?.includes('disturbance')), [events])
   const maintenanceTiles = useMemo(
     () => [
-      { id: 'tracked-assets', label: 'Tracked assets/activities', value: String(maintenanceAssets.length), status: maintenanceAssets.length > 4 ? 'elevated' : 'watch', score: maintenanceAssets.length > 4 ? 70 : 46 },
-      { id: 'disturbance-events', label: 'Disturbance events', value: String(maintenanceEvents.filter((event) => event.type?.includes('disturbance')).length), status: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 'high' : 'normal', score: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 88 : 35 },
+      { id: 'tracked-assets', label: 'Tracked assets/activities', value: String(maintenanceAssets.length), status: maintenanceAssets.length > 4 ? OperationalStatus.ELEVATED : OperationalStatus.WATCH, score: maintenanceAssets.length > 4 ? 70 : 46 },
+      { id: 'disturbance-events', label: 'Disturbance events', value: String(maintenanceEvents.filter((event) => event.type?.includes('disturbance')).length), status: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? OperationalStatus.VIOLATED : OperationalStatus.NORMAL, score: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 88 : 35 },
     ],
     [maintenanceAssets.length, maintenanceEvents]
   )
@@ -40,13 +41,13 @@ export function MaintenancePage() {
       {
         label: 'Asset disturbance risk',
         value: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 82 : 38,
-        severity: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 'high' : 'normal',
+        severity: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? Severity.CRITICAL : Severity.NORMAL,
         annotation: `${maintenanceEvents.length} maintenance-linked events in scope`,
       },
       {
         label: 'Intervention readiness',
         value: maintenanceAssets.length > 4 ? 62 : 74,
-        severity: maintenanceAssets.length > 4 ? 'watch' : 'normal',
+        severity: maintenanceAssets.length > 4 ? Severity.WATCH : Severity.NORMAL,
         annotation: maintenanceAssets.length > 4 ? 'High maintenance load detected' : 'Load currently manageable',
       },
     ],

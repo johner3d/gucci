@@ -5,6 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { Severity } from '../domain/uiVocabulary'
 
 export function ProductionPage() {
   const outletContext = useOutletContext()
@@ -28,9 +29,9 @@ export function ProductionPage() {
     const totalSteps = processData?.canvas?.steps?.length || 0
     const highRisk = (processData?.canvas?.steps || []).filter((step) => step.risk === 'high').length
     return [
-      { label: 'Line throughput risk', value: productionEvents.length > 2 ? 72 : 45, severity: productionEvents.length > 2 ? 'elevated' : 'watch', annotation: `${productionEvents.length} units in scoped incident window` },
-      { label: 'High-risk process steps', value: totalSteps ? (highRisk / totalSteps) * 100 : 0, severity: highRisk > 2 ? 'high' : 'watch', annotation: `${highRisk}/${totalSteps} steps flagged high risk` },
-      { label: 'Recovery readiness', value: highRisk > 2 ? 40 : 68, severity: highRisk > 2 ? 'watch' : 'normal', annotation: highRisk > 2 ? 'Containment not stabilized' : 'Line stabilizing' },
+      { label: 'Line throughput risk', value: productionEvents.length > 2 ? 72 : 45, severity: productionEvents.length > 2 ? Severity.ELEVATED : Severity.WATCH, annotation: `${productionEvents.length} units in scoped incident window` },
+      { label: 'High-risk process steps', value: totalSteps ? (highRisk / totalSteps) * 100 : 0, severity: highRisk > 2 ? Severity.CRITICAL : Severity.WATCH, annotation: `${highRisk}/${totalSteps} steps flagged high risk` },
+      { label: 'Recovery readiness', value: highRisk > 2 ? 40 : 68, severity: highRisk > 2 ? Severity.WATCH : Severity.NORMAL, annotation: highRisk > 2 ? 'Containment not stabilized' : 'Line stabilizing' },
     ]
   }, [processData, productionEvents.length])
 
