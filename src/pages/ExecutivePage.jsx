@@ -4,22 +4,24 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { DomainImpactMatrix, KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { OverviewPage } from './OverviewPage'
 import { Panel } from '../components/primitives/Primitives'
-import { loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
+import { loadEntityWorkspaceData, loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
 
 export function ExecutivePage() {
   const outletContext = useOutletContext()
   const globalContext = outletContext?.globalContext || {}
+  const [workspace, setWorkspace] = useState(null)
   const [events, setEvents] = useState([])
   const [processData, setProcessData] = useState(null)
   const [diagnostics, setDiagnostics] = useState([])
 
   useEffect(() => {
-    Promise.all([loadEventsData(), loadProcessData()])
-      .then(([eventsPayload, processPayload]) => {
+    Promise.all([loadEntityWorkspaceData(), loadEventsData(), loadProcessData()])
+      .then(([entityPayload, eventsPayload, processPayload]) => {
+        setWorkspace(entityPayload)
         setEvents(eventsPayload.events)
         setProcessData(processPayload)
-        setDiagnostics([...eventsPayload.diagnostics, ...processPayload.diagnostics])
+        setDiagnostics([...entityPayload.diagnostics, ...eventsPayload.diagnostics, ...processPayload.diagnostics])
       })
       .catch((error) => setDiagnostics(toUiDiagnostics(error, 'executive')))
   }, [])

@@ -465,14 +465,6 @@ a:hover {
   margin-bottom: var(--space-2);
 }
 
-.process-risk-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
-}
-
 .trend-band {
   display: grid;
   gap: var(--space-2);

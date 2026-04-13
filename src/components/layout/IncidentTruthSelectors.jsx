@@ -25,7 +25,6 @@ export function IncidentTruthSelectors({ contextKernel, searchParams, setSearchP
         <span className="chip">Severity: {contextKernel.severity}</span>
         <span className="chip">Confidence: {contextKernel.confidence}</span>
         <span className="chip">Focus: {contextKernel.focusEntity}</span>
-        {contextKernel.evidenceAnchor ? <span className="chip">Anchor: {contextKernel.evidenceAnchor}</span> : null}
       </div>
       <div className="timeline-filter-bar">
         <label>
