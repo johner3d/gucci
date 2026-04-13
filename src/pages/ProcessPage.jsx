@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { ProcessRiskBoard, TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { DecisionActionCard, rankTrustLevel } from '../components/domain/DecisionActionCard'
 import { Panel } from '../components/primitives/Primitives'
 import { loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
@@ -100,6 +101,27 @@ export function ProcessPage() {
         rationale: step.state_transition || step.type,
       }))
   }, [processData])
+
+  const decisionPackages = useMemo(() => {
+    if (!lanes.length) return []
+    return lanes.map((lane) => {
+      const highRiskSteps = lane.steps.filter((step) => step.risk === 'high')
+      const anchors = lane.steps.map((step) => step.id).slice(0, 2)
+      const selectedAnchors = selectedStep?.lane_id === lane.id && related
+        ? [...anchors, ...(related.events || []).map((event) => event.id).slice(0, 1)]
+        : anchors
+      const severity = highRiskSteps.length ? Severity.CRITICAL : Severity.WATCH
+      return {
+        domain: lane.name,
+        decisionStatement: `Authorize ${lane.name.toLowerCase()} execution guardrails for the next operating window.`,
+        businessImpact: `${highRiskSteps.length} high-risk steps are active in this lane and require explicit operational ownership.`,
+        owner: `${lane.name} lane owner`,
+        timingExpectation: highRiskSteps.length ? 'Decision needed before next handoff checkpoint' : 'Decision needed in daily standup',
+        trustLevel: rankTrustLevel({ severity, evidenceAnchors: selectedAnchors }),
+        evidenceAnchors: selectedAnchors,
+      }
+    })
+  }, [lanes, related, selectedStep])
 
   if (!processData && !diagnostics.length) return <p>Loading process…</p>
 
@@ -244,6 +266,14 @@ export function ProcessPage() {
               </ul>
             </Panel>
           ) : null}
+          <Panel title="Decision summary by impacted domain">
+            <p className="meta">Process review closes with a domain-by-domain decision package for execution tracking.</p>
+            <div className="decision-action-grid">
+              {decisionPackages.map((pack) => (
+                <DecisionActionCard key={pack.domain} {...pack} />
+              ))}
+            </div>
+          </Panel>
         </>
       ) : (
         <p>Process content unavailable.</p>

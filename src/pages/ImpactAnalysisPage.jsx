@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { DecisionActionCard, rankTrustLevel } from '../components/domain/DecisionActionCard'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadGraphData, loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
@@ -12,6 +13,14 @@ function toScoredEdges(edges = []) {
       impactScore: Number(((Number(edge.qualifiers?.confidence || 0) * 0.6 + Number(edge.qualifiers?.strength || 0) * 0.4) * 100).toFixed(1)),
     }))
     .sort((a, b) => b.impactScore - a.impactScore)
+}
+
+function inferDomain(tokens = []) {
+  const normalized = tokens.join(' ').toLowerCase()
+  if (normalized.includes('inspection') || normalized.includes('quality')) return 'Quality'
+  if (normalized.includes('maintenance') || normalized.includes('disturbance') || normalized.includes('asset')) return 'Maintenance'
+  if (normalized.includes('order') || normalized.includes('shipment') || normalized.includes('logistics')) return 'Logistics'
+  return 'Production'
 }
 
 export function ImpactAnalysisPage() {
@@ -45,6 +54,36 @@ export function ImpactAnalysisPage() {
     () => events.filter((event) => Object.values(event).includes(focus) || event.type?.includes('kpi') || event.type?.includes('inspection')).slice(0, 10),
     [events, focus]
   )
+  const decisionPackages = useMemo(() => {
+    const packageMap = new Map()
+    impactingEdges.forEach((edge) => {
+      const domain = inferDomain([edge.source_id, edge.target_id, edge.type])
+      const existing = packageMap.get(domain) || { anchors: [], score: 0 }
+      packageMap.set(domain, {
+        anchors: [...existing.anchors, edge.id].slice(0, 3),
+        score: Math.max(existing.score, edge.impactScore),
+      })
+    })
+
+    correlatedEvents.forEach((event) => {
+      const domain = inferDomain([event.type, event.asset_id, event.order_id, event.station_id])
+      const existing = packageMap.get(domain) || { anchors: [], score: 0 }
+      packageMap.set(domain, {
+        anchors: [...existing.anchors, event.id].slice(0, 3),
+        score: existing.score,
+      })
+    })
+
+    return [...packageMap.entries()].map(([domain, info]) => ({
+      domain,
+      decisionStatement: `Confirm ${domain.toLowerCase()} mitigation sequence from the scored impact chain.`,
+      businessImpact: `${domain} shows high downstream exposure in the focused analysis path, demanding a communicated action package before handoff.`,
+      owner: `${domain} domain lead`,
+      timingExpectation: info.score >= 70 ? 'Finalize mitigation in next 4 hours' : 'Finalize mitigation before next operations review',
+      trustLevel: rankTrustLevel({ severity: info.score >= 70 ? 'critical' : 'watch', evidenceAnchors: info.anchors }),
+      evidenceAnchors: info.anchors,
+    }))
+  }, [correlatedEvents, impactingEdges])
 
   return (
     <div className="stack">
@@ -103,6 +142,15 @@ export function ImpactAnalysisPage() {
             </li>
           ))}
         </ul>
+      </Panel>
+
+      <Panel title="Decision summary by impacted domain">
+        <p className="meta">Impact scoring output is translated into domain-owned action packages for review and sign-off.</p>
+        <div className="decision-action-grid">
+          {decisionPackages.map((pack) => (
+            <DecisionActionCard key={pack.domain} {...pack} />
+          ))}
+        </div>
       </Panel>
     </div>
   )
