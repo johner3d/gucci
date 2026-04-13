@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { DecisionActionCard, rankTrustLevel } from '../components/domain/DecisionActionCard'
 import { DomainImpactMatrix, KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { OverviewPage } from './OverviewPage'
 import { Panel } from '../components/primitives/Primitives'
@@ -67,6 +68,38 @@ export function ExecutivePage() {
     ]
   }, [events.length, kpiTiles, processData])
 
+  const decisionPackages = useMemo(() => {
+    const ownerByDomain = {
+      Production: 'Production Director',
+      Quality: 'Quality Director',
+      Logistics: 'Logistics Director',
+      Maintenance: 'Maintenance Director',
+    }
+
+    return domainCells.map((cell) => {
+      const anchors = events
+        .filter((event) => {
+          if (cell.domain === 'Production') return event.type?.includes('unit_processed')
+          if (cell.domain === 'Quality') return event.type?.includes('inspection') || event.type?.includes('quality')
+          if (cell.domain === 'Logistics') return Boolean(event.order_id || event.serial_unit_id)
+          if (cell.domain === 'Maintenance') return event.type?.includes('maintenance') || event.type?.includes('disturbance')
+          return false
+        })
+        .slice(0, 3)
+        .map((event) => event.id)
+
+      return {
+        domain: cell.domain,
+        decisionStatement: `Approve ${cell.severity} containment plan for ${cell.domain}.`,
+        businessImpact: `${cell.summary} ${cell.entityCount} entities are exposed and ${cell.eventCount} disruption signals require executive follow-through.`,
+        owner: ownerByDomain[cell.domain] || 'Domain owner',
+        timingExpectation: cell.severity === Severity.CRITICAL ? 'Issue decision in next 2 hours' : 'Issue decision in current shift',
+        trustLevel: rankTrustLevel({ severity: cell.severity, evidenceAnchors: anchors }),
+        evidenceAnchors: anchors,
+      }
+    })
+  }, [domainCells, events])
+
   return (
     <div className="stack">
       <h1>Executive Command Center</h1>
@@ -85,6 +118,14 @@ export function ExecutivePage() {
         </div>
       </Panel>
       <OverviewPage />
+      <Panel title="Decision summary by impacted domain">
+        <p className="meta">Each investigation track closes with a reviewable decision-action package.</p>
+        <div className="decision-action-grid">
+          {decisionPackages.map((pack) => (
+            <DecisionActionCard key={pack.domain} {...pack} />
+          ))}
+        </div>
+      </Panel>
     </div>
   )
 }
