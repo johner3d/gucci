@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
+import { KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, toUiDiagnostics } from '../lib/api'
@@ -27,11 +28,38 @@ export function MaintenancePage() {
     [workspace]
   )
   const maintenanceEvents = useMemo(() => events.filter((event) => event.type?.includes('maintenance') || event.type?.includes('disturbance')), [events])
+  const maintenanceTiles = useMemo(
+    () => [
+      { id: 'tracked-assets', label: 'Tracked assets/activities', value: String(maintenanceAssets.length), status: maintenanceAssets.length > 4 ? 'elevated' : 'watch', score: maintenanceAssets.length > 4 ? 70 : 46 },
+      { id: 'disturbance-events', label: 'Disturbance events', value: String(maintenanceEvents.filter((event) => event.type?.includes('disturbance')).length), status: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 'high' : 'normal', score: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 88 : 35 },
+    ],
+    [maintenanceAssets.length, maintenanceEvents]
+  )
+  const maintenanceTrend = useMemo(
+    () => [
+      {
+        label: 'Asset disturbance risk',
+        value: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 82 : 38,
+        severity: maintenanceEvents.some((event) => event.type?.includes('disturbance')) ? 'high' : 'normal',
+        annotation: `${maintenanceEvents.length} maintenance-linked events in scope`,
+      },
+      {
+        label: 'Intervention readiness',
+        value: maintenanceAssets.length > 4 ? 62 : 74,
+        severity: maintenanceAssets.length > 4 ? 'watch' : 'normal',
+        annotation: maintenanceAssets.length > 4 ? 'High maintenance load detected' : 'Load currently manageable',
+      },
+    ],
+    [maintenanceAssets.length, maintenanceEvents]
+  )
 
   return (
     <div className="stack">
-      <h1>Maintenance Workspace</h1>
+      <h1>Maintenance Lens</h1>
+      <p className="meta">Asset reliability, disturbance chains, and intervention sequencing.</p>
       <DataDiagnostics diagnostics={diagnostics} />
+      <KpiCommandStrip title="Maintenance risk strip" tiles={maintenanceTiles} />
+      <TrendBand rows={maintenanceTrend} />
       <Panel title="Asset health and intervention">
         <p className="meta">Tracked maintenance entities: {maintenanceAssets.length}</p>
         <div className="button-row">

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext, useParams, useSearchParams } from 'react-router-dom'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
@@ -93,7 +94,8 @@ export function ObjectsPage() {
 
   const pinned = asArrayParam(searchParams, 'pin')
   const compared = asArrayParam(searchParams, 'compare')
-  const highlightedId = searchParams.get('highlight') || ''
+  const highlightedId = searchParams.get('highlight') || searchParams.get('anchor') || ''
+  const evidenceAnchor = searchParams.get('anchor') || entity?.id || id
 
   const toggleEntityList = (key) => {
     if (!id) return
@@ -134,19 +136,20 @@ export function ObjectsPage() {
           Primary route for action is cross-workspace drilldown from this hub.
         </p>
         <div className="button-row">
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, highlight: entity.id })}>Graph causality path</Link>
-          <Link className="btn" to={toScopedPath('/process', globalContext, { highlight: entity.id })}>Process swimlanes</Link>
-          <Link className="btn" to={toScopedPath('/events', globalContext, { highlight: relatedEvents[0]?.id || entity.id })}>Temporal events</Link>
-          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext, { highlight: lineageLinks[0]?.id || '' })}>Lineage DAG</Link>
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, highlight: entity.id, anchor: entity.id })}>Graph causality path</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext, { highlight: entity.id, anchor: entity.id })}>Process swimlanes</Link>
+          <Link className="btn" to={toScopedPath('/events', globalContext, { highlight: relatedEvents[0]?.id || entity.id, anchor: relatedEvents[0]?.id || entity.id })}>Temporal events</Link>
+          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext, { highlight: lineageLinks[0]?.id || '', anchor: lineageLinks[0]?.id || entity.id })}>Lineage DAG</Link>
         </div>
       </Panel>
+      <EvidenceAnchorPanel anchor={evidenceAnchor} scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch, anchor: evidenceAnchor })} />
 
       <Panel title="Entity actions">
         <div className="button-row">
           <button type="button" className="btn" onClick={() => toggleEntityList('pin')}>{pinned.includes(entity.id) ? 'Unpin entity' : 'Pin entity'}</button>
           <button type="button" className="btn" onClick={() => toggleEntityList('compare')}>{compared.includes(entity.id) ? 'Remove from compare' : 'Add to compare'}</button>
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, mode: 'downstream-impact' })}>Impact view</Link>
-          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext)}>Lineage view</Link>
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus: entity.id, mode: 'downstream-impact', anchor: entity.id })}>Impact view</Link>
+          <Link className="btn" to={toScopedPath(`/lineage/${lineageLinks[0]?.id || 'LIN_0039'}`, globalContext, { anchor: lineageLinks[0]?.id || entity.id })}>Lineage view</Link>
           <Link className="btn" to={toScopedPath('/object-explorer', globalContext, Object.fromEntries(searchParams.entries()))}>Back to object search</Link>
         </div>
         <p className="meta">Pinned: {pinned.join(', ') || 'none'} | Compare: {compared.join(', ') || 'none'}</p>
@@ -182,8 +185,8 @@ export function ObjectsPage() {
               <strong>{relationship.id}</strong> — {relationship.source_id} {relationship.type} {relationship.target_id}
               <div className="meta">{relationship.category} | confidence {relationship.qualifiers?.confidence ?? 'n/a'} | polarity {relationship.qualifiers?.polarity ?? 'n/a'}</div>
               <div className="button-row">
-                <Link to={toScopedPath('/graph', globalContext, { focus: relationship.source_id, highlight: relationship.id })}>Highlight in graph</Link>
-                <Link to={toScopedPath('/impact-analysis', globalContext, { focus: relationship.target_id, highlight: relationship.id })}>Impact map</Link>
+                <Link to={toScopedPath('/graph', globalContext, { focus: relationship.source_id, highlight: relationship.id, anchor: relationship.id })}>Highlight in graph</Link>
+                <Link to={toScopedPath('/impact-analysis', globalContext, { focus: relationship.target_id, highlight: relationship.id, anchor: relationship.id })}>Impact map</Link>
               </div>
             </li>
           ))}
@@ -255,7 +258,7 @@ export function ObjectsPage() {
       <EventTimeline
         events={relatedEvents}
         highlightedId={highlightedId}
-        onHighlight={(eventId) => setSearchParams(toSearch(searchParams, { highlight: eventId }))}
+        onHighlight={(eventId) => setSearchParams(toSearch(searchParams, { highlight: eventId, anchor: eventId }))}
       />
     </div>
   )

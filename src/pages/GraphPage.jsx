@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { CausalPath } from '../components/domain/CausalPath'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
+import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { Panel } from '../components/primitives/Primitives'
 import { loadGraphData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
@@ -159,7 +160,8 @@ export function GraphPage() {
   const focus = searchParams.get('focus') || globalContext.focus || 'KPIOBS_2101'
   const selectedNode = searchParams.get('selectedNode') || globalContext.selectedNode || focus
   const selectedPathId = searchParams.get('selectedPath') || globalContext.selectedPath || ''
-  const highlightedId = searchParams.get('highlight') || ''
+  const highlightedId = searchParams.get('highlight') || searchParams.get('anchor') || ''
+  const evidenceAnchor = searchParams.get('anchor') || globalContext.anchor || highlightedId || focus
 
   const query = {
     mode: normalizeMode(searchParams.get('mode')),
@@ -195,19 +197,20 @@ export function GraphPage() {
       <DataDiagnostics diagnostics={diagnostics} />
       <Panel title="Graph workspace interactions">
         <div className="button-row">
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus })}>Impact analysis</Link>
-          <Link className="btn" to={toScopedPath('/events', globalContext, { focus })}>Events evidence</Link>
-          <Link className="btn" to={toScopedPath('/process', globalContext, { focus })}>Process context</Link>
-          <Link className="btn" to={toScopedPath('/lineage', globalContext, { focus, highlight: highlightedId })}>Lineage flow</Link>
+          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus, anchor: evidenceAnchor })}>Impact analysis</Link>
+          <Link className="btn" to={toScopedPath('/events', globalContext, { focus, anchor: evidenceAnchor })}>Events evidence</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext, { focus, anchor: evidenceAnchor })}>Process context</Link>
+          <Link className="btn" to={toScopedPath('/lineage', globalContext, { focus, highlight: highlightedId, anchor: evidenceAnchor })}>Lineage flow</Link>
         </div>
       </Panel>
+      <EvidenceAnchorPanel anchor={evidenceAnchor} scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch, anchor: evidenceAnchor })} />
       <Panel title="Impact propagation mapping">
         <p className="meta">
           Reachable propagation surface: <strong>{details.reachableNodeIds.length}</strong> nodes from focus <strong>{focus}</strong>.
         </p>
         <div className="button-row">
           {details.reachableNodeIds.slice(0, 8).map((nodeId) => (
-            <Link key={nodeId} className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus: nodeId, highlight: highlightedId })}>
+            <Link key={nodeId} className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus: nodeId, highlight: highlightedId, anchor: evidenceAnchor })}>
               Propagate to {nodeId}
             </Link>
           ))}
@@ -223,12 +226,12 @@ export function GraphPage() {
           query={query}
           queryModeOptions={queryModeOptions}
           onQueryChange={(patch) => updateSearch(patch)}
-          onFocusChange={(nextFocus) => updateSearch({ focus: nextFocus, selectedNode: nextFocus })}
-          onSelectNode={(nextNode) => updateSearch({ selectedNode: nextNode })}
-          onSelectPath={(pathId, nodeId) => updateSearch({ selectedPath: pathId, selectedNode: nodeId })}
-          onHighlight={(edgeId) => updateSearch({ highlight: edgeId })}
-          scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch })}
-          objectPathForNode={(nodeId) => toScopedPath(`/object-explorer/${nodeId}`, globalContext)}
+          onFocusChange={(nextFocus) => updateSearch({ focus: nextFocus, selectedNode: nextFocus, anchor: nextFocus })}
+          onSelectNode={(nextNode) => updateSearch({ selectedNode: nextNode, anchor: nextNode })}
+          onSelectPath={(pathId, nodeId) => updateSearch({ selectedPath: pathId, selectedNode: nodeId, anchor: nodeId })}
+          onHighlight={(edgeId) => updateSearch({ highlight: edgeId, anchor: edgeId })}
+          scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch, anchor: evidenceAnchor })}
+          objectPathForNode={(nodeId) => toScopedPath(`/object-explorer/${nodeId}`, globalContext, { anchor: nodeId })}
         />
       ) : (
         <p>Graph content unavailable.</p>
