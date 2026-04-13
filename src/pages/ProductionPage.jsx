@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
+import { TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
@@ -23,11 +24,22 @@ export function ProductionPage() {
   }, [])
 
   const productionEvents = useMemo(() => events.filter((event) => event.type?.includes('unit_processed')), [events])
+  const lineDisruptionRows = useMemo(() => {
+    const totalSteps = processData?.canvas?.steps?.length || 0
+    const highRisk = (processData?.canvas?.steps || []).filter((step) => step.risk === 'high').length
+    return [
+      { label: 'Line throughput risk', value: productionEvents.length > 2 ? 72 : 45, severity: productionEvents.length > 2 ? 'elevated' : 'watch', annotation: `${productionEvents.length} units in scoped incident window` },
+      { label: 'High-risk process steps', value: totalSteps ? (highRisk / totalSteps) * 100 : 0, severity: highRisk > 2 ? 'high' : 'watch', annotation: `${highRisk}/${totalSteps} steps flagged high risk` },
+      { label: 'Recovery readiness', value: highRisk > 2 ? 40 : 68, severity: highRisk > 2 ? 'watch' : 'normal', annotation: highRisk > 2 ? 'Containment not stabilized' : 'Line stabilizing' },
+    ]
+  }, [processData, productionEvents.length])
 
   return (
     <div className="stack">
-      <h1>Production Workspace</h1>
+      <h1>Production Lens</h1>
+      <p className="meta">Production continuity, throughput posture, and flow-aware mitigation.</p>
       <DataDiagnostics diagnostics={diagnostics} />
+      <TrendBand rows={lineDisruptionRows} />
       <Panel title="Production recovery controls">
         <p className="meta">Units processed in scope: {productionEvents.length}</p>
         <div className="button-row">
