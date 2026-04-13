@@ -5,6 +5,7 @@ import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
+import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
 
 function toTypeLabel(type = '') {
@@ -39,6 +40,11 @@ export function ObjectsPage() {
   }, [id])
 
   const entity = useMemo(() => workspace?.entities?.find((candidate) => candidate.id === id) || null, [workspace, id])
+
+  useEffect(() => {
+    if (!entity) return
+    captureLatencyHook('object.hydration', { entityId: entity.id })
+  }, [entity])
 
   const relationships = useMemo(() => {
     if (!workspace || !id) return []

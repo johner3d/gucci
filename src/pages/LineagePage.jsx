@@ -5,6 +5,7 @@ import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { LineageTrustPanel } from '../components/domain/LineageTrustPanel'
 import { Panel } from '../components/primitives/Primitives'
 import { loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
+import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
 
 export function LineagePage() {
@@ -31,6 +32,11 @@ export function LineagePage() {
     if (!artifact) return []
     return [...new Set([...(artifact.upstream_artifact_ids || []), artifact.id, ...(artifact.downstream_artifact_ids || [])])]
   }, [artifact])
+
+  useEffect(() => {
+    if (!artifactId) return
+    captureLatencyHook('lineage.load', { artifactId, found: Boolean(artifact) })
+  }, [artifact, artifactId])
 
   if (!artifact && !diagnostics.length) return <p>Loading lineage artifact…</p>
 
