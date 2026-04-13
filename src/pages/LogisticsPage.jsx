@@ -5,6 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
+import { Severity } from '../domain/uiVocabulary'
 
 export function LogisticsPage() {
   const outletContext = useOutletContext()
@@ -33,13 +34,13 @@ export function LogisticsPage() {
       {
         label: 'Order flow pressure',
         value: logisticsEntities.length > 4 ? 76 : 44,
-        severity: logisticsEntities.length > 4 ? 'elevated' : 'watch',
+        severity: logisticsEntities.length > 4 ? Severity.ELEVATED : Severity.WATCH,
         annotation: `${logisticsEntities.length} logistics entities in active incident scope`,
       },
       {
         label: 'Material handoff volatility',
         value: flowEvents.length > 2 ? 69 : 40,
-        severity: flowEvents.length > 2 ? 'high' : 'watch',
+        severity: flowEvents.length > 2 ? Severity.CRITICAL : Severity.WATCH,
         annotation: `${flowEvents.length} tracked flow events requiring follow-up`,
       },
     ],

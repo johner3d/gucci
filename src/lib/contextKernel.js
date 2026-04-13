@@ -1,3 +1,5 @@
+import { Severity, Trust, toApprovedSeverity, toApprovedTrust } from '../domain/uiVocabulary'
+
 const DEFAULT_INCIDENT_SCOPE = {
   incidentId: 'INC_PAINT_A_20260115_01',
   relatedEntityIds: ['ASSET_PAINT_ROBOT_07', 'ST_PAINT_BOOTH_03', 'SU_900001', 'ORD_10045', 'KPIOBS_2101'],
@@ -8,8 +10,8 @@ export const DEFAULT_CONTEXT_KERNEL = {
   plant: 'PLANT_DE_01',
   line: 'LINE_PAINT_A',
   time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
-  severity: 'high',
-  confidence: 'supported',
+  severity: Severity.CRITICAL,
+  confidence: Trust.SUPPORTED,
   stage: 'issue-detection',
   focusEntity: 'KPIOBS_2101',
   hypothesis: 'Paint booth contamination increased rework and delayed outbound delivery.',
@@ -38,8 +40,8 @@ export function readContextKernel(searchParams) {
     plant: searchParams.get('plant') || DEFAULT_CONTEXT_KERNEL.plant,
     line: searchParams.get('line') || DEFAULT_CONTEXT_KERNEL.line,
     time: searchParams.get('time') || DEFAULT_CONTEXT_KERNEL.time,
-    severity: searchParams.get('severity') || DEFAULT_CONTEXT_KERNEL.severity,
-    confidence: searchParams.get('confidence') || DEFAULT_CONTEXT_KERNEL.confidence,
+    severity: toApprovedSeverity(searchParams.get('severity') || DEFAULT_CONTEXT_KERNEL.severity, DEFAULT_CONTEXT_KERNEL.severity),
+    confidence: toApprovedTrust(searchParams.get('confidence') || DEFAULT_CONTEXT_KERNEL.confidence, DEFAULT_CONTEXT_KERNEL.confidence),
     stage: searchParams.get('stage') || DEFAULT_CONTEXT_KERNEL.stage,
     focusEntity,
     hypothesis,
@@ -54,8 +56,8 @@ export function toKernelQuery(kernel, patch = {}) {
   params.set('plant', merged.plant)
   params.set('line', merged.line)
   params.set('time', merged.time)
-  params.set('severity', merged.severity)
-  params.set('confidence', merged.confidence || DEFAULT_CONTEXT_KERNEL.confidence)
+  params.set('severity', toApprovedSeverity(merged.severity, DEFAULT_CONTEXT_KERNEL.severity))
+  params.set('confidence', toApprovedTrust(merged.confidence || DEFAULT_CONTEXT_KERNEL.confidence, DEFAULT_CONTEXT_KERNEL.confidence))
   params.set('stage', merged.stage || DEFAULT_CONTEXT_KERNEL.stage)
   params.set('focusEntity', merged.focusEntity)
   params.set('focus', merged.focusEntity)
