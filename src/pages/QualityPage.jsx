@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
+import { KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
@@ -23,11 +24,28 @@ export function QualityPage() {
   }, [])
 
   const qualityEvents = useMemo(() => events.filter((event) => event.type?.includes('inspection') || event.type?.includes('quality')), [events])
+  const qualityKpiTiles = useMemo(
+    () => [
+      { id: 'quality-events', label: 'Inspection events', value: String(qualityEvents.length), status: qualityEvents.length > 2 ? 'elevated' : 'watch', score: qualityEvents.length > 2 ? 74 : 42 },
+      { id: 'lineage-evidence', label: 'Lineage artifacts', value: String(artifacts.length), status: artifacts.length > 20 ? 'supported' : 'provisional', score: artifacts.length > 20 ? 83 : 61 },
+    ],
+    [artifacts.length, qualityEvents.length]
+  )
+  const qualityTrend = useMemo(
+    () => [
+      { label: 'Defect containment pressure', value: qualityEvents.length > 2 ? 78 : 48, severity: qualityEvents.length > 2 ? 'high' : 'watch', annotation: `${qualityEvents.length} quality signals in active scope` },
+      { label: 'Evidence confidence', value: artifacts.length > 20 ? 82 : 58, severity: artifacts.length > 20 ? 'normal' : 'elevated', annotation: `${artifacts.length} lineage artifacts available` },
+    ],
+    [artifacts.length, qualityEvents.length]
+  )
 
   return (
     <div className="stack">
-      <h1>Quality Workspace</h1>
+      <h1>Quality Lens</h1>
+      <p className="meta">Defect pressure, inspection evidence, and quality-to-business impact traceability.</p>
       <DataDiagnostics diagnostics={diagnostics} />
+      <KpiCommandStrip title="Quality signal strip" tiles={qualityKpiTiles} />
+      <TrendBand rows={qualityTrend} />
       <Panel title="Quality investigation links">
         <div className="button-row">
           <Link className="btn" to={toScopedPath('/events', globalContext, { eventClass: 'quality', correlatedOnly: true })}>Timeline quality lane</Link>

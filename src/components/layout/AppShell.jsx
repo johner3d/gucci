@@ -16,6 +16,15 @@ const spaceRoutes = [
   { to: '/impact-analysis', label: 'Impact Analysis' },
 ]
 
+const reasoningFlow = [
+  { id: 'management-overview', label: 'Management overview', route: '/executive' },
+  { id: 'issue-detection', label: 'Issue detection', route: '/executive' },
+  { id: 'impact-understanding', label: 'Impact understanding', route: '/impact-analysis' },
+  { id: 'graph-deep-dive', label: 'Graph deep dive', route: '/graph' },
+  { id: 'root-cause', label: 'Root cause', route: '/process' },
+  { id: 'decision-support', label: 'Decision support', route: '/lineage' },
+]
+
 const transitionRules = [
   {
     id: 'kpi-breach-to-graph',
@@ -66,15 +75,18 @@ export function AppShell() {
     focus: searchParams.get('focus') || contextKernel.focusEntity,
     selectedNode: searchParams.get('selectedNode') || contextKernel.focusEntity,
     selectedPath: searchParams.get('selectedPath') || '',
+    anchor: searchParams.get('anchor') || contextKernel.evidenceAnchor || '',
   }
 
   const scopedQuery = toKernelQuery(contextKernel, scopedParams).toString()
   const breadcrumbs = buildSemanticBreadcrumbs(location.pathname, contextKernel)
+  const reasoningStep = contextKernel.stage
 
   return (
     <div className="app-shell">
       <aside className="shell-nav">
-        <h3>Issue Explorer</h3>
+        <h3>Incident Intelligence</h3>
+        <p className="meta">One shared truth across all analytical lenses.</p>
         <ul className="nav-list">
           {spaceRoutes.map((route) => (
             <li key={route.to}>
@@ -87,14 +99,7 @@ export function AppShell() {
       </aside>
 
       <main className="shell-main">
-        <div className="context-bar meta">
-          Context kernel: {contextKernel.plant} / {contextKernel.line} / {contextKernel.severity} / {contextKernel.time}
-        </div>
         <IncidentTruthSelectors contextKernel={contextKernel} searchParams={searchParams} setSearchParams={setSearchParams} />
-        <div className="context-bar meta">
-          Scope: {contextKernel.incidentScope.incidentId} · Focus: {contextKernel.focusEntity}
-        </div>
-        <div className="context-bar meta">Hypothesis: {contextKernel.hypothesis}</div>
         <div className="breadcrumb-zone">
           <ul className="semantic-crumbs list-reset">
             {breadcrumbs.map((crumb, idx) => (
@@ -105,10 +110,30 @@ export function AppShell() {
             ))}
           </ul>
         </div>
+        <div className="context-bar">
+          <strong>Reasoning spine</strong>
+          <div className="button-row">
+            {reasoningFlow.map((step) => (
+              <Link
+                key={step.id}
+                className={`chip ${reasoningStep === step.id ? 'chip-primary' : ''}`.trim()}
+                to={`${step.route}?${toKernelQuery({ ...contextKernel, stage: step.id }, scopedParams).toString()}`}
+              >
+                {step.label}
+              </Link>
+            ))}
+          </div>
+        </div>
         <Outlet context={{ globalContext: routeContract, contextKernel, incidentScope: contextKernel.incidentScope, transitionRules }} />
       </main>
 
       <aside className="shell-rail">
+        <h4>Next-best actions</h4>
+        <ul className="rail-list meta">
+          <li>If severity is high/critical: open Graph in upstream-cause mode.</li>
+          <li>If confidence is unverified/provisional: open Lineage before decisions.</li>
+          <li>If impact spread is broad: open Impact Analysis and then Process handoff lanes.</li>
+        </ul>
         <h4>Transition rules</h4>
         <ul className="rail-list meta">
           {transitionRules.map((rule) => (
