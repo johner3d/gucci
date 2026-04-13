@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
+import { TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, loadEventsData, toUiDiagnostics } from '../lib/api'
@@ -27,11 +28,30 @@ export function LogisticsPage() {
     [workspace]
   )
   const flowEvents = useMemo(() => events.filter((event) => event.type?.includes('unit_processed')), [events])
+  const logisticsTrend = useMemo(
+    () => [
+      {
+        label: 'Order flow pressure',
+        value: logisticsEntities.length > 4 ? 76 : 44,
+        severity: logisticsEntities.length > 4 ? 'elevated' : 'watch',
+        annotation: `${logisticsEntities.length} logistics entities in active incident scope`,
+      },
+      {
+        label: 'Material handoff volatility',
+        value: flowEvents.length > 2 ? 69 : 40,
+        severity: flowEvents.length > 2 ? 'high' : 'watch',
+        annotation: `${flowEvents.length} tracked flow events requiring follow-up`,
+      },
+    ],
+    [flowEvents.length, logisticsEntities.length]
+  )
 
   return (
     <div className="stack">
-      <h1>Logistics Workspace</h1>
+      <h1>Logistics Lens</h1>
+      <p className="meta">Order/material propagation view with downstream delay-risk orientation.</p>
       <DataDiagnostics diagnostics={diagnostics} />
+      <TrendBand rows={logisticsTrend} />
       <Panel title="Material flow control center">
         <p className="meta">Active logistics entities in incident scope: {logisticsEntities.length}</p>
         <div className="button-row">
