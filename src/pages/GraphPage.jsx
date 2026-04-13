@@ -5,6 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { Panel } from '../components/primitives/Primitives'
 import { loadGraphData, toUiDiagnostics } from '../lib/api'
+import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
 
 const queryModeOptions = [
@@ -183,6 +184,11 @@ export function GraphPage() {
     if (!graph) return { node: null, paths: [], adjacentEdges: [], reachableNodeIds: [] }
     return findPaths({ graph, focus, query })
   }, [focus, graph, query.evidenceMin, query.hopDepth, query.mode, query.relationshipClass])
+
+  useEffect(() => {
+    if (!graph) return
+    captureLatencyHook('graph.update', { focusEntity: focus, reachableNodes: details.reachableNodeIds.length })
+  }, [details.reachableNodeIds.length, focus, graph])
 
   const updateSearch = (patch) => {
     const current = Object.fromEntries(searchParams.entries())

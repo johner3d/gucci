@@ -4,6 +4,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
 import { toScopedQuery } from '../lib/contextKernel'
+import { captureLatencyHook } from '../lib/qaTelemetry'
 
 const defaultFilters = {
   type: 'all',
@@ -126,6 +127,11 @@ export function ObjectSearchPage() {
       return true
     })
   }, [enriched, filters])
+
+  useEffect(() => {
+    if (!filtered.length) return
+    captureLatencyHook('search.first_result', { entityId: filtered[0].id, resultCount: filtered.length })
+  }, [filtered])
 
   const updateFilter = (patch) => {
     const current = Object.fromEntries(searchParams.entries())

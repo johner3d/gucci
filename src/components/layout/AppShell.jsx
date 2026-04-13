@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import { NavLink, Link, Outlet, useLocation, useSearchParams } from 'react-router-dom'
 import { IncidentTruthSelectors } from './IncidentTruthSelectors'
 import { buildSemanticBreadcrumbs, readContextKernel, toKernelQuery } from '../../lib/contextKernel'
+import { captureLatencyHook } from '../../lib/qaTelemetry'
 
 const spaceRoutes = [
   { to: '/executive', label: 'Executive', end: true },
@@ -80,6 +82,10 @@ export function AppShell() {
   const scopedQuery = toKernelQuery(contextKernel, scopedParams).toString()
   const breadcrumbs = buildSemanticBreadcrumbs(location.pathname, contextKernel)
   const reasoningStep = contextKernel.stage
+
+  useEffect(() => {
+    captureLatencyHook('route.transition', { pathname: location.pathname })
+  }, [location.pathname])
 
   return (
     <div className="app-shell">
