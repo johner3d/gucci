@@ -157,7 +157,7 @@ export function GraphPage() {
   const globalContext = outletContext?.globalContext || {}
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const focus = searchParams.get('focus') || globalContext.focus || 'KPIOBS_2101'
+  const focus = searchParams.get('focusEntity') || searchParams.get('focus') || globalContext.focusEntity || 'KPIOBS_2101'
   const selectedNode = searchParams.get('selectedNode') || globalContext.selectedNode || focus
   const selectedPathId = searchParams.get('selectedPath') || globalContext.selectedPath || ''
   const highlightedId = searchParams.get('highlight') || searchParams.get('anchor') || ''
@@ -197,10 +197,10 @@ export function GraphPage() {
       <DataDiagnostics diagnostics={diagnostics} />
       <Panel title="Graph workspace interactions">
         <div className="button-row">
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus, anchor: evidenceAnchor })}>Impact analysis</Link>
-          <Link className="btn" to={toScopedPath('/events', globalContext, { focus, anchor: evidenceAnchor })}>Events evidence</Link>
-          <Link className="btn" to={toScopedPath('/process', globalContext, { focus, anchor: evidenceAnchor })}>Process context</Link>
-          <Link className="btn" to={toScopedPath('/lineage', globalContext, { focus, highlight: highlightedId, anchor: evidenceAnchor })}>Lineage flow</Link>
+          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { focusEntity: focus, anchor: evidenceAnchor })}>Impact analysis</Link>
+          <Link className="btn" to={toScopedPath('/events', globalContext, { focusEntity: focus, anchor: evidenceAnchor })}>Events evidence</Link>
+          <Link className="btn" to={toScopedPath('/process', globalContext, { focusEntity: focus, anchor: evidenceAnchor })}>Process context</Link>
+          <Link className="btn" to={toScopedPath('/lineage', globalContext, { focusEntity: focus, highlight: highlightedId, anchor: evidenceAnchor })}>Lineage flow</Link>
         </div>
       </Panel>
       <EvidenceAnchorPanel anchor={evidenceAnchor} scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch, anchor: evidenceAnchor })} />
@@ -210,7 +210,7 @@ export function GraphPage() {
         </p>
         <div className="button-row">
           {details.reachableNodeIds.slice(0, 8).map((nodeId) => (
-            <Link key={nodeId} className="btn" to={toScopedPath('/impact-analysis', globalContext, { focus: nodeId, highlight: highlightedId, anchor: evidenceAnchor })}>
+            <Link key={nodeId} className="btn" to={toScopedPath('/impact-analysis', globalContext, { focusEntity: nodeId, highlight: highlightedId, anchor: evidenceAnchor })}>
               Propagate to {nodeId}
             </Link>
           ))}
@@ -226,7 +226,7 @@ export function GraphPage() {
           query={query}
           queryModeOptions={queryModeOptions}
           onQueryChange={(patch) => updateSearch(patch)}
-          onFocusChange={(nextFocus) => updateSearch({ focus: nextFocus, selectedNode: nextFocus, anchor: nextFocus })}
+          onFocusChange={(nextFocus) => updateSearch({ focusEntity: nextFocus, selectedNode: nextFocus, anchor: nextFocus })}
           onSelectNode={(nextNode) => updateSearch({ selectedNode: nextNode, anchor: nextNode })}
           onSelectPath={(pathId, nodeId) => updateSearch({ selectedPath: pathId, selectedNode: nodeId, anchor: nodeId })}
           onHighlight={(edgeId) => updateSearch({ highlight: edgeId, anchor: edgeId })}

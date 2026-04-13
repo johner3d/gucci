@@ -304,7 +304,7 @@ Hide advanced controls by default; reveal contextually to avoid clutter.
 Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-off. All links are route-safe for the existing PoC shell and preserve context using query parameters.
 
 ### 15.1 Journey A — Defect spike triage (executive-to-analyst handoff)
-- **Seeded deep link:** `/executive?plant=PLANT_01&line=LINE_PAINT_1&incident=INC_DEFECT_SPIKE_001&severity=elevated`
+- **Seeded deep link:** `/executive?plant=PLANT_01&line=LINE_PAINT_1&incidentId=INC_DEFECT_SPIKE_001&severity=elevated`
 - **Script:**
   1. Start on Executive Overview breach stack.
   2. Jump to ranked causality graph path.
@@ -317,7 +317,7 @@ Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-o
   - Decision statement includes severity, trust level, and next action owner.
 
 ### 15.2 Journey B — Order risk to fulfillment impact
-- **Seeded deep link:** `/logistics?plant=PLANT_01&order=ORD_10045&incident=INC_ORDER_RISK_002&severity=watch`
+- **Seeded deep link:** `/logistics?plant=PLANT_01&focusEntity=ORD_10045&incidentId=INC_ORDER_RISK_002&severity=watch`
 - **Script:**
   1. Open affected order and unit scope in Logistics.
   2. Pivot to Process View handoff latency points.
@@ -329,7 +329,7 @@ Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-o
   - Mitigation option is prioritized by business impact.
 
 ### 15.3 Journey C — Asset disturbance causal propagation
-- **Seeded deep link:** `/maintenance?plant=PLANT_01&asset=ASSET_PAINT_ROBOT_07&incident=INC_ASSET_DISTURBANCE_003&severity=critical`
+- **Seeded deep link:** `/maintenance?plant=PLANT_01&focusEntity=ASSET_PAINT_ROBOT_07&incidentId=INC_ASSET_DISTURBANCE_003&severity=critical`
 - **Script:**
   1. Start from maintenance disturbance signal.
   2. Traverse graph path to quality defect spike.
@@ -341,7 +341,7 @@ Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-o
   - Proposed action captures immediate containment and follow-up verification.
 
 ### 15.4 Journey D — Traceability assurance challenge
-- **Seeded deep link:** `/lineage/LIN_0039?incident=INC_TRACEABILITY_004&focus=kpi-card`
+- **Seeded deep link:** `/lineage/LIN_0039?incidentId=INC_TRACEABILITY_004&focusEntity=kpi-card`
 - **Script:**
   1. Start with “why should we trust this KPI insight?” challenge.
   2. Read business narrative lineage layer.
@@ -353,7 +353,7 @@ Use these deterministic journeys for demos, QA rehearsals, and acceptance sign-o
   - Any confidence caveat is visible before action recommendation.
 
 ### 15.5 Journey E — Cross-domain handoff stress test
-- **Seeded deep link:** `/process?plant=PLANT_01&incident=INC_HANDOFF_STRESS_005&domain=production,quality,logistics,maintenance`
+- **Seeded deep link:** `/process?plant=PLANT_01&incidentId=INC_HANDOFF_STRESS_005&domain=production,quality,logistics,maintenance`
 - **Script:**
   1. Open swimlane flow and identify degraded handoffs.
   2. Inspect correlated anomaly clusters in Events.
