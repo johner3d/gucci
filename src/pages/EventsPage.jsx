@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-router-dom'
+import { EventSequenceBoard } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
@@ -25,7 +26,7 @@ export function EventsPage() {
   const globalContext = outletContext?.globalContext || {}
   const incidentScope = outletContext?.incidentScope
   const [searchParams] = useSearchParams()
-  const highlightedId = searchParams.get('highlight') || ''
+  const highlightedId = searchParams.get('highlight') || searchParams.get('anchor') || ''
 
   const [events, setEvents] = useState([])
   const [diagnostics, setDiagnostics] = useState([])
@@ -69,21 +70,42 @@ export function EventsPage() {
 
   const onFiltersChange = (patch) => setFilters((current) => ({ ...current, ...patch }))
 
+  const sequenceRows = useMemo(() => {
+    const groups = events.reduce((acc, event) => {
+      const track = event.domain || (event.type?.includes('inspection') ? 'quality' : event.type?.includes('maintenance') ? 'maintenance' : 'production')
+      if (!acc[track]) acc[track] = []
+      acc[track].push(event)
+      return acc
+    }, {})
+
+    return Object.entries(groups).map(([track, trackEvents]) => {
+      const anomalies = trackEvents.filter((event) => ['threshold', 'disturbance', 'violation'].some((token) => `${event.type}`.includes(token))).length
+      const correlated = trackEvents.filter((event) => event.kpi_observation_id || event.type?.includes('inspection') || event.type?.includes('kpi')).length
+      return {
+        track,
+        count: trackEvents.length,
+        anomalies,
+        correlated,
+        severity: anomalies > 0 ? 'high' : correlated > 0 ? 'elevated' : 'watch',
+      }
+    })
+  }, [events])
+
   const jumpToGraph = (event) => {
     const focus = event.asset_id || event.station_id || event.serial_unit_id || event.inspection_id || event.id
-    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id, highlight: event.id })}`)
+    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id, highlight: event.id, anchor: event.id })}`)
   }
 
   const jumpToProcess = (event) => {
     const hint = eventToStepHints.find((entry) => event.type?.includes(entry.match))
     const step = (hint && processStepByType[hint.match]) || processData?.canvas?.steps?.[0]?.id
-    navigate(`/process${asScopedSearch(globalContext, { step, event: event.id, highlight: step || event.id })}`)
+    navigate(`/process${asScopedSearch(globalContext, { step, event: event.id, highlight: step || event.id, anchor: event.id })}`)
   }
 
   const jumpToEntity = (event) => {
     const entityId = event.asset_id || event.serial_unit_id || event.station_id || event.inspection_id
     if (!entityId) return
-    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id, highlight: entityId })}`)
+    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id, highlight: entityId, anchor: event.id })}`)
   }
 
   const jumpToLineage = (event) => {
@@ -97,7 +119,7 @@ export function EventsPage() {
             : 'derive_order_delay_risk_kpi'
     const artifactId = lineageByRule[ruleName] || lineageArtifacts[0]?.id
     if (!artifactId) return
-    navigate(`/lineage/${artifactId}${asScopedSearch(globalContext, { event: event.id, highlight: artifactId })}`)
+    navigate(`/lineage/${artifactId}${asScopedSearch(globalContext, { event: event.id, highlight: artifactId, anchor: event.id })}`)
   }
 
   if (!events.length && !diagnostics.length) return <p>Loading events…</p>
@@ -113,6 +135,7 @@ export function EventsPage() {
           <Link className="btn" to={toScopedPath('/impact-analysis', globalContext)}>Impact scoring</Link>
         </div>
       </Panel>
+      <EventSequenceBoard rows={sequenceRows} />
       {events.length ? (
         <EventTimeline
           events={events}
@@ -124,7 +147,7 @@ export function EventsPage() {
           onJumpToEntity={jumpToEntity}
           onJumpToLineage={jumpToLineage}
           highlightedId={highlightedId}
-          onHighlight={(eventId) => navigate(`/events${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId })}`)}
+          onHighlight={(eventId) => navigate(`/events${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId, anchor: eventId })}`)}
         />
       ) : (
         <p>No events available.</p>

@@ -75,6 +75,7 @@ export function AppShell() {
     focus: searchParams.get('focus') || contextKernel.focusEntity,
     selectedNode: searchParams.get('selectedNode') || contextKernel.focusEntity,
     selectedPath: searchParams.get('selectedPath') || '',
+    anchor: searchParams.get('anchor') || contextKernel.evidenceAnchor || '',
   }
 
   const scopedQuery = toKernelQuery(contextKernel, scopedParams).toString()
