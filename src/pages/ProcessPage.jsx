@@ -3,7 +3,7 @@ import { Link, useOutletContext, useSearchParams } from 'react-router-dom'
 import { ProcessRiskBoard, TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { DecisionActionCard, rankTrustLevel } from '../components/domain/DecisionActionCard'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
 import { Severity, toApprovedSeverity } from '../domain/uiVocabulary'
@@ -123,7 +123,7 @@ export function ProcessPage() {
     })
   }, [lanes, related, selectedStep])
 
-  if (!processData && !diagnostics.length) return <p>Loading process…</p>
+  if (!processData && !diagnostics.length) return <StatePanel state="loading" title="Loading process" />
 
   return (
     <div className="stack">
@@ -134,11 +134,14 @@ export function ProcessPage() {
           <TrendBand rows={processTrendRows} />
           <ProcessRiskBoard rows={processRiskRows} />
           <Panel title="Process workspace interactions">
-            <div className="button-row">
-              <Link className="btn" to={toScopedPath('/events', globalContext, { step: selectedStep?.id || '' })}>Related events timeline</Link>
-              <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'dependency-chain' })}>Graph dependencies</Link>
-              <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { step: selectedStep?.id || '' })}>Impact analysis</Link>
-            </div>
+            <CtaButtonRow
+              actions={[
+                { key: 'investigate', label: 'Investigate', to: toScopedPath('/events', globalContext, { step: selectedStep?.id || '' }) },
+                { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext, { step: selectedStep?.id || '' }) },
+                { key: 'lineage', label: 'Explain lineage', to: toScopedPath('/lineage/LIN_0039', globalContext, { step: selectedStep?.id || '' }) },
+                { key: 'export', label: 'Export', to: toScopedPath('/process', globalContext, { export: 'brief' }) },
+              ]}
+            />
           </Panel>
           <Panel title="Global context">
             <div className="meta">
@@ -276,7 +279,7 @@ export function ProcessPage() {
           </Panel>
         </>
       ) : (
-        <p>Process content unavailable.</p>
+        <StatePanel state="empty" title="Process content unavailable" />
       )}
     </div>
   )

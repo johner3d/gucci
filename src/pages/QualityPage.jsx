@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
 import { KpiCommandStrip, TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
 import { OperationalStatus, Severity } from '../domain/uiVocabulary'
@@ -48,11 +48,14 @@ export function QualityPage() {
       <KpiCommandStrip title="Quality signal strip" tiles={qualityKpiTiles} />
       <TrendBand rows={qualityTrend} />
       <Panel title="Quality investigation links">
-        <div className="button-row">
-          <Link className="btn" to={toScopedPath('/events', globalContext, { eventClass: 'quality', correlatedOnly: true })}>Timeline quality lane</Link>
-          <Link className="btn" to={toScopedPath('/lineage', globalContext, { lineageArtifact: artifacts[0]?.id || 'LIN_0039' })}>Open lineage evidence</Link>
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { mode: 'upstream-cause' })}>Run impact analysis</Link>
-        </div>
+        <CtaButtonRow
+          actions={[
+            { key: 'investigate', label: 'Investigate', to: toScopedPath('/events', globalContext, { eventClass: 'quality', correlatedOnly: true }) },
+            { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext, { mode: 'upstream-cause' }) },
+            { key: 'lineage', label: 'Explain lineage', to: toScopedPath(`/lineage/${artifacts[0]?.id || 'LIN_0039'}`, globalContext) },
+            { key: 'export', label: 'Export', to: toScopedPath('/quality', globalContext, { export: 'brief' }) },
+          ]}
+        />
       </Panel>
       <Panel title="Inspection and quality events">
         <ul className="row-list">

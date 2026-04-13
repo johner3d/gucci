@@ -3,7 +3,7 @@ import { Link, useOutletContext, useParams, useSearchParams } from 'react-router
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { LineageTrustPanel } from '../components/domain/LineageTrustPanel'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadLineageArtifactsData, toUiDiagnostics } from '../lib/api'
 import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
@@ -38,7 +38,7 @@ export function LineagePage() {
     captureLatencyHook('lineage.load', { artifactId, found: Boolean(artifact) })
   }, [artifact, artifactId])
 
-  if (!artifact && !diagnostics.length) return <p>Loading lineage artifact…</p>
+  if (!artifact && !diagnostics.length) return <StatePanel state="loading" title="Loading lineage artifact" />
 
   return (
     <div className="stack">
@@ -46,11 +46,14 @@ export function LineagePage() {
       <p>Lineage explanations are split into business trust narrative and technical derivation details.</p>
       <DataDiagnostics diagnostics={diagnostics} />
       <Panel title="Lineage workspace interactions">
-        <div className="button-row">
-          <Link className="btn" to={toScopedPath('/impact-analysis', globalContext, { lineageArtifact: artifactId, anchor: evidenceAnchor })}>Impact analysis replay</Link>
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'lineage-trail', anchor: evidenceAnchor, highlight: evidenceAnchor })}>Graph lineage trail</Link>
-          <Link className="btn" to={toScopedPath('/object-explorer', globalContext, { lineageArtifact: artifactId, anchor: evidenceAnchor })}>Object explorer</Link>
-        </div>
+        <CtaButtonRow
+          actions={[
+            { key: 'investigate', label: 'Investigate', to: toScopedPath('/events', globalContext, { anchor: evidenceAnchor }) },
+            { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext, { lineageArtifact: artifactId, anchor: evidenceAnchor }) },
+            { key: 'lineage', label: 'Explain lineage', to: toScopedPath(`/lineage/${artifactId || 'LIN_0039'}`, globalContext, { anchor: evidenceAnchor }) },
+            { key: 'export', label: 'Export', to: toScopedPath('/lineage', globalContext, { export: 'brief', anchor: evidenceAnchor }) },
+          ]}
+        />
       </Panel>
       <EvidenceAnchorPanel anchor={evidenceAnchor} scopedPathFor={(path, patch) => toScopedPath(path, globalContext, { ...Object.fromEntries(searchParams.entries()), ...patch, anchor: evidenceAnchor })} />
       {artifact ? (
@@ -72,7 +75,7 @@ export function LineagePage() {
           <p className="meta">DAG nodes in local flow: {dagNodes.join(' → ')}</p>
         </Panel>
       ) : null}
-      {artifact ? <LineageTrustPanel artifact={artifact} /> : <p>Lineage artifact unavailable.</p>}
+      {artifact ? <LineageTrustPanel artifact={artifact} /> : <StatePanel state="empty" title="Lineage artifact unavailable" />}
     </div>
   )
 }

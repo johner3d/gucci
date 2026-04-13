@@ -3,7 +3,7 @@ import { Link, useOutletContext, useParams, useSearchParams } from 'react-router
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EvidenceAnchorPanel } from '../components/domain/EvidenceAnchorPanel'
 import { EventTimeline } from '../components/domain/EventTimeline'
-import { Panel } from '../components/primitives/Primitives'
+import { Panel, StatePanel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
 import { captureLatencyHook } from '../lib/qaTelemetry'
 import { toScopedPath } from '../lib/scopedLink'
@@ -110,17 +110,15 @@ export function ObjectsPage() {
     setSearchParams(toSearch(searchParams, { [key]: next.join(',') }))
   }
 
-  if (!workspace && !diagnostics.length) return <p>Loading entity detail…</p>
+  if (!workspace && !diagnostics.length) return <StatePanel state="loading" title="Loading entity detail" />
 
   if (!entity) {
     return (
       <div className="stack">
         <h1>Entity Detail</h1>
         <DataDiagnostics diagnostics={diagnostics} />
-        <Panel title="Lookup error">
-          <p>Canonical entity not available for {id}.</p>
-          <Link to="/object-explorer">Return to object search workspace</Link>
-        </Panel>
+        <StatePanel state="error" title="Lookup error" action={{ label: 'Investigate', to: '/object-explorer' }} />
+        <p className="meta">Canonical entity not available for {id}.</p>
       </div>
     )
   }

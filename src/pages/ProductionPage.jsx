@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router-dom'
 import { TrendBand } from '../components/domain/CommandCenterModules'
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
-import { Panel } from '../components/primitives/Primitives'
+import { CtaButtonRow, Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadProcessData, toUiDiagnostics } from '../lib/api'
 import { toScopedPath } from '../lib/scopedLink'
 import { Severity } from '../domain/uiVocabulary'
@@ -43,11 +43,14 @@ export function ProductionPage() {
       <TrendBand rows={lineDisruptionRows} />
       <Panel title="Production recovery controls">
         <p className="meta">Units processed in scope: {productionEvents.length}</p>
-        <div className="button-row">
-          <Link className="btn" to={toScopedPath('/process', globalContext, { step: processData?.canvas?.steps?.[0]?.id || '' })}>Open process control</Link>
-          <Link className="btn" to={toScopedPath('/events', globalContext, { domain: 'production' })}>Open production events</Link>
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { mode: 'dependency-chain' })}>Open dependency graph</Link>
-        </div>
+        <CtaButtonRow
+          actions={[
+            { key: 'investigate', label: 'Investigate', to: toScopedPath('/events', globalContext, { domain: 'production' }) },
+            { key: 'compare', label: 'Compare', to: toScopedPath('/impact-analysis', globalContext, { mode: 'downstream-impact' }) },
+            { key: 'lineage', label: 'Explain lineage', to: toScopedPath('/lineage/LIN_0039', globalContext) },
+            { key: 'export', label: 'Export', to: toScopedPath('/production', globalContext, { export: 'brief' }) },
+          ]}
+        />
       </Panel>
       <Panel title="Impacted production events">
         <ul className="row-list">
