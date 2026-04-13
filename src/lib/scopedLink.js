@@ -1,6 +1,9 @@
+import { toScopedQuery } from './contextKernel'
+
 export function toScopedSearch(globalContext = {}, extra = {}) {
-  const params = new URLSearchParams({ ...globalContext, ...extra })
-  return `?${params.toString()}`
+  const params = toScopedQuery(globalContext, extra)
+  const query = params.toString()
+  return query ? `?${query}` : ''
 }
 
 export function toScopedPath(pathname, globalContext = {}, extra = {}) {

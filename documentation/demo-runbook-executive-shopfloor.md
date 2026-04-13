@@ -16,7 +16,7 @@ This runbook operationalizes showcase delivery with deterministic scripted journ
 ## Scripted journeys with deep links and success criteria
 
 ### Journey 1 — Defect spike triage
-- **Open:** `/executive?plant=PLANT_01&line=LINE_PAINT_1&incident=INC_DEFECT_SPIKE_001&severity=elevated`
+- **Open:** `/executive?plant=PLANT_01&line=LINE_PAINT_1&incidentId=INC_DEFECT_SPIKE_001&severity=elevated`
 - **Expected walkthrough result:**
   - Root-cause candidates identified quickly.
   - Evidence chain crosses Overview → Graph → Events → Lineage.
@@ -26,7 +26,7 @@ This runbook operationalizes showcase delivery with deterministic scripted journ
   - Trust state explicitly called out before recommendation.
 
 ### Journey 2 — Order risk impact
-- **Open:** `/logistics?plant=PLANT_01&order=ORD_10045&incident=INC_ORDER_RISK_002&severity=watch`
+- **Open:** `/logistics?plant=PLANT_01&focusEntity=ORD_10045&incidentId=INC_ORDER_RISK_002&severity=watch`
 - **Expected walkthrough result:**
   - Affected orders/units and delay scope are quantified.
   - Process bottleneck and mitigation path are identified.
@@ -35,7 +35,7 @@ This runbook operationalizes showcase delivery with deterministic scripted journ
   - One prioritized mitigation with expected timeline.
 
 ### Journey 3 — Asset disturbance propagation
-- **Open:** `/maintenance?plant=PLANT_01&asset=ASSET_PAINT_ROBOT_07&incident=INC_ASSET_DISTURBANCE_003&severity=critical`
+- **Open:** `/maintenance?plant=PLANT_01&focusEntity=ASSET_PAINT_ROBOT_07&incidentId=INC_ASSET_DISTURBANCE_003&severity=critical`
 - **Expected walkthrough result:**
   - Causal path from maintenance issue to quality/KPI impact is demonstrated.
   - Affected serial unit (`SU_900001`) is inspected with lineage support.
@@ -44,7 +44,7 @@ This runbook operationalizes showcase delivery with deterministic scripted journ
   - Immediate containment + validation follow-up action captured.
 
 ### Journey 4 — Traceability assurance challenge
-- **Open:** `/lineage/LIN_0039?incident=INC_TRACEABILITY_004&focus=kpi-card`
+- **Open:** `/lineage/LIN_0039?incidentId=INC_TRACEABILITY_004&focusEntity=kpi-card`
 - **Expected walkthrough result:**
   - “Why trust this insight?” answered through narrative + technical lineage.
   - Rule/version/input provenance surfaced without manual data digging.
@@ -53,7 +53,7 @@ This runbook operationalizes showcase delivery with deterministic scripted journ
   - Confidence caveats (if any) are visible and understandable.
 
 ### Journey 5 — Cross-domain handoff stress
-- **Open:** `/process?plant=PLANT_01&incident=INC_HANDOFF_STRESS_005&domain=production,quality,logistics,maintenance`
+- **Open:** `/process?plant=PLANT_01&incidentId=INC_HANDOFF_STRESS_005&domain=production,quality,logistics,maintenance`
 - **Expected walkthrough result:**
   - Degraded handoffs are ranked and linked to event/graph evidence.
   - Domain owners align on actions and timing.

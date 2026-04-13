@@ -34,7 +34,7 @@ export function ImpactAnalysisPage() {
       .catch((error) => setDiagnostics(toUiDiagnostics(error, 'impact-analysis')))
   }, [])
 
-  const focus = searchParams.get('focus') || globalContext.focus || globalContext.focusEntity
+  const focus = searchParams.get('focusEntity') || searchParams.get('focus') || globalContext.focusEntity
   const highlightedId = searchParams.get('highlight') || ''
   const impactingEdges = useMemo(() => toScoredEdges(graph.filter((edge) => edge.source_id === focus || edge.target_id === focus)).slice(0, 8), [focus, graph])
   const breachSignals = useMemo(
@@ -54,7 +54,7 @@ export function ImpactAnalysisPage() {
 
       <Panel title={`Focus impact surface — ${focus}`}>
         <div className="button-row">
-          <Link className="btn" to={toScopedPath('/graph', globalContext, { focus, mode: 'downstream-impact' })}>Open causal graph</Link>
+          <Link className="btn" to={toScopedPath('/graph', globalContext, { focusEntity: focus, mode: 'downstream-impact' })}>Open causal graph</Link>
           <Link className="btn" to={toScopedPath('/events', globalContext, { correlatedOnly: true })}>Open correlated events</Link>
           <Link className="btn" to={toScopedPath('/lineage', globalContext, { lineageArtifact: artifacts[0]?.id || 'LIN_0039' })}>Open lineage proof</Link>
         </div>
@@ -67,7 +67,7 @@ export function ImpactAnalysisPage() {
               <strong>{edge.id}</strong> — {edge.source_id} {edge.type} {edge.target_id}
               <div className="meta">impact score {edge.impactScore} | confidence {edge.qualifiers?.confidence ?? 'n/a'} | strength {edge.qualifiers?.strength ?? 'n/a'}</div>
               <div className="button-row">
-                <Link to={toScopedPath('/graph', globalContext, { focus: edge.source_id, highlight: edge.id })}>Graph path</Link>
+                <Link to={toScopedPath('/graph', globalContext, { focusEntity: edge.source_id, highlight: edge.id })}>Graph path</Link>
                 <Link to={toScopedPath('/process', globalContext, { highlight: edge.target_id })}>Process lane</Link>
                 <Link to={toScopedPath(`/object-explorer/${edge.target_id}`, globalContext, { highlight: edge.id })}>Entity hub</Link>
               </div>
@@ -84,7 +84,7 @@ export function ImpactAnalysisPage() {
               <div className="meta">{event.occurred_at_utc}</div>
               <div className="button-row">
                 <Link to={toScopedPath('/events', globalContext, { highlight: event.id, event: event.id })}>Open temporal track</Link>
-                <Link to={toScopedPath('/graph', globalContext, { focus: event.kpi_observation_id || focus, highlight: event.id })}>Open causality path</Link>
+                <Link to={toScopedPath('/graph', globalContext, { focusEntity: event.kpi_observation_id || focus, highlight: event.id })}>Open causality path</Link>
               </div>
             </li>
           ))}

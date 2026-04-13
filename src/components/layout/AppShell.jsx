@@ -72,7 +72,6 @@ export function AppShell() {
   const scopedParams = Object.fromEntries(searchParams.entries())
   const routeContract = {
     ...contextKernel,
-    focus: searchParams.get('focus') || contextKernel.focusEntity,
     selectedNode: searchParams.get('selectedNode') || contextKernel.focusEntity,
     selectedPath: searchParams.get('selectedPath') || '',
     anchor: searchParams.get('anchor') || contextKernel.evidenceAnchor || '',

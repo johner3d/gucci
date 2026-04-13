@@ -170,7 +170,7 @@ export function ProcessPage() {
                   <strong>{kpi.id}</strong> — {kpi.kpi}
                   <div className="meta">status {kpi.status} | value {String(kpi.value)}</div>
                   <div className="button-row">
-                    <Link to={toScopedPath('/graph', globalContext, { focus: kpi.id, highlight: kpi.id, anchor: kpi.id })}>Graph causality</Link>
+                    <Link to={toScopedPath('/graph', globalContext, { focusEntity: kpi.id, highlight: kpi.id, anchor: kpi.id })}>Graph causality</Link>
                     <Link to={toScopedPath('/events', globalContext, { correlatedOnly: true, highlight: kpi.id, anchor: kpi.id })}>Temporal events</Link>
                     <Link to={toScopedPath(`/object-explorer/${kpi.id}`, globalContext, { highlight: kpi.id, anchor: kpi.id })}>Entity semantic hub</Link>
                   </div>
@@ -211,7 +211,7 @@ export function ProcessPage() {
               <ul className="row-list">
                 {related.causalLinks.map((link) => (
                   <li key={link.id}>
-                    <Link to={`/graph${toQueryString({ ...context, focus: link.source_id, mode: 'impact', step: selectedStep.id, anchor: link.id, highlight: link.id })}`}>
+                    <Link to={`/graph${toQueryString({ ...context, focusEntity: link.source_id, mode: 'impact', step: selectedStep.id, anchor: link.id, highlight: link.id })}`}>
                       {link.id} — {link.source_id} {link.type} {link.target_id}
                     </Link>
                     <div className="meta">category {link.category} | confidence {link.qualifiers?.confidence ?? 'n/a'}</div>

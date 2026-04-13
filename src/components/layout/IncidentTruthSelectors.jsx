@@ -33,7 +33,7 @@ export function IncidentTruthSelectors({ contextKernel, searchParams, setSearchP
         </label>
         <label>
           Focus entity
-          <input value={contextKernel.focusEntity} onChange={(event) => onPatch({ focusEntity: event.target.value, focus: event.target.value })} />
+          <input value={contextKernel.focusEntity} onChange={(event) => onPatch({ focusEntity: event.target.value })} />
         </label>
         <label>
           Severity
@@ -67,7 +67,7 @@ export function IncidentTruthSelectors({ contextKernel, searchParams, setSearchP
       </div>
       <label>
         Hypothesis
-        <input value={contextKernel.hypothesis} onChange={(event) => onPatch({ hypothesis: event.target.value, activeHypothesis: event.target.value })} />
+        <input value={contextKernel.hypothesis} onChange={(event) => onPatch({ hypothesis: event.target.value })} />
       </label>
       <details>
         <summary className="meta">Advanced incident scope controls</summary>

@@ -5,7 +5,7 @@ import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { EventTimeline } from '../components/domain/EventTimeline'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEventsData, loadLineageArtifactsData, loadProcessData, toUiDiagnostics } from '../lib/api'
-import { toScopedPath } from '../lib/scopedLink'
+import { toScopedPath, toScopedSearch } from '../lib/scopedLink'
 
 const eventToStepHints = [
   { match: 'maintenance', stepType: 'handoff' },
@@ -15,10 +15,6 @@ const eventToStepHints = [
   { match: 'kpi', stepType: 'process' },
 ]
 
-function asScopedSearch(globalContext, extra = {}) {
-  const params = new URLSearchParams({ ...globalContext, ...extra })
-  return `?${params.toString()}`
-}
 
 export function EventsPage() {
   const navigate = useNavigate()
@@ -93,19 +89,19 @@ export function EventsPage() {
 
   const jumpToGraph = (event) => {
     const focus = event.asset_id || event.station_id || event.serial_unit_id || event.inspection_id || event.id
-    navigate(`/graph${asScopedSearch(globalContext, { focus, mode: 'downstream-impact', sourceEvent: event.id, highlight: event.id, anchor: event.id })}`)
+    navigate(`/graph${toScopedSearch(globalContext, { focusEntity: focus, mode: 'downstream-impact', sourceEvent: event.id, highlight: event.id, anchor: event.id })}`)
   }
 
   const jumpToProcess = (event) => {
     const hint = eventToStepHints.find((entry) => event.type?.includes(entry.match))
     const step = (hint && processStepByType[hint.match]) || processData?.canvas?.steps?.[0]?.id
-    navigate(`/process${asScopedSearch(globalContext, { step, event: event.id, highlight: step || event.id, anchor: event.id })}`)
+    navigate(`/process${toScopedSearch(globalContext, { step, event: event.id, highlight: step || event.id, anchor: event.id })}`)
   }
 
   const jumpToEntity = (event) => {
     const entityId = event.asset_id || event.serial_unit_id || event.station_id || event.inspection_id
     if (!entityId) return
-    navigate(`/object-explorer/${entityId}${asScopedSearch(globalContext, { event: event.id, highlight: entityId, anchor: event.id })}`)
+    navigate(`/object-explorer/${entityId}${toScopedSearch(globalContext, { event: event.id, highlight: entityId, anchor: event.id })}`)
   }
 
   const jumpToLineage = (event) => {
@@ -119,7 +115,7 @@ export function EventsPage() {
             : 'derive_order_delay_risk_kpi'
     const artifactId = lineageByRule[ruleName] || lineageArtifacts[0]?.id
     if (!artifactId) return
-    navigate(`/lineage/${artifactId}${asScopedSearch(globalContext, { event: event.id, highlight: artifactId, anchor: event.id })}`)
+    navigate(`/lineage/${artifactId}${toScopedSearch(globalContext, { event: event.id, highlight: artifactId, anchor: event.id })}`)
   }
 
   if (!events.length && !diagnostics.length) return <p>Loading events…</p>
@@ -147,7 +143,7 @@ export function EventsPage() {
           onJumpToEntity={jumpToEntity}
           onJumpToLineage={jumpToLineage}
           highlightedId={highlightedId}
-          onHighlight={(eventId) => navigate(`/events${asScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId, anchor: eventId })}`)}
+          onHighlight={(eventId) => navigate(`/events${toScopedSearch(globalContext, { ...Object.fromEntries(searchParams.entries()), highlight: eventId, anchor: eventId })}`)}
         />
       ) : (
         <p>No events available.</p>

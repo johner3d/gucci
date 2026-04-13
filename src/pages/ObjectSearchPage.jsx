@@ -3,6 +3,7 @@ import { Link, useNavigate, useOutletContext, useSearchParams } from 'react-rout
 import { DataDiagnostics } from '../components/domain/DataDiagnostics'
 import { Panel } from '../components/primitives/Primitives'
 import { loadEntityWorkspaceData, toUiDiagnostics } from '../lib/api'
+import { toScopedQuery } from '../lib/contextKernel'
 
 const defaultFilters = {
   type: 'all',
@@ -48,7 +49,7 @@ function inferTimeBand(entity) {
 }
 
 function asScopedSearch(globalContext, patch = {}) {
-  return new URLSearchParams({ ...globalContext, ...patch }).toString()
+  return toScopedQuery(globalContext, patch).toString()
 }
 
 export function ObjectSearchPage() {
@@ -128,7 +129,7 @@ export function ObjectSearchPage() {
 
   const updateFilter = (patch) => {
     const current = Object.fromEntries(searchParams.entries())
-    setSearchParams({ ...current, ...globalContext, ...patch })
+    setSearchParams({ ...current, ...patch })
   }
 
   const toggleListItem = (key, id) => {
