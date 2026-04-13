@@ -9,6 +9,8 @@ export const DEFAULT_CONTEXT_KERNEL = {
   line: 'LINE_PAINT_A',
   time: '2026-01-15T06:00:00Z/2026-01-15T14:00:00Z',
   severity: 'high',
+  confidence: 'supported',
+  stage: 'issue-detection',
   focusEntity: 'KPIOBS_2101',
   hypothesis: 'Paint booth contamination increased rework and delayed outbound delivery.',
   incidentScope: DEFAULT_INCIDENT_SCOPE,
@@ -37,6 +39,8 @@ export function readContextKernel(searchParams) {
     line: searchParams.get('line') || DEFAULT_CONTEXT_KERNEL.line,
     time: searchParams.get('time') || DEFAULT_CONTEXT_KERNEL.time,
     severity: searchParams.get('severity') || DEFAULT_CONTEXT_KERNEL.severity,
+    confidence: searchParams.get('confidence') || DEFAULT_CONTEXT_KERNEL.confidence,
+    stage: searchParams.get('stage') || DEFAULT_CONTEXT_KERNEL.stage,
     focusEntity,
     hypothesis,
     incidentScope,
@@ -51,6 +55,8 @@ export function toKernelQuery(kernel, patch = {}) {
   params.set('line', merged.line)
   params.set('time', merged.time)
   params.set('severity', merged.severity)
+  params.set('confidence', merged.confidence || DEFAULT_CONTEXT_KERNEL.confidence)
+  params.set('stage', merged.stage || DEFAULT_CONTEXT_KERNEL.stage)
   params.set('focusEntity', merged.focusEntity)
   params.set('focus', merged.focusEntity)
   params.set('hypothesis', merged.hypothesis)
@@ -84,9 +90,26 @@ const routeLabels = {
   'impact-analysis': 'Impact Analysis',
 }
 
+const reasoningHints = {
+  executive: 'Issue detection',
+  production: 'Domain impact - production',
+  quality: 'Domain impact - quality',
+  logistics: 'Domain impact - logistics',
+  maintenance: 'Domain impact - maintenance',
+  process: 'Evidence in process flow',
+  events: 'Evidence in timeline',
+  graph: 'Root-cause and propagation',
+  'object-explorer': 'Object-centric validation',
+  lineage: 'Trust and provenance',
+  'impact-analysis': 'Decision support',
+}
+
 export function buildSemanticBreadcrumbs(pathname, kernel) {
   const segments = pathname.split('/').filter(Boolean)
-  const crumbs = [{ label: 'Incident Scope', hint: `${kernel.incidentScope.incidentId} · ${kernel.severity}`, to: '/executive' }]
+  const crumbs = [
+    { label: 'Incident', hint: `${kernel.incidentScope.incidentId} · ${kernel.severity}`, to: '/executive' },
+    { label: 'Impact', hint: `${kernel.plant} / ${kernel.line}`, to: '/impact-analysis' },
+  ]
 
   let current = ''
   segments.forEach((segment, idx) => {
@@ -94,11 +117,11 @@ export function buildSemanticBreadcrumbs(pathname, kernel) {
     const isId = idx > 0 && /[_\d]/.test(segment)
     crumbs.push({
       label: isId ? `Entity ${decodeURIComponent(segment)}` : routeLabels[segment] || decodeURIComponent(segment),
-      hint: isId ? 'focus node' : idx === 0 ? `${kernel.plant} / ${kernel.line}` : 'analysis view',
+      hint: isId ? 'focus node' : reasoningHints[segment] || 'analysis view',
       to: current,
     })
   })
 
-  crumbs.push({ label: 'Hypothesis', hint: kernel.hypothesis, to: '/impact-analysis' })
+  crumbs.push({ label: 'Decision', hint: kernel.hypothesis, to: '/impact-analysis' })
   return crumbs
 }
